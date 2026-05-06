@@ -115,6 +115,7 @@ const Player = (() => {
         isPlaying = true;
         setPlayIcon(true);
         updateTracklistBtns();
+        if (typeof Visualizer !== 'undefined') Visualizer.start();
       }).catch(err => {
         console.warn("[Player] play() blocked:", err);
         isPlaying = false;
@@ -128,6 +129,7 @@ const Player = (() => {
     isPlaying = false;
     setPlayIcon(false);
     updateTracklistBtns();
+    if (typeof Visualizer !== 'undefined') Visualizer.stop();
   }
 
   function togglePlay() {
@@ -254,6 +256,9 @@ const Player = (() => {
     });
 
     initTabs();
+
+    // Inicializa o visualizador (visualizer.js ou visualizer-particles.js)
+    if (typeof Visualizer !== 'undefined') Visualizer.init(audio);
   }
 
   return { init, playIndex, togglePlay, next, prev, isPlaying: () => isPlaying };

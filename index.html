@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="css/char-bg.css" />
   <!-- Mobile overrides (≤ 600px) — centralizado aqui -->
   <link rel="stylesheet" href="css/mobile.css" />
+  <!-- Visualizer -->
+  <link rel="stylesheet" href="css/visualizer.css" />
   <!-- Download UI -->
   <link rel="stylesheet" href="css/downloader.css" />
   <!-- Gallery lightbox -->
@@ -139,6 +141,7 @@
   <!-- MINI PLAYER -->
   <div class="mini-player hidden" id="miniPlayer">
     <div class="mini-progress-bar" id="miniProgressBar">
+      <canvas id="vizCanvasMini" class="viz-canvas-mini"></canvas>
       <div class="mini-progress-fill" id="miniProgressFill"></div>
     </div>
     <div class="mini-player__body">
@@ -162,6 +165,8 @@
   <div class="fullscreen-player" id="fullscreenPlayer" aria-hidden="true">
     <button class="fs-close-btn" id="fsCloseBtn" aria-label="Fechar">&#x2715;</button>
     <div class="fs-geo-bg"><div class="fs-geo-lines"></div></div>
+    <!-- Canvas partículas: só usado por visualizer-particles.js -->
+    <canvas id="vizCanvasParticles" class="viz-canvas-particles"></canvas>
     <div class="fs-content">
       <div class="fs-artwork">
         <div class="fs-artwork-ring"></div>
@@ -203,6 +208,8 @@
         </div>
       </div>
     </div>
+    <!-- Canvas waveform fullscreen -->
+    <canvas id="vizCanvasFS" class="viz-canvas-fs"></canvas>
   </div>
 
   <audio id="audioEngine" preload="metadata"></audio>
@@ -211,6 +218,9 @@
   <script src="js/downloader.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/character-design.js"></script>
+  <!-- VISUALIZER: troque a linha abaixo para testar com/sem partículas -->
+  <script src="js/visualizer.js"></script>
+  <!-- <script src="js/visualizer-particles.js"></script> -->
   <script src="js/player.js"></script>
   <script src="js/char-bg.js"></script>
   <script src="js/gallery.js"></script>

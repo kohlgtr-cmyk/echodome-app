@@ -1,0 +1,76 @@
+/* =========================================================
+   ECHODOME — css/visualizer.css
+   Posicionamento dos canvases + animação pulse na progress.
+   ========================================================= */
+
+/* ============================
+   CANVAS — FULLSCREEN waveform
+   ============================ */
+.viz-canvas-fs {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  pointer-events: none;
+  opacity: 0.7;
+  z-index: 2;
+}
+
+/* ============================
+   CANVAS — MINI PLAYER waveform
+   ============================ */
+.viz-canvas-mini {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 0;
+}
+
+/* O wrapper da mini progress precisa de position:relative
+   para o canvas absoluto funcionar */
+.mini-progress-bar {
+  position: relative;
+  overflow: hidden;
+}
+
+/* ============================
+   CANVAS — PARTÍCULAS (fundo fullscreen)
+   Só existe no visualizer-particles.js
+   ============================ */
+.viz-canvas-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.6;
+}
+
+/* ============================
+   PULSE na progress bar
+   Ativado via JS (.pulse-beat)
+   ============================ */
+@keyframes progressPulse {
+  0%   { box-shadow: 0 0 4px var(--neon-60); }
+  50%  { box-shadow: 0 0 14px var(--neon), 0 0 28px var(--neon-40); }
+  100% { box-shadow: 0 0 4px var(--neon-60); }
+}
+
+.mini-progress-fill.pulse-beat,
+.fs-progress-fill.pulse-beat {
+  animation: progressPulse 0.12s ease-out;
+}
+
+/* Garante que o fs-artwork-ring acelere no beat */
+@keyframes rotateFast {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.fullscreen-player .fs-artwork-ring {
+  transition: animation-duration 0.1s;
+}
