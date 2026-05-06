@@ -175,6 +175,12 @@ const Visualizer = (() => {
 
     // Waveform
     if (cvFS && cvFS.offsetParent !== null) {
+      // Sincroniza resolução do canvas com o tamanho CSS real
+      const wrap = cvFS.parentElement;
+      if (wrap && wrap.offsetWidth > 0 && cvFS.width !== wrap.offsetWidth) {
+        cvFS.width  = wrap.offsetWidth;
+        cvFS.height = wrap.offsetHeight;
+      }
       drawWave(cvFS, timeData, bufferLen, CFG.lineWidth);
     }
     if (cvMini) {
@@ -194,13 +200,12 @@ const Visualizer = (() => {
     if (!canvas) return;
     const parent = canvas.parentElement;
     if (!parent) return;
-    const rect = parent.getBoundingClientRect();
-    const W = rect.width  || parent.clientWidth  || 300;
-    const H = rect.height || parent.clientHeight || 100;
-    canvas.width  = W;
-    canvas.height = H;
+    const W = parent.offsetWidth  || parent.clientWidth  || 300;
+    const H = parent.offsetHeight || parent.clientHeight || 120;
+    if (W > 0) canvas.width  = W;
+    if (H > 0) canvas.height = H;
     // Re-inicializa partículas no resize do fundo
-    if (canvas === cvParticles) initParticles(W, H);
+    if (canvas === cvParticles) initParticles(canvas.width, canvas.height);
   }
 
   /* ---- API pública ---- */

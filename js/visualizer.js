@@ -121,6 +121,12 @@ const Visualizer = (() => {
 
     // Desenha nos dois canvases se visíveis
     if (cvFS && cvFS.offsetParent !== null) {
+      // Sincroniza resolução do canvas com o tamanho CSS real
+      const wrap = cvFS.parentElement;
+      if (wrap && wrap.offsetWidth > 0 && cvFS.width !== wrap.offsetWidth) {
+        cvFS.width  = wrap.offsetWidth;
+        cvFS.height = wrap.offsetHeight;
+      }
       drawWave(cvFS, timeData, bufferLen, CFG.lineWidth);
     }
     if (cvMini) {
@@ -135,10 +141,12 @@ const Visualizer = (() => {
     if (!canvas) return;
     const parent = canvas.parentElement;
     if (!parent) return;
-    // Usa getBoundingClientRect para pegar tamanho real do container
-    const rect = parent.getBoundingClientRect();
-    canvas.width  = rect.width  || parent.clientWidth  || 300;
-    canvas.height = rect.height || parent.clientHeight || 100;
+    // offsetWidth funciona mesmo com opacity:0; clientWidth falha em display:none
+    const w = parent.offsetWidth  || parent.clientWidth  || 300;
+    const h = parent.offsetHeight || parent.clientHeight || 120;
+    // Só atualiza se tiver valores reais — evita zerar o canvas desnecessariamente
+    if (w > 0) canvas.width  = w;
+    if (h > 0) canvas.height = h;
   }
 
   /* ---- API pública ---- */
