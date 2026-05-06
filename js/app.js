@@ -146,6 +146,7 @@ const app = (() => {
     renderBand();
     ThemeManager.init();
     Player.init(SONGS);
+    CharBg.init();
   }
 
   return { init, navigate };

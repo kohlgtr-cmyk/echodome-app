@@ -1,0 +1,117 @@
+/* =========================================================
+   ECHODOME — css/char-bg.css
+   SVG de personagem no fundo do hero.
+   Cada tema troca a imagem e a cor via currentColor + filter.
+   ========================================================= */
+
+/* ---- Container base ---- */
+.char-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.char-bg__img {
+  position: absolute;
+  bottom: 0;
+  right: -40px;
+  height: 96%;
+  width: auto;
+  object-fit: contain;
+  object-position: bottom right;
+
+  opacity: 0;
+  transform: translateX(24px);
+  transition:
+    opacity  0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+    filter   0.55s ease;
+}
+
+/* Estado ativo: visível */
+.char-bg__img.active {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+/* ---- Cor por personagem (via filter para colorir o SVG preto) ---- */
+/*
+  Os SVGs usam fill="currentColor" mas como são <img>, não herdam CSS color.
+  Usamos filter: drop-shadow + brightness para tingir cada personagem
+  com a cor neon do seu tema.
+  Fórmula: brightness(0) satura para preto puro, depois
+           drop-shadow projeta a cor desejada sobre o shape.
+  Resultado: silhueta colorida com leve brilho neon.
+*/
+
+[data-theme="trace"] .char-bg__img {
+  /* verde neon: #39ff14 */
+  filter:
+    brightness(0)
+    drop-shadow(0 0 18px rgba(57, 255, 20, 0.55))
+    drop-shadow(0 0 40px rgba(57, 255, 20, 0.20))
+    opacity(0.18);
+}
+
+[data-theme="od"] .char-bg__img {
+  /* laranja neon: #ff6a00 */
+  filter:
+    brightness(0)
+    drop-shadow(0 0 18px rgba(255, 106, 0, 0.55))
+    drop-shadow(0 0 40px rgba(255, 106, 0, 0.20))
+    opacity(0.18);
+}
+
+[data-theme="dusk"] .char-bg__img {
+  /* amarelo neon: #ffe600 */
+  filter:
+    brightness(0)
+    drop-shadow(0 0 18px rgba(255, 230, 0, 0.55))
+    drop-shadow(0 0 40px rgba(255, 230, 0, 0.20))
+    opacity(0.18);
+}
+
+[data-theme="ember"] .char-bg__img {
+  /* vermelho neon: #ff2d55 */
+  filter:
+    brightness(0)
+    drop-shadow(0 0 18px rgba(255, 45, 85, 0.55))
+    drop-shadow(0 0 40px rgba(255, 45, 85, 0.20))
+    opacity(0.18);
+}
+
+[data-theme="lyra"] .char-bg__img {
+  /* ciano neon: #00f5ff */
+  filter:
+    brightness(0)
+    drop-shadow(0 0 18px rgba(0, 245, 255, 0.55))
+    drop-shadow(0 0 40px rgba(0, 245, 255, 0.20))
+    opacity(0.18);
+}
+
+/* ---- Responsivo ---- */
+@media (max-width: 768px) {
+  .char-bg__img {
+    height: 65%;
+    right: -20px;
+    opacity: 0;           /* base: hidden antes de .active */
+  }
+
+  .char-bg__img.active {
+    opacity: 1;
+  }
+
+  /* Opacidade menor em mobile para não competir com o texto */
+  [data-theme="trace"] .char-bg__img,
+  [data-theme="od"]    .char-bg__img,
+  [data-theme="dusk"]  .char-bg__img,
+  [data-theme="ember"] .char-bg__img,
+  [data-theme="lyra"]  .char-bg__img {
+    filter:
+      brightness(0)
+      drop-shadow(0 0 12px rgba(255,255,255,0.3))
+      opacity(0.10);
+  }
+}

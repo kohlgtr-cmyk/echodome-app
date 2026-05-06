@@ -350,39 +350,7 @@ body {
   box-shadow: 0 0 12px var(--neon-20);
 }
 
-.neon-geo--home {
-  position: absolute;
-  right: -80px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 500px;
-  height: 500px;
-  border: 1px solid var(--neon-20);
-  border-radius: 50%;
-  box-shadow: inset 0 0 80px var(--neon-08), 0 0 80px var(--neon-08);
-  animation: rotateSlow 20s linear infinite;
-  pointer-events: none;
-}
-.neon-geo--home::before {
-  content: '';
-  position: absolute;
-  inset: 40px;
-  border: 1px solid var(--neon-30);
-  border-radius: 50%;
-  animation: rotateSlow 12s linear infinite reverse;
-}
-.neon-geo--home::after {
-  content: '';
-  position: absolute;
-  inset: 100px;
-  border: 1px solid var(--neon-20);
-  border-radius: 50%;
-}
-
-@keyframes rotateSlow {
-  from { transform: translateY(-50%) rotate(0deg); }
-  to   { transform: translateY(-50%) rotate(360deg); }
-}
+/* neon-geo--home removido — substituído por char-bg.css */
 
 /* ---------- Tracklist ---------- */
 .tracklist {
