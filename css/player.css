@@ -211,18 +211,25 @@
   gap: var(--gap-lg);
 }
 
-/* Artwork circle */
-.fs-artwork {
+/* Meta compacta: artwork pequena + título lado a lado */
+.fs-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  width: 100%;
+}
+
+.fs-artwork-small {
   position: relative;
-  width: 180px; height: 180px;
+  width: 52px; height: 52px;
   flex-shrink: 0;
 }
 .fs-artwork-ring {
   position: absolute;
-  inset: -12px;
+  inset: -6px;
   border-radius: 50%;
   border: 1px solid var(--neon-30);
-  box-shadow: 0 0 24px var(--neon-20), inset 0 0 24px var(--neon-10, var(--neon-08));
+  box-shadow: 0 0 12px var(--neon-20);
   animation: rotateMed 8s linear infinite;
 }
 @keyframes rotateMed {
@@ -239,35 +246,43 @@
   justify-content: center;
 }
 .fs-artwork-icon {
-  font-size: 4rem;
+  font-size: 1.4rem;
   color: var(--neon);
-  text-shadow: 0 0 20px var(--neon);
+  text-shadow: 0 0 10px var(--neon);
 }
 
-/* Meta */
-.fs-meta {
-  text-align: center;
-  width: 100%;
+.fs-meta-text {
+  min-width: 0;
+  flex: 1;
 }
 .fs-title {
   font-family: var(--font-display);
-  font-size: clamp(1.6rem, 6vw, 2.2rem);
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
   letter-spacing: 0.08em;
   color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .fs-artist {
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   color: var(--neon);
   letter-spacing: 0.2em;
-  margin-top: 4px;
+  margin-top: 2px;
+  opacity: 0.8;
 }
-.fs-duration {
+
+/* Tempo embaixo da waveform */
+.fs-time {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.7rem;
   color: var(--fg-dim);
-  margin-top: 8px;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  margin-top: -8px;
 }
 
 /* Progress */

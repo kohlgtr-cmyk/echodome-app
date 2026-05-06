@@ -168,22 +168,27 @@
     <!-- Canvas partículas: só usado por visualizer-particles.js -->
     <canvas id="vizCanvasParticles" class="viz-canvas-particles"></canvas>
     <div class="fs-content">
-      <div class="fs-artwork">
-        <div class="fs-artwork-ring"></div>
-        <div class="fs-artwork-inner">
-          <span class="fs-artwork-icon" id="fsArtworkIcon">◈</span>
+      <!-- Meta compacta: ícone pequeno + título lado a lado -->
+      <div class="fs-meta">
+        <div class="fs-artwork-small">
+          <div class="fs-artwork-ring"></div>
+          <div class="fs-artwork-inner">
+            <span class="fs-artwork-icon" id="fsArtworkIcon">◈</span>
+          </div>
+        </div>
+        <div class="fs-meta-text">
+          <h2 class="fs-title" id="fsTitle">—</h2>
+          <p class="fs-artist">ECHODOME</p>
         </div>
       </div>
-      <div class="fs-meta">
-        <h2 class="fs-title" id="fsTitle">—</h2>
-        <p class="fs-artist">ECHODOME</p>
-        <p class="fs-duration">
-          <span id="fsCurrent">0:00</span> / <span id="fsDuration">0:00</span>
-        </p>
-      </div>
-      <!-- Waveform: bloco dedicado acima da barra de progresso -->
+      <!-- Waveform central — destaque principal -->
       <div class="fs-waveform-wrap">
         <canvas id="vizCanvasFS" class="viz-canvas-fs"></canvas>
+      </div>
+      <!-- Tempo abaixo da waveform -->
+      <div class="fs-time">
+        <span id="fsCurrent">0:00</span>
+        <span id="fsDuration">0:00</span>
       </div>
       <div class="fs-progress-wrap">
         <div class="fs-progress-bar" id="fsProgressBar">
