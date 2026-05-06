@@ -1,10 +1,9 @@
 /* =========================================================
    ECHODOME — css/char-bg.css
    SVG de personagem no fundo do hero.
-   Cada tema troca a imagem e a cor via currentColor + filter.
    ========================================================= */
 
-/* ---- Container base ---- */
+/* ---- Container ---- */
 .char-bg {
   position: absolute;
   inset: 0;
@@ -13,105 +12,107 @@
   z-index: 0;
 }
 
+/* ---- Imagem base (oculta por padrão) ---- */
 .char-bg__img {
   position: absolute;
   bottom: 0;
-  right: -40px;
-  height: 96%;
+  right: -20px;
+  height: 92%;
   width: auto;
   object-fit: contain;
   object-position: bottom right;
 
   opacity: 0;
-  transform: translateX(24px);
+  transform: translateX(32px);
   transition:
-    opacity  0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-    filter   0.55s ease;
+    opacity   0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    filter    0.6s ease;
 }
 
-/* Estado ativo: visível */
 .char-bg__img.active {
   opacity: 1;
   transform: translateX(0);
 }
 
-/* ---- Cor por personagem (via filter para colorir o SVG preto) ---- */
+/* ---- Colorização por tema ---- */
 /*
-  Os SVGs usam fill="currentColor" mas como são <img>, não herdam CSS color.
-  Usamos filter: drop-shadow + brightness para tingir cada personagem
-  com a cor neon do seu tema.
-  Fórmula: brightness(0) satura para preto puro, depois
-           drop-shadow projeta a cor desejada sobre o shape.
-  Resultado: silhueta colorida com leve brilho neon.
+  Técnica: brightness(0) torna o SVG preto puro.
+  invert + sepia + hue-rotate + saturate + brightness
+  pintam esse preto com a cor neon do personagem.
+  drop-shadow adiciona o brilho ao redor da silhueta.
+
+  trace  #e8e8ff  hue ~240°  (lilás/branco)
+  od     #39ff14  hue ~111°  (verde neon)
+  dusk   #ff6a00  hue ~25°   (laranja)
+  ember  #ffe600  hue ~54°   (amarelo)
+  lyra   #00c8ff  hue ~193°  (ciano)
 */
 
 [data-theme="trace"] .char-bg__img {
-  /* verde neon: #39ff14 */
   filter:
     brightness(0)
-    drop-shadow(0 0 18px rgba(57, 255, 20, 0.55))
-    drop-shadow(0 0 40px rgba(57, 255, 20, 0.20))
-    opacity(0.18);
+    invert(1)
+    sepia(1)
+    hue-rotate(200deg)
+    saturate(20%)
+    brightness(1.8)
+    drop-shadow(0 0 24px rgba(232, 232, 255, 0.7))
+    drop-shadow(0 0 60px rgba(232, 232, 255, 0.25));
 }
 
 [data-theme="od"] .char-bg__img {
-  /* laranja neon: #ff6a00 */
   filter:
     brightness(0)
-    drop-shadow(0 0 18px rgba(255, 106, 0, 0.55))
-    drop-shadow(0 0 40px rgba(255, 106, 0, 0.20))
-    opacity(0.18);
+    invert(1)
+    sepia(1)
+    hue-rotate(70deg)
+    saturate(600%)
+    brightness(1.1)
+    drop-shadow(0 0 24px rgba(57, 255, 20, 0.7))
+    drop-shadow(0 0 60px rgba(57, 255, 20, 0.25));
 }
 
 [data-theme="dusk"] .char-bg__img {
-  /* amarelo neon: #ffe600 */
   filter:
     brightness(0)
-    drop-shadow(0 0 18px rgba(255, 230, 0, 0.55))
-    drop-shadow(0 0 40px rgba(255, 230, 0, 0.20))
-    opacity(0.18);
+    invert(1)
+    sepia(1)
+    hue-rotate(0deg)
+    saturate(500%)
+    brightness(1.0)
+    drop-shadow(0 0 24px rgba(255, 106, 0, 0.7))
+    drop-shadow(0 0 60px rgba(255, 106, 0, 0.25));
 }
 
 [data-theme="ember"] .char-bg__img {
-  /* vermelho neon: #ff2d55 */
   filter:
     brightness(0)
-    drop-shadow(0 0 18px rgba(255, 45, 85, 0.55))
-    drop-shadow(0 0 40px rgba(255, 45, 85, 0.20))
-    opacity(0.18);
+    invert(1)
+    sepia(1)
+    hue-rotate(20deg)
+    saturate(500%)
+    brightness(1.1)
+    drop-shadow(0 0 24px rgba(255, 230, 0, 0.7))
+    drop-shadow(0 0 60px rgba(255, 230, 0, 0.25));
 }
 
 [data-theme="lyra"] .char-bg__img {
-  /* ciano neon: #00f5ff */
   filter:
     brightness(0)
-    drop-shadow(0 0 18px rgba(0, 245, 255, 0.55))
-    drop-shadow(0 0 40px rgba(0, 245, 255, 0.20))
-    opacity(0.18);
+    invert(1)
+    sepia(1)
+    hue-rotate(155deg)
+    saturate(600%)
+    brightness(1.1)
+    drop-shadow(0 0 24px rgba(0, 200, 255, 0.7))
+    drop-shadow(0 0 60px rgba(0, 200, 255, 0.25));
 }
 
 /* ---- Responsivo ---- */
 @media (max-width: 768px) {
   .char-bg__img {
-    height: 65%;
-    right: -20px;
-    opacity: 0;           /* base: hidden antes de .active */
-  }
-
-  .char-bg__img.active {
-    opacity: 1;
-  }
-
-  /* Opacidade menor em mobile para não competir com o texto */
-  [data-theme="trace"] .char-bg__img,
-  [data-theme="od"]    .char-bg__img,
-  [data-theme="dusk"]  .char-bg__img,
-  [data-theme="ember"] .char-bg__img,
-  [data-theme="lyra"]  .char-bg__img {
-    filter:
-      brightness(0)
-      drop-shadow(0 0 12px rgba(255,255,255,0.3))
-      opacity(0.10);
+    height: 70%;
+    right: -10px;
   }
 }
