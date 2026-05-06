@@ -360,8 +360,8 @@ body {
   flex-direction: column;
   gap: 2px;
   background: var(--bg-glass);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border-radius: 4px;
   padding: 4px;
 }
@@ -563,11 +563,4 @@ body {
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 600px) {
-  .site-header { padding: 0 var(--gap-md); gap: var(--gap-md); }
-  .main-nav .nav-btn { padding: 6px 8px; font-size: 0.65rem; }
-  .section { padding: var(--gap-lg) var(--gap-md); }
-  .theme-panel { width: 100%; }
-  .track-item { grid-template-columns: 36px 1fr auto; }
-  .track-play-btn { display: none; }
-}
+/* ---------- Mobile overrides ---------- */

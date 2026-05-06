@@ -1,0 +1,110 @@
+/* =========================================================
+   ECHODOME — mobile.css
+   Todos os overrides para viewport ≤ 600px.
+   Centraliza aqui. Não duplicar media queries nos outros CSS.
+   ========================================================= */
+
+@media (max-width: 600px) {
+
+  /* ── style.css ──────────────────────────────────────── */
+
+  .site-header {
+    padding: 0 var(--gap-md);
+    gap: var(--gap-sm);
+  }
+
+  .logo-text {
+    font-size: 1.1rem;
+    letter-spacing: 0.08em;
+  }
+
+  .main-nav { gap: 2px; }
+
+  .main-nav .nav-btn {
+    padding: 5px 7px;
+    font-size: 0.6rem;
+    letter-spacing: 0.06em;
+  }
+
+  .theme-label { display: none; }
+
+  .theme-toggle-btn { padding: 6px 8px; }
+
+  .theme-panel { width: 100%; }
+
+  .section { padding: var(--gap-lg) var(--gap-md); }
+
+  /* Hero */
+  .hero {
+    justify-content: flex-start;
+    padding-top: var(--gap-lg);
+  }
+
+  .hero-title {
+    font-size: clamp(3rem, 18vw, 5rem);
+    margin-bottom: var(--gap-sm);
+  }
+
+  .hero-sub {
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    margin-bottom: var(--gap-lg);
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    gap: var(--gap-sm);
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    width: 100%;
+    text-align: center;
+    padding: 12px 24px;
+  }
+
+  /* Tracklist */
+  .track-item { grid-template-columns: 36px 1fr auto; }
+  .track-play-btn { display: none; }
+
+  /* ── player.css ─────────────────────────────────────── */
+
+  .mini-player {
+    padding: 0 var(--gap-md);
+    gap: var(--gap-sm);
+  }
+
+  .mini-progress-bar { display: none; }
+
+  .fs-content { padding: 80px var(--gap-md) var(--gap-md); }
+
+  /* ── char-bg.css ────────────────────────────────────── */
+
+  .char-bg__img {
+    width: 90%;
+    height: 45%;
+    right: 50%;
+    transform: translateX(calc(50% + 20px));
+    object-position: bottom center;
+  }
+
+  .char-bg__img.active { transform: translateX(50%); }
+
+  /* Fade de cima pra baixo: protege texto no topo */
+  .char-bg::after {
+    background: linear-gradient(
+      to bottom,
+      var(--bg)    0%,
+      var(--bg)    30%,
+      transparent  65%,
+      var(--bg)    100%
+    );
+  }
+
+  /* Opacidades por seção no mobile */
+  body.section-home     .char-bg__img.active { --char-opacity: 0.5;  }
+  body.section-music    .char-bg__img.active { --char-opacity: 0.15; }
+  body.section-gallery  .char-bg__img.active { --char-opacity: 0.15; }
+  body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
+
+}

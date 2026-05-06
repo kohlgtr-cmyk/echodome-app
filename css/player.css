@@ -379,8 +379,3 @@
 }
 
 /* ---------- Responsive ---------- */
-@media (max-width: 600px) {
-  .mini-player { padding: 0 var(--gap-md); gap: var(--gap-sm); }
-  .mini-progress-bar { display: none; }
-  .fs-content { padding: 80px var(--gap-md) var(--gap-md); }
-}

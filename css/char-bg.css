@@ -9,11 +9,11 @@
   position: fixed;
   inset: 0;
   pointer-events: none;
-  z-index: 0;        /* abaixo do header (z:100) e de todo conteúdo */
+  z-index: 0;
   overflow: hidden;
 }
 
-/* ---- Imagem: ocupa a metade direita, alinhada à base ---- */
+/* ---- Imagem: metade direita, ancorada na base ---- */
 .char-bg__img {
   position: absolute;
   bottom: 0;
@@ -31,42 +31,22 @@
     filter    0.6s ease;
 }
 
-/* Estado ativo base (seções internas: music, gallery, band) */
 .char-bg__img.active {
   opacity: 1;
   transform: translateX(0);
 }
 
-/*
-  No home o personagem fica mais presente.
-  Nas outras seções fica mais recuado (opacity menor no próprio filter).
-  Controlado via classe no <body> que o app.js já seta.
-*/
+/* Opacidade por seção via classe no <body> */
 body.section-home     .char-bg__img.active { --char-opacity: 1;    }
 body.section-music    .char-bg__img.active { --char-opacity: 0.35; }
 body.section-gallery  .char-bg__img.active { --char-opacity: 0.35; }
 body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
 
 /* ---- Colorização por tema ---- */
-/*
-  brightness(0)  → preto puro
-  invert(1)      → branco
-  sepia(1)       → dourado base
-  hue-rotate()   → cor do tema
-  saturate()     → intensidade
-  brightness()   → brilho final
-  opacity()      → transparência (home vs outras seções via var)
-  drop-shadow()  → glow neon ao redor
-*/
-
 [data-theme="trace"] .char-bg__img {
   filter:
-    brightness(0)
-    invert(1)
-    sepia(1)
-    hue-rotate(200deg)
-    saturate(20%)
-    brightness(1.8)
+    brightness(0) invert(1) sepia(1)
+    hue-rotate(200deg) saturate(20%) brightness(1.8)
     opacity(var(--char-opacity, 0.38))
     drop-shadow(0 0 32px rgba(232, 232, 255, 0.5))
     drop-shadow(0 0 80px rgba(232, 232, 255, 0.15));
@@ -74,12 +54,8 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
 
 [data-theme="od"] .char-bg__img {
   filter:
-    brightness(0)
-    invert(1)
-    sepia(1)
-    hue-rotate(70deg)
-    saturate(600%)
-    brightness(1.1)
+    brightness(0) invert(1) sepia(1)
+    hue-rotate(70deg) saturate(600%) brightness(1.1)
     opacity(var(--char-opacity, 0.38))
     drop-shadow(0 0 32px rgba(57, 255, 20, 0.5))
     drop-shadow(0 0 80px rgba(57, 255, 20, 0.15));
@@ -87,12 +63,8 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
 
 [data-theme="dusk"] .char-bg__img {
   filter:
-    brightness(0)
-    invert(1)
-    sepia(1)
-    hue-rotate(0deg)
-    saturate(500%)
-    brightness(1.0)
+    brightness(0) invert(1) sepia(1)
+    hue-rotate(0deg) saturate(500%) brightness(1.0)
     opacity(var(--char-opacity, 0.38))
     drop-shadow(0 0 32px rgba(255, 106, 0, 0.5))
     drop-shadow(0 0 80px rgba(255, 106, 0, 0.15));
@@ -100,12 +72,8 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
 
 [data-theme="ember"] .char-bg__img {
   filter:
-    brightness(0)
-    invert(1)
-    sepia(1)
-    hue-rotate(20deg)
-    saturate(500%)
-    brightness(1.1)
+    brightness(0) invert(1) sepia(1)
+    hue-rotate(20deg) saturate(500%) brightness(1.1)
     opacity(var(--char-opacity, 0.38))
     drop-shadow(0 0 32px rgba(255, 230, 0, 0.5))
     drop-shadow(0 0 80px rgba(255, 230, 0, 0.15));
@@ -113,19 +81,15 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
 
 [data-theme="lyra"] .char-bg__img {
   filter:
-    brightness(0)
-    invert(1)
-    sepia(1)
-    hue-rotate(155deg)
-    saturate(600%)
-    brightness(1.1)
+    brightness(0) invert(1) sepia(1)
+    hue-rotate(155deg) saturate(600%) brightness(1.1)
     opacity(var(--char-opacity, 0.38))
     drop-shadow(0 0 32px rgba(0, 200, 255, 0.5))
     drop-shadow(0 0 80px rgba(0, 200, 255, 0.15));
 }
 
-/* ---- Gradiente de fade na borda esquerda ---- */
-/* Evita que o SVG "corte" o texto do hero bruscamente */
+/* ---- Fade lateral esquerdo (desktop) ---- */
+/* Impede que o SVG se misture com o texto do hero */
 .char-bg::after {
   content: '';
   position: absolute;
@@ -139,27 +103,4 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
   pointer-events: none;
 }
 
-/* ---- Responsivo ---- */
-@media (max-width: 768px) {
-  .char-bg__img {
-    width: 100%;
-    height: 55%;
-    bottom: 0;
-    right: 0;
-    object-position: bottom center;
-  }
-
-  /* No mobile o fade vem de baixo pra cima */
-  .char-bg::after {
-    background: linear-gradient(
-      to top,
-      transparent 0%,
-      var(--bg) 60%
-    );
-  }
-
-  body.section-home    .char-bg__img.active { --char-opacity: 0.28; }
-  body.section-music   .char-bg__img.active { --char-opacity: 0.12; }
-  body.section-gallery .char-bg__img.active { --char-opacity: 0.12; }
-  body.section-about   .char-bg__img.active { --char-opacity: 0.12; }
-}
+/* ---- Mobile ---- */
