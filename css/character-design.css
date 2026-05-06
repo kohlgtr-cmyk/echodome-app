@@ -1,0 +1,548 @@
+/* =========================================================
+   ECHODOME — character-design.css
+   CSS estático por personagem: texturas de fundo,
+   comportamentos globais, e overrides permanentes.
+   Complementa o character-design.js.
+   ========================================================= */
+
+/* ── Transition global no body ────────────────────────────── */
+body {
+  transition:
+    background-color 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── Animação padrão da seção (usada pelo char-enter) ──────── */
+.char-enter {
+  animation-fill-mode: both;
+}
+
+/* ════════════════════════════════════════════════════════════
+   TRACE — O Silêncio que Grita
+   Estética: monospace puro, vazio intencional,
+   zero ornamentação. O cursor crosshair é o único ornamento.
+   ════════════════════════════════════════════════════════════ */
+
+/* Sem textura — o vazio é a textura */
+body.char-trace::before { display: none; }
+
+/* Logo com underline sutil em vez de glow */
+body.char-trace .logo-text {
+  text-shadow: none;
+  border-bottom: 1px solid var(--neon-40);
+  padding-bottom: 2px;
+}
+
+/* Hero title sem text-shadow exagerado */
+body.char-trace .hero-title {
+  text-shadow: none;
+  letter-spacing: 0.03em;
+}
+
+/* Eyebrow e sub com underline monospace */
+body.char-trace .hero-eyebrow {
+  border-bottom: 1px solid var(--neon-20);
+  padding-bottom: 6px;
+  display: inline-block;
+}
+
+/* Nav buttons: underline em vez de glow */
+body.char-trace .nav-btn:hover,
+body.char-trace .nav-btn.active {
+  text-shadow: none;
+}
+
+/* Botão primário: sem radius, clean */
+body.char-trace .btn-primary {
+  letter-spacing: 0.2em;
+}
+
+/* Geo bg mais tênue */
+body.char-trace .geo-lines {
+  opacity: 0.4;
+}
+
+/* Section title: sem glow */
+body.char-trace .section-line {
+  opacity: 0.3;
+}
+
+/* Watermark sutil no canto */
+body.char-trace::after {
+  content: 'ECHO';
+  position: fixed;
+  bottom: -20px;
+  right: -10px;
+  font-family: "Space Mono", monospace;
+  font-size: clamp(60px, 12vw, 110px);
+  font-weight: 700;
+  color: var(--neon);
+  opacity: 0.025;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   OD — Overdrive Permanente
+   Estética: agressivo, punk, tudo uppercase, verde que sangra,
+   scanlines CRT constantes, zero bordas arredondadas.
+   ════════════════════════════════════════════════════════════ */
+
+/* Scanlines CRT sobre toda a tela */
+body.char-od::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(57, 255, 20, 0.018) 2px,
+    rgba(57, 255, 20, 0.018) 4px
+  );
+  mix-blend-mode: screen;
+}
+
+/* Sem watermark after */
+body.char-od::after { display: none; }
+
+/* Logo: uppercase forçado, maior glow */
+body.char-od .logo-text {
+  text-shadow: 0 0 20px var(--neon), 0 0 40px rgba(57,255,20,0.3);
+  letter-spacing: 0.18em;
+}
+
+/* Hero title: brutal, sem suavidade */
+body.char-od .hero-title {
+  text-shadow: 0 0 60px rgba(57,255,20,0.2), 2px 2px 0 rgba(57,255,20,0.1);
+  letter-spacing: 0.08em;
+  line-height: 0.88;
+}
+
+/* Sub texts: uppercase */
+body.char-od .hero-eyebrow,
+body.char-od .hero-sub {
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+}
+
+/* Botão primário: borda de glow + offset punk */
+body.char-od .btn-primary {
+  box-shadow: 3px 3px 0 rgba(57,255,20,0.6);
+  letter-spacing: 0.25em;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+body.char-od .btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 5px 5px 0 rgba(57,255,20,0.7);
+}
+
+/* Geo bg: mais denso e agressivo */
+body.char-od .geo-lines {
+  background-size: 40px 40px;
+  opacity: 0.8;
+}
+
+/* Track tags: uppercase, sem radius */
+body.char-od .track-tag {
+  letter-spacing: 0.12em;
+  font-size: 0.6rem;
+  font-weight: 600;
+}
+
+/* Watermark OD no canto */
+body.char-od .hero::after {
+  content: 'OD';
+  position: absolute;
+  bottom: -20px;
+  right: -15px;
+  font-family: "Bebas Neue", sans-serif;
+  font-size: clamp(80px, 18vw, 160px);
+  color: var(--neon);
+  opacity: 0.04;
+  pointer-events: none;
+  user-select: none;
+  line-height: 1;
+}
+
+/* Section line: mais opaca */
+body.char-od .section-line {
+  background: linear-gradient(90deg, var(--neon-60), transparent);
+  height: 2px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   DUSK — O Mecânico do Abismo
+   Estética: industrial, metálico enferrujado, grid de fábrica,
+   tipografia condensada pesada, laranja como óxido.
+   ════════════════════════════════════════════════════════════ */
+
+/* Grid industrial tênue */
+body.char-dusk::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(255, 106, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 106, 0, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+  mask-image: radial-gradient(ellipse at center, black 40%, transparent 90%);
+}
+
+body.char-dusk::after { display: none; }
+
+/* Logo: sem decoração excessiva, só o peso da fonte */
+body.char-dusk .logo-text {
+  font-size: 1.8rem;
+  letter-spacing: 0.06em;
+  text-shadow: 0 0 8px var(--neon-30);
+}
+
+/* Hero: condensado e seco */
+body.char-dusk .hero-title {
+  text-shadow: 0 0 30px var(--neon-20);
+  line-height: 0.92;
+  letter-spacing: 0.02em;
+}
+
+/* Hero sub: feel de manual técnico */
+body.char-dusk .hero-sub {
+  letter-spacing: 0.2em;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+}
+
+/* Botão primário: mais mecânico */
+body.char-dusk .btn-primary {
+  letter-spacing: 0.18em;
+  font-size: 0.9rem;
+}
+
+/* Section line: mais espessa */
+body.char-dusk .section-line {
+  height: 2px;
+  background: linear-gradient(90deg, var(--neon-50), rgba(255,106,0,0.1), transparent);
+}
+
+/* Watermark DUSK */
+body.char-dusk::after {
+  content: 'DSK';
+  position: fixed;
+  bottom: -10px;
+  right: -20px;
+  font-family: "Rajdhani", sans-serif;
+  font-size: clamp(60px, 14vw, 130px);
+  font-weight: 700;
+  color: var(--neon);
+  opacity: 0.03;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  line-height: 1;
+}
+
+/* Band cards: feel de placa metálica */
+body.char-dusk .band-card::before {
+  height: 3px;
+}
+
+/* Geo bg: grid menor e mais industrial */
+body.char-dusk .geo-lines {
+  background-size: 48px 48px;
+  opacity: 0.6;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   EMBER — A Brasa que Nunca Apaga
+   Estética: energia caótica mas quente, âmbar,
+   partículas em drift, tudo pulsa, urgência.
+   ════════════════════════════════════════════════════════════ */
+
+/* Partículas em drift lento — brasas flutuando */
+body.char-ember::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(255, 230, 0, 0.3) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 200, 60, 0.2) 1px, transparent 1px),
+    radial-gradient(circle, rgba(255, 160, 0, 0.15) 1px, transparent 1px);
+  background-size: 130px 130px, 90px 90px, 70px 70px;
+  background-position: 0 0, 45px 45px, 22px 22px;
+  animation: ember-drift 14s linear infinite;
+  opacity: 0.35;
+}
+
+@keyframes ember-drift {
+  from { background-position: 0 0,    45px 45px,  22px 22px; }
+  to   { background-position: 0 130px, 45px 135px, 22px 92px; }
+}
+
+body.char-ember::after { display: none; }
+
+/* Logo: glow quente e pulsante */
+body.char-ember .logo-text {
+  text-shadow:
+    0 0 12px var(--neon),
+    0 0 30px rgba(255,230,0,0.4),
+    0 0 60px rgba(255,180,0,0.15);
+  animation: ember-logo-glow 3s ease-in-out infinite;
+}
+
+@keyframes ember-logo-glow {
+  0%, 100% { text-shadow: 0 0 12px var(--neon), 0 0 30px rgba(255,230,0,0.4); }
+  50%       { text-shadow: 0 0 20px var(--neon), 0 0 50px rgba(255,230,0,0.6), 0 0 80px rgba(255,180,0,0.2); }
+}
+
+/* Hero: urgência e energia */
+body.char-ember .hero-title {
+  text-shadow:
+    0 0 40px rgba(255,230,0,0.3),
+    0 0 80px rgba(255,200,0,0.15);
+  letter-spacing: 0.05em;
+}
+
+/* Geo bg: maior e mais dinâmico */
+body.char-ember .geo-lines {
+  background-size: 70px 70px;
+  opacity: 0.7;
+}
+
+/* Section line: ondulada (simulada com gradiente) */
+body.char-ember .section-line {
+  background: linear-gradient(90deg,
+    var(--neon-60),
+    var(--neon-30),
+    var(--neon-60),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: ember-line-wave 3s linear infinite;
+}
+
+@keyframes ember-line-wave {
+  from { background-position: 100% 0; }
+  to   { background-position: -100% 0; }
+}
+
+/* Botão primário: calor visível */
+body.char-ember .btn-primary {
+  box-shadow: 0 0 20px rgba(255,230,0,0.3);
+  letter-spacing: 0.18em;
+  transition: box-shadow 0.2s, transform 0.15s;
+}
+body.char-ember .btn-primary:hover {
+  box-shadow: 0 0 35px rgba(255,230,0,0.5);
+}
+
+/* Neon geo no hero: pulsa */
+body.char-ember .neon-geo--home {
+  animation: rotateSlow 20s linear infinite, ember-ring-pulse 3s ease-in-out infinite;
+}
+
+@keyframes ember-ring-pulse {
+  0%, 100% { box-shadow: inset 0 0 80px rgba(255,230,0,0.06), 0 0 80px rgba(255,230,0,0.06); }
+  50%       { box-shadow: inset 0 0 120px rgba(255,230,0,0.12), 0 0 120px rgba(255,230,0,0.1); }
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   LYRA — A Constelação Interior
+   Estética: etéreo, cósmico, serif elegante,
+   estrelas tênues em drift, tudo flutua.
+   ════════════════════════════════════════════════════════════ */
+
+/* Campo estelar em drift suave */
+body.char-lyra::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle, rgba(0, 200, 255, 0.55) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 180, 255, 0.35) 1px, transparent 1px),
+    radial-gradient(circle, rgba(100, 220, 255, 0.25) 1px, transparent 1px),
+    radial-gradient(circle, rgba(0, 200, 255, 0.2) 1px, transparent 1px);
+  background-size: 220px 220px, 160px 160px, 110px 110px, 80px 80px;
+  background-position: 10px 20px, 80px 60px, 150px 110px, 40px 150px;
+  animation: lyra-stars-drift 25s ease-in-out infinite alternate;
+  opacity: 0.4;
+}
+
+@keyframes lyra-stars-drift {
+  from { transform: translateY(0) translateX(0); }
+  to   { transform: translateY(-12px) translateX(4px); }
+}
+
+body.char-lyra::after { display: none; }
+
+/* Logo: italic serif elegante */
+body.char-lyra .logo-text {
+  font-style: italic;
+  font-size: 1.7rem;
+  letter-spacing: 0.08em;
+  text-shadow:
+    0 0 20px rgba(0,200,255,0.4),
+    0 0 60px rgba(0,200,255,0.1);
+}
+
+/* Hero: etéreo, muito espaço */
+body.char-lyra .hero-title {
+  font-style: italic;
+  text-shadow:
+    0 0 50px rgba(0,200,255,0.2),
+    0 0 120px rgba(0,200,255,0.08);
+  letter-spacing: 0.06em;
+  line-height: 0.95;
+}
+
+/* Eyebrow e sub: outfit clean */
+body.char-lyra .hero-eyebrow {
+  letter-spacing: 0.3em;
+  opacity: 0.5;
+}
+
+body.char-lyra .hero-sub {
+  letter-spacing: 0.4em;
+  opacity: 0.5;
+  font-size: clamp(0.65rem, 1.5vw, 0.85rem);
+}
+
+/* Botão primário: pill com glow suave */
+body.char-lyra .btn-primary {
+  box-shadow: 0 0 20px rgba(0,200,255,0.2), inset 0 0 8px rgba(0,200,255,0.05);
+  letter-spacing: 0.2em;
+  transition: box-shadow 0.4s ease, transform 0.4s ease;
+}
+body.char-lyra .btn-primary:hover {
+  box-shadow: 0 0 40px rgba(0,200,255,0.3), inset 0 0 16px rgba(0,200,255,0.1);
+  transform: translateY(-3px);
+}
+
+body.char-lyra .btn-ghost {
+  border-radius: 999px;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, transform 0.4s ease;
+}
+body.char-lyra .btn-ghost:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 0 20px rgba(0,200,255,0.15);
+}
+
+/* Geo bg: muito tênue, como nebulosa */
+body.char-lyra .geo-lines {
+  background-size: 100px 100px;
+  opacity: 0.2;
+}
+
+/* Section line: pontilhada discreta */
+body.char-lyra .section-line {
+  background: none;
+  border-bottom: 1px dotted var(--neon-30);
+  height: 1px;
+}
+
+/* Neon geo no hero: rotação mais lenta e suave */
+body.char-lyra .neon-geo--home {
+  animation: rotateSlow 30s linear infinite;
+  box-shadow:
+    inset 0 0 100px rgba(0,200,255,0.05),
+    0 0 100px rgba(0,200,255,0.05);
+}
+
+/* Band cards: muito arredondados, glass */
+body.char-lyra .band-card {
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Gallery items: pill-ish */
+body.char-lyra .gallery-item {
+  border-radius: 16px;
+}
+
+/* Theme panel: mais arredondado */
+body.char-lyra .theme-panel {
+  border-radius: 16px 0 0 16px;
+}
+
+/* Member cards: arredondados */
+body.char-lyra .member-card {
+  border-radius: 12px;
+}
+
+/* Track tags: pill */
+body.char-lyra .track-tag {
+  border-radius: 999px;
+  padding: 2px 10px;
+}
+
+/* Scrollbar: azul etéreo */
+body.char-lyra ::-webkit-scrollbar-thumb {
+  border-radius: 999px;
+}
+
+
+/* ════════════════════════════════════════════════════════════
+   UTILITÁRIOS GLOBAIS
+   ════════════════════════════════════════════════════════════ */
+
+/* Transição suave ao trocar de tema em qualquer elemento */
+.logo-text,
+.hero-title,
+.hero-eyebrow,
+.hero-sub,
+.section-title,
+.track-name,
+.band-card-name,
+.btn-primary,
+.btn-ghost,
+.nav-btn {
+  transition:
+    font-family 0.5s ease,
+    letter-spacing 0.4s ease,
+    text-transform 0.3s ease,
+    border-radius 0.4s ease;
+}
+
+.mini-player,
+.fullscreen-player,
+.track-item,
+.band-card,
+.gallery-item,
+.member-card {
+  transition:
+    border-radius 0.4s ease,
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+/* Reduced motion — respeita preferência do sistema */
+@media (prefers-reduced-motion: reduce) {
+  body.char-ember::before,
+  body.char-lyra::before {
+    animation: none;
+  }
+  body.char-ember .logo-text,
+  body.char-ember .neon-geo--home,
+  body.char-ember .section-line {
+    animation: none;
+  }
+  .char-enter {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}

@@ -1,0 +1,110 @@
+/* =========================================================
+   ECHODOME — themes.css
+   One CSS data-theme per band member.
+   Each defines: --bg, --fg, --fg-dim, --neon + alpha variants,
+   --bg-glass, --bg-panel, --bg-field.
+   ========================================================= */
+
+/* ---------- TRACE — White / Silver / Hex geometry ---------- */
+[data-theme="trace"] {
+  --neon:       #e8e8ff;
+  --neon-08:    rgba(232,232,255,0.08);
+  --neon-05:    rgba(232,232,255,0.05);
+  --neon-15:    rgba(232,232,255,0.15);
+  --neon-20:    rgba(232,232,255,0.20);
+  --neon-30:    rgba(232,232,255,0.30);
+  --neon-40:    rgba(232,232,255,0.40);
+  --neon-50:    rgba(232,232,255,0.50);
+  --neon-60:    rgba(232,232,255,0.60);
+  --bg:         #0d0d12;
+  --bg-glass:   rgba(13,13,18,0.80);
+  --bg-panel:   rgba(16,16,22,0.95);
+  --fg:         #f0f0ff;
+  --fg-dim:     #7070a0;
+  color-scheme: dark;
+}
+
+/* ---------- OD — Neon Green / Diamond grid / Punk ---------- */
+[data-theme="od"] {
+  --neon:       #39ff14;
+  --neon-08:    rgba(57,255,20,0.08);
+  --neon-05:    rgba(57,255,20,0.05);
+  --neon-15:    rgba(57,255,20,0.15);
+  --neon-20:    rgba(57,255,20,0.20);
+  --neon-30:    rgba(57,255,20,0.30);
+  --neon-40:    rgba(57,255,20,0.40);
+  --neon-50:    rgba(57,255,20,0.50);
+  --neon-60:    rgba(57,255,20,0.60);
+  --bg:         #050d05;
+  --bg-glass:   rgba(5,13,5,0.80);
+  --bg-panel:   rgba(6,15,6,0.95);
+  --fg:         #d8ffd0;
+  --fg-dim:     #4a7a40;
+  color-scheme: dark;
+}
+
+/* ---------- DUSK — Orange / Fire-Red / Star geometry ---------- */
+[data-theme="dusk"] {
+  --neon:       #ff6a00;
+  --neon-08:    rgba(255,106,0,0.08);
+  --neon-05:    rgba(255,106,0,0.05);
+  --neon-15:    rgba(255,106,0,0.15);
+  --neon-20:    rgba(255,106,0,0.20);
+  --neon-30:    rgba(255,106,0,0.30);
+  --neon-40:    rgba(255,106,0,0.40);
+  --neon-50:    rgba(255,106,0,0.50);
+  --neon-60:    rgba(255,106,0,0.60);
+  --bg:         #0e0700;
+  --bg-glass:   rgba(14,7,0,0.80);
+  --bg-panel:   rgba(16,8,0,0.95);
+  --fg:         #ffe0c0;
+  --fg-dim:     #7a4020;
+  color-scheme: dark;
+}
+
+/* ---------- EMBER — Yellow Neon / Radial burst / Explosive ---------- */
+[data-theme="ember"] {
+  --neon:       #ffe600;
+  --neon-08:    rgba(255,230,0,0.08);
+  --neon-05:    rgba(255,230,0,0.05);
+  --neon-15:    rgba(255,230,0,0.15);
+  --neon-20:    rgba(255,230,0,0.20);
+  --neon-30:    rgba(255,230,0,0.30);
+  --neon-40:    rgba(255,230,0,0.40);
+  --neon-50:    rgba(255,230,0,0.50);
+  --neon-60:    rgba(255,230,0,0.60);
+  --bg:         #0c0b00;
+  --bg-glass:   rgba(12,11,0,0.80);
+  --bg-panel:   rgba(14,13,0,0.95);
+  --fg:         #fff8c0;
+  --fg-dim:     #7a7000;
+  color-scheme: dark;
+}
+
+/* ---------- LYRA — Electric Blue / Grid cross / Synth cold ---------- */
+[data-theme="lyra"] {
+  --neon:       #00c8ff;
+  --neon-08:    rgba(0,200,255,0.08);
+  --neon-05:    rgba(0,200,255,0.05);
+  --neon-15:    rgba(0,200,255,0.15);
+  --neon-20:    rgba(0,200,255,0.20);
+  --neon-30:    rgba(0,200,255,0.30);
+  --neon-40:    rgba(0,200,255,0.40);
+  --neon-50:    rgba(0,200,255,0.50);
+  --neon-60:    rgba(0,200,255,0.60);
+  --bg:         #00080e;
+  --bg-glass:   rgba(0,8,14,0.80);
+  --bg-panel:   rgba(0,10,18,0.95);
+  --fg:         #c0f0ff;
+  --fg-dim:     #1a5a70;
+  color-scheme: dark;
+}
+
+/* ---------- Scrollbar theming ---------- */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--neon-30); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--neon-60); }
+
+/* ---------- Selection ---------- */
+::selection { background: var(--neon-30); color: var(--fg); }

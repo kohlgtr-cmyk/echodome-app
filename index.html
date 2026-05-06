@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0a0a" />
+  <meta name="description" content="Echodome — official band app" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title>ECHODOME</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- Fontes base (fallback antes do CharDesign carregar as fontes por personagem) -->
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:wght@300;400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/themes.css" />
+  <link rel="stylesheet" href="css/player.css" />
+  <!-- Sistema de design por personagem -->
+  <link rel="stylesheet" href="css/character-design.css" />
+</head>
+<body data-theme="trace">
+
+  <!-- NAV -->
+  <header class="site-header">
+    <div class="logo-wrap">
+      <span class="logo-text">ECHODOME</span>
+    </div>
+    <nav class="main-nav">
+      <button class="nav-btn active" data-section="home">HOME</button>
+      <button class="nav-btn" data-section="music">MUSIC</button>
+      <button class="nav-btn" data-section="gallery">GALLERY</button>
+      <button class="nav-btn" data-section="about">BAND</button>
+    </nav>
+    <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Selecionar tema">
+      <span class="theme-dot"></span>
+      <span class="theme-label">TRACE</span>
+    </button>
+  </header>
+
+  <!-- THEME SELECTOR PANEL -->
+  <aside class="theme-panel" id="themePanel">
+    <p class="theme-panel-title">SELECT YOUR SIGNAL</p>
+    <div class="theme-members">
+      <button class="member-card" data-theme="trace">
+        <div class="member-neon-ring"></div>
+        <div class="member-icon">◈</div>
+        <span class="member-name">TRACE</span>
+        <span class="member-role">VOX / GTR</span>
+      </button>
+      <button class="member-card" data-theme="od">
+        <div class="member-neon-ring"></div>
+        <div class="member-icon">◆</div>
+        <span class="member-name">OD</span>
+        <span class="member-role">GUITAR</span>
+      </button>
+      <button class="member-card" data-theme="dusk">
+        <div class="member-neon-ring"></div>
+        <div class="member-icon">✶</div>
+        <span class="member-name">DUSK</span>
+        <span class="member-role">BASS</span>
+      </button>
+      <button class="member-card" data-theme="ember">
+        <div class="member-neon-ring"></div>
+        <div class="member-icon">★</div>
+        <span class="member-name">EMBER</span>
+        <span class="member-role">DRUMS</span>
+      </button>
+      <button class="member-card" data-theme="lyra">
+        <div class="member-neon-ring"></div>
+        <div class="member-icon">⟁</div>
+        <span class="member-name">LYRA</span>
+        <span class="member-role">KEYS</span>
+      </button>
+    </div>
+  </aside>
+  <div class="theme-panel-overlay" id="themePanelOverlay"></div>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- HOME SECTION -->
+    <section class="section active" id="section-home">
+      <div class="hero">
+        <div class="hero-geo-bg"><div class="geo-lines"></div></div>
+        <div class="hero-content">
+          <p class="hero-eyebrow">// SIGNAL RECEIVED</p>
+          <h1 class="hero-title">ECHODOME</h1>
+          <p class="hero-sub">THE SOUND INSIDE THE MASK</p>
+          <div class="hero-actions">
+            <button class="btn-primary" onclick="app.navigate('music')">LISTEN NOW</button>
+            <button class="btn-ghost" onclick="app.navigate('about')">MEET THE BAND</button>
+          </div>
+        </div>
+        <div class="neon-geo neon-geo--home"></div>
+      </div>
+    </section>
+
+    <!-- MUSIC SECTION -->
+    <section class="section" id="section-music">
+      <div class="section-header">
+        <h2 class="section-title">MUSIC</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="tracklist" id="tracklist"></div>
+    </section>
+
+    <!-- GALLERY SECTION -->
+    <section class="section" id="section-gallery">
+      <div class="section-header">
+        <h2 class="section-title">GALLERY</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="gallery-grid" id="galleryGrid"></div>
+    </section>
+
+    <!-- BAND SECTION -->
+    <section class="section" id="section-about">
+      <div class="section-header">
+        <h2 class="section-title">THE BAND</h2>
+        <div class="section-line"></div>
+      </div>
+      <div class="band-grid" id="bandGrid"></div>
+    </section>
+
+  </main>
+
+  <!-- MINI PLAYER -->
+  <div class="mini-player hidden" id="miniPlayer">
+    <div class="mini-player__info">
+      <span class="mini-player__title" id="miniTitle">—</span>
+      <span class="mini-player__artist">ECHODOME</span>
+    </div>
+    <div class="mini-player__controls">
+      <button class="ctrl-btn" id="miniPrev" aria-label="Anterior">&#9664;&#9664;</button>
+      <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause">&#9654;</button>
+      <button class="ctrl-btn" id="miniNext" aria-label="Próximo">&#9654;&#9654;</button>
+    </div>
+    <div class="mini-player__right">
+      <div class="mini-progress-bar" id="miniProgressBar">
+        <div class="mini-progress-fill" id="miniProgressFill"></div>
+      </div>
+      <button class="ctrl-btn ctrl-btn--expand" id="expandPlayer" aria-label="Abrir player fullscreen">&#x2B1D;</button>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN PLAYER -->
+  <div class="fullscreen-player" id="fullscreenPlayer" aria-hidden="true">
+    <button class="fs-close-btn" id="fsCloseBtn" aria-label="Fechar">&#x2715;</button>
+    <div class="fs-geo-bg"><div class="fs-geo-lines"></div></div>
+    <div class="fs-content">
+      <div class="fs-artwork">
+        <div class="fs-artwork-ring"></div>
+        <div class="fs-artwork-inner">
+          <span class="fs-artwork-icon" id="fsArtworkIcon">◈</span>
+        </div>
+      </div>
+      <div class="fs-meta">
+        <h2 class="fs-title" id="fsTitle">—</h2>
+        <p class="fs-artist">ECHODOME</p>
+        <p class="fs-duration">
+          <span id="fsCurrent">0:00</span> / <span id="fsDuration">0:00</span>
+        </p>
+      </div>
+      <div class="fs-progress-wrap">
+        <div class="fs-progress-bar" id="fsProgressBar">
+          <div class="fs-progress-fill" id="fsProgressFill"></div>
+        </div>
+      </div>
+      <div class="fs-controls">
+        <button class="fs-ctrl-btn" id="fsPrev">&#9664;&#9664;</button>
+        <button class="fs-ctrl-btn fs-ctrl-btn--play" id="fsPlay">&#9654;</button>
+        <button class="fs-ctrl-btn" id="fsNext">&#9654;&#9654;</button>
+      </div>
+      <div class="fs-volume-wrap">
+        <span>&#128264;</span>
+        <input type="range" class="fs-volume-slider" id="fsVolume" min="0" max="1" step="0.01" value="1" />
+      </div>
+      <div class="fs-tabs">
+        <button class="fs-tab active" data-tab="lyrics">LYRICS</button>
+        <button class="fs-tab" data-tab="story">STORY</button>
+      </div>
+      <div class="fs-tab-content">
+        <div class="fs-tab-pane active" id="tab-lyrics">
+          <div class="fs-lyrics" id="fsLyrics"><p class="placeholder-text">// no lyrics loaded</p></div>
+        </div>
+        <div class="fs-tab-pane" id="tab-story">
+          <div class="fs-story" id="fsStory"><p class="placeholder-text">// no story loaded</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <audio id="audioEngine" preload="metadata"></audio>
+
+  <script src="js/songs/index.js"></script>
+  <script src="js/themes.js"></script>
+  <script src="js/character-design.js"></script>
+  <script src="js/player.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
