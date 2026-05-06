@@ -22,14 +22,14 @@ const ALBUMS = [
     id: "album1",
     name: "Echo",
     year: 2024,
-    cover: "assets/img/full-band-logo.jpg", // ← coloque a capa (ou deixe null para emoji)
+    cover: "assets/gallery/full-band-logo.jpg", // ← coloque a capa (ou deixe null para emoji)
     coverEmoji: "🎸",               // ← emoji de fallback se não tiver capa
   },
   {
     id: "album2",
     name: "Silent Harmonies",
     year: 2025,
-    cover: "assets/img/album2.png",
+    cover: "assets/gallery/album2.png",
     coverEmoji: "",
   }
 ];
