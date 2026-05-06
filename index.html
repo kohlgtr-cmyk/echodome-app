@@ -181,6 +181,10 @@
           <span id="fsCurrent">0:00</span> / <span id="fsDuration">0:00</span>
         </p>
       </div>
+      <!-- Waveform: bloco dedicado acima da barra de progresso -->
+      <div class="fs-waveform-wrap">
+        <canvas id="vizCanvasFS" class="viz-canvas-fs"></canvas>
+      </div>
       <div class="fs-progress-wrap">
         <div class="fs-progress-bar" id="fsProgressBar">
           <div class="fs-progress-fill" id="fsProgressFill"></div>
@@ -208,8 +212,6 @@
         </div>
       </div>
     </div>
-    <!-- Canvas waveform fullscreen -->
-    <canvas id="vizCanvasFS" class="viz-canvas-fs"></canvas>
   </div>
 
   <audio id="audioEngine" preload="metadata"></audio>
@@ -219,8 +221,8 @@
   <script src="js/themes.js"></script>
   <script src="js/character-design.js"></script>
   <!-- VISUALIZER: troque a linha abaixo para testar com/sem partículas -->
-  <!--<script src="js/visualizer.js"></script> -->
-  <script src="js/visualizer-particles.js"></script>
+  <script src="js/visualizer.js"></script>
+  <!-- <script src="js/visualizer-particles.js"></script> -->
   <script src="js/player.js"></script>
   <script src="js/char-bg.js"></script>
   <script src="js/gallery.js"></script>

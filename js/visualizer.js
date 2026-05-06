@@ -135,8 +135,10 @@ const Visualizer = (() => {
     if (!canvas) return;
     const parent = canvas.parentElement;
     if (!parent) return;
-    canvas.width  = parent.clientWidth  || canvas.clientWidth  || 300;
-    canvas.height = parent.clientHeight || canvas.clientHeight || 40;
+    // Usa getBoundingClientRect para pegar tamanho real do container
+    const rect = parent.getBoundingClientRect();
+    canvas.width  = rect.width  || parent.clientWidth  || 300;
+    canvas.height = rect.height || parent.clientHeight || 100;
   }
 
   /* ---- API pública ---- */
@@ -174,5 +176,10 @@ const Visualizer = (() => {
     document.getElementById('fsProgressFill')?.classList.remove('pulse-beat');
   }
 
-  return { init, start, stop };
+  function resize() {
+    sizeCanvas(cvFS);
+    sizeCanvas(cvMini);
+  }
+
+  return { init, start, stop, resize };
 })();

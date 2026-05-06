@@ -169,7 +169,14 @@ const Player = (() => {
 
   /* ---- Fullscreen ---- */
   function openFS() {
-    if (elFS) { elFS.classList.add("open"); elFS.removeAttribute("aria-hidden"); }
+    if (elFS) {
+      elFS.classList.add("open");
+      elFS.removeAttribute("aria-hidden");
+      // Redimensiona canvas após o player ficar visível
+      requestAnimationFrame(() => {
+        if (typeof Visualizer !== 'undefined') Visualizer.resize();
+      });
+    }
   }
   function closeFS() {
     if (elFS) { elFS.classList.remove("open"); elFS.setAttribute("aria-hidden", "true"); }

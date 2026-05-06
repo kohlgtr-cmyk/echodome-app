@@ -194,8 +194,9 @@ const Visualizer = (() => {
     if (!canvas) return;
     const parent = canvas.parentElement;
     if (!parent) return;
-    const W = parent.clientWidth  || canvas.clientWidth  || 300;
-    const H = parent.clientHeight || canvas.clientHeight || 40;
+    const rect = parent.getBoundingClientRect();
+    const W = rect.width  || parent.clientWidth  || 300;
+    const H = rect.height || parent.clientHeight || 100;
     canvas.width  = W;
     canvas.height = H;
     // Re-inicializa partículas no resize do fundo
@@ -242,5 +243,10 @@ const Visualizer = (() => {
     document.getElementById('fsProgressFill')?.classList.remove('pulse-beat');
   }
 
-  return { init, start, stop };
+  function resize() {
+    sizeCanvas(cvFS);
+    sizeCanvas(cvMini);
+  }
+
+  return { init, start, stop, resize };
 })();
