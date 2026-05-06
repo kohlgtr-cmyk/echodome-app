@@ -4,7 +4,7 @@
    network-first for audio files.
    ========================================================= */
 
-const CACHE_NAME   = "echodome-v2.0.04";
+const CACHE_NAME   = "echodome-v2.0.05";
 const AUDIO_CACHE  = "echodome-audio-v1";
 
 const STATIC_ASSETS = [

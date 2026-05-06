@@ -62,9 +62,14 @@ const app = (() => {
     const btn = document.querySelector(`.nav-btn[data-section="${sectionId}"]`);
     if (btn) btn.classList.add("active");
 
+    // Atualiza classe no body para o char-bg saber a seção atual
+    document.body.className = document.body.className
+      .replace(/\bsection-\S+/g, "")
+      .trim();
+    document.body.classList.add(`section-${sectionId}`);
+
     window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // Animação de entrada por personagem ao trocar de seção
     if (window.CharDesign) window.CharDesign.triggerEnter();
   }
 
@@ -140,6 +145,7 @@ const app = (() => {
   }
 
   function init() {
+    document.body.classList.add("section-home");
     initNav();
     renderTracklist();
     renderGallery();

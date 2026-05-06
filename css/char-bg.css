@@ -1,52 +1,62 @@
 /* =========================================================
    ECHODOME — css/char-bg.css
-   SVG de personagem no fundo do hero.
+   SVG de personagem como fundo fixo de toda a viewport.
+   Mais visível no home, recuado nas outras seções.
    ========================================================= */
 
-/* ---- Container ---- */
+/* ---- Container fixo, atrás de tudo ---- */
 .char-bg {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  overflow: hidden;
   pointer-events: none;
-  z-index: 0;
+  z-index: 0;        /* abaixo do header (z:100) e de todo conteúdo */
+  overflow: hidden;
 }
 
-/* ---- Imagem base (oculta por padrão) ---- */
+/* ---- Imagem: ocupa a metade direita, alinhada à base ---- */
 .char-bg__img {
   position: absolute;
   bottom: 0;
-  right: -20px;
-  height: 92%;
-  width: auto;
+  right: 0;
+  height: 100%;
+  width: 60%;
   object-fit: contain;
   object-position: bottom right;
 
   opacity: 0;
-  transform: translateX(32px);
+  transform: translateX(20px);
   transition:
-    opacity   0.6s cubic-bezier(0.16, 1, 0.3, 1),
-    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    opacity   0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1),
     filter    0.6s ease;
 }
 
+/* Estado ativo base (seções internas: music, gallery, band) */
 .char-bg__img.active {
   opacity: 1;
   transform: translateX(0);
 }
 
+/*
+  No home o personagem fica mais presente.
+  Nas outras seções fica mais recuado (opacity menor no próprio filter).
+  Controlado via classe no <body> que o app.js já seta.
+*/
+body.section-home     .char-bg__img.active { --char-opacity: 1;    }
+body.section-music    .char-bg__img.active { --char-opacity: 0.35; }
+body.section-gallery  .char-bg__img.active { --char-opacity: 0.35; }
+body.section-about    .char-bg__img.active { --char-opacity: 0.35; }
+
 /* ---- Colorização por tema ---- */
 /*
-  Técnica: brightness(0) torna o SVG preto puro.
-  invert + sepia + hue-rotate + saturate + brightness
-  pintam esse preto com a cor neon do personagem.
-  drop-shadow adiciona o brilho ao redor da silhueta.
-
-  trace  #e8e8ff  hue ~240°  (lilás/branco)
-  od     #39ff14  hue ~111°  (verde neon)
-  dusk   #ff6a00  hue ~25°   (laranja)
-  ember  #ffe600  hue ~54°   (amarelo)
-  lyra   #00c8ff  hue ~193°  (ciano)
+  brightness(0)  → preto puro
+  invert(1)      → branco
+  sepia(1)       → dourado base
+  hue-rotate()   → cor do tema
+  saturate()     → intensidade
+  brightness()   → brilho final
+  opacity()      → transparência (home vs outras seções via var)
+  drop-shadow()  → glow neon ao redor
 */
 
 [data-theme="trace"] .char-bg__img {
@@ -57,8 +67,9 @@
     hue-rotate(200deg)
     saturate(20%)
     brightness(1.8)
-    drop-shadow(0 0 24px rgba(232, 232, 255, 0.7))
-    drop-shadow(0 0 60px rgba(232, 232, 255, 0.25));
+    opacity(var(--char-opacity, 0.38))
+    drop-shadow(0 0 32px rgba(232, 232, 255, 0.5))
+    drop-shadow(0 0 80px rgba(232, 232, 255, 0.15));
 }
 
 [data-theme="od"] .char-bg__img {
@@ -69,8 +80,9 @@
     hue-rotate(70deg)
     saturate(600%)
     brightness(1.1)
-    drop-shadow(0 0 24px rgba(57, 255, 20, 0.7))
-    drop-shadow(0 0 60px rgba(57, 255, 20, 0.25));
+    opacity(var(--char-opacity, 0.38))
+    drop-shadow(0 0 32px rgba(57, 255, 20, 0.5))
+    drop-shadow(0 0 80px rgba(57, 255, 20, 0.15));
 }
 
 [data-theme="dusk"] .char-bg__img {
@@ -81,8 +93,9 @@
     hue-rotate(0deg)
     saturate(500%)
     brightness(1.0)
-    drop-shadow(0 0 24px rgba(255, 106, 0, 0.7))
-    drop-shadow(0 0 60px rgba(255, 106, 0, 0.25));
+    opacity(var(--char-opacity, 0.38))
+    drop-shadow(0 0 32px rgba(255, 106, 0, 0.5))
+    drop-shadow(0 0 80px rgba(255, 106, 0, 0.15));
 }
 
 [data-theme="ember"] .char-bg__img {
@@ -93,8 +106,9 @@
     hue-rotate(20deg)
     saturate(500%)
     brightness(1.1)
-    drop-shadow(0 0 24px rgba(255, 230, 0, 0.7))
-    drop-shadow(0 0 60px rgba(255, 230, 0, 0.25));
+    opacity(var(--char-opacity, 0.38))
+    drop-shadow(0 0 32px rgba(255, 230, 0, 0.5))
+    drop-shadow(0 0 80px rgba(255, 230, 0, 0.15));
 }
 
 [data-theme="lyra"] .char-bg__img {
@@ -105,14 +119,47 @@
     hue-rotate(155deg)
     saturate(600%)
     brightness(1.1)
-    drop-shadow(0 0 24px rgba(0, 200, 255, 0.7))
-    drop-shadow(0 0 60px rgba(0, 200, 255, 0.25));
+    opacity(var(--char-opacity, 0.38))
+    drop-shadow(0 0 32px rgba(0, 200, 255, 0.5))
+    drop-shadow(0 0 80px rgba(0, 200, 255, 0.15));
+}
+
+/* ---- Gradiente de fade na borda esquerda ---- */
+/* Evita que o SVG "corte" o texto do hero bruscamente */
+.char-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    var(--bg) 0%,
+    var(--bg) 25%,
+    transparent 60%
+  );
+  pointer-events: none;
 }
 
 /* ---- Responsivo ---- */
 @media (max-width: 768px) {
   .char-bg__img {
-    height: 70%;
-    right: -10px;
+    width: 100%;
+    height: 55%;
+    bottom: 0;
+    right: 0;
+    object-position: bottom center;
   }
+
+  /* No mobile o fade vem de baixo pra cima */
+  .char-bg::after {
+    background: linear-gradient(
+      to top,
+      transparent 0%,
+      var(--bg) 60%
+    );
+  }
+
+  body.section-home    .char-bg__img.active { --char-opacity: 0.28; }
+  body.section-music   .char-bg__img.active { --char-opacity: 0.12; }
+  body.section-gallery .char-bg__img.active { --char-opacity: 0.12; }
+  body.section-about   .char-bg__img.active { --char-opacity: 0.12; }
 }
