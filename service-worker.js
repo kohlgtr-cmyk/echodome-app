@@ -1,71 +1,104 @@
 /* =========================================================
-   ECHODOME — sw.js
-   Service Worker: cache-first for static assets,
-   network-first for audio files.
+   ECHODOME — service-worker.js
+   v3.0 — cache-first estático + download explícito de áudio.
    ========================================================= */
 
-const CACHE_NAME   = "echodome-v2.0.07";
-const AUDIO_CACHE  = "echodome-audio-v1";
+const STATIC_CACHE = 'echodome-static-v3.0.0';
+const AUDIO_CACHE  = 'echodome-audio-v3';
 
 const STATIC_ASSETS = [
-  "/",
-  "/index.html",
-  "/css/style.css",
-  "/css/themes.css",
-  "/css/player.css",
-  "/js/app.js",
-  "/js/player.js",
-  "/js/themes.js",
-  "/js/songs/index.js",
-  "/manifest.json"
+  '/','/index.html',
+  '/css/style.css','/css/themes.css','/css/player.css',
+  '/css/character-design.css','/css/char-bg.css','/css/mobile.css',
+  '/js/app.js','/js/player.js','/js/themes.js',
+  '/js/character-design.js','/js/char-bg.js','/js/songs/index.js',
+  '/manifest.json',
 ];
 
-self.addEventListener("install", event => {
+self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(STATIC_ASSETS))
+    caches.open(STATIC_CACHE)
+      .then(cache => cache.addAll(STATIC_ASSETS))
+      .then(() => self.skipWaiting())
   );
-  self.skipWaiting();
 });
 
-self.addEventListener("activate", event => {
+self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys
-        .filter(k => k !== CACHE_NAME && k !== AUDIO_CACHE)
-        .map(k => caches.delete(k))
-      )
-    )
+      Promise.all(keys.filter(k => k !== STATIC_CACHE && k !== AUDIO_CACHE).map(k => caches.delete(k)))
+    ).then(() => self.clients.claim())
   );
-  self.clients.claim();
 });
 
-self.addEventListener("fetch", event => {
-  const url = new URL(event.request.url);
-
-  // Audio: network-first, cache fallback
-  if (url.pathname.startsWith("/assets/songs/")) {
+self.addEventListener('fetch', event => {
+  const url = event.request.url;
+  if (url.includes('/assets/songs/')) {
     event.respondWith(
-      fetch(event.request)
-        .then(res => {
-          const clone = res.clone();
-          caches.open(AUDIO_CACHE).then(c => c.put(event.request, clone));
-          return res;
-        })
-        .catch(() => caches.match(event.request))
+      caches.open(AUDIO_CACHE).then(cache =>
+        cache.match(event.request).then(cached => cached || fetch(event.request))
+      )
     );
     return;
   }
-
-  // Everything else: cache-first
   event.respondWith(
     caches.match(event.request).then(cached =>
       cached || fetch(event.request).then(res => {
-        if (res.ok) {
-          const clone = res.clone();
-          caches.open(CACHE_NAME).then(c => c.put(event.request, clone));
+        if (res && res.ok) {
+          caches.open(STATIC_CACHE).then(c => c.put(event.request, res.clone()));
         }
         return res;
       })
     )
   );
 });
+
+self.addEventListener('message', event => {
+  const { type, url, songId, urls, albumId } = event.data || {};
+  const port = event.ports[0];
+
+  if (type === 'CACHE_SONG') {
+    cacheSong(url, songId)
+      .then(() => port && port.postMessage({ type: 'CACHE_DONE', songId }))
+      .catch(err => port && port.postMessage({ type: 'CACHE_ERROR', songId, err: err.message }));
+    return;
+  }
+
+  if (type === 'CACHE_SONGS') {
+    (async () => {
+      for (const item of urls) {
+        try {
+          await cacheSong(item.url, item.songId);
+          port && port.postMessage({ type: 'CACHE_PROGRESS', songId: item.songId, albumId });
+        } catch (err) {
+          port && port.postMessage({ type: 'CACHE_ERROR', songId: item.songId, err: err.message });
+        }
+      }
+      port && port.postMessage({ type: 'CACHE_BATCH_DONE', albumId });
+    })();
+    return;
+  }
+
+  if (type === 'REMOVE_SONG') {
+    caches.open(AUDIO_CACHE).then(cache =>
+      cache.delete(url).then(() => port && port.postMessage({ type: 'REMOVE_DONE', songId }))
+    );
+    return;
+  }
+
+  if (type === 'CHECK_CACHED') {
+    caches.open(AUDIO_CACHE).then(async cache => {
+      const keys = await cache.keys();
+      port && port.postMessage({ type: 'CACHED_LIST', cached: keys.map(r => r.url) });
+    });
+    return;
+  }
+});
+
+async function cacheSong(url, songId) {
+  const cache = await caches.open(AUDIO_CACHE);
+  if (await cache.match(url)) return;
+  const response = await fetch(url, { mode: 'cors' });
+  if (!response.ok) throw new Error('HTTP ' + response.status);
+  await cache.put(url, response);
+}

@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="css/char-bg.css" />
   <!-- Mobile overrides (≤ 600px) — centralizado aqui -->
   <link rel="stylesheet" href="css/mobile.css" />
+  <!-- Download UI -->
+  <link rel="stylesheet" href="css/downloader.css" />
 </head>
 <body data-theme="trace">
 
@@ -35,6 +37,7 @@
       <button class="nav-btn" data-section="gallery">GALLERY</button>
       <button class="nav-btn" data-section="about">BAND</button>
     </nav>
+    <span class="offline-badge" id="offlineBadge">OFFLINE</span>
     <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Selecionar tema">
       <span class="theme-dot"></span>
       <span class="theme-label">TRACE</span>
@@ -200,6 +203,7 @@
   <audio id="audioEngine" preload="metadata"></audio>
 
   <script src="js/songs/index.js"></script>
+  <script src="js/downloader.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/character-design.js"></script>
   <script src="js/player.js"></script>
