@@ -138,20 +138,23 @@
 
   <!-- MINI PLAYER -->
   <div class="mini-player hidden" id="miniPlayer">
-    <div class="mini-player__info">
-      <span class="mini-player__title" id="miniTitle">—</span>
-      <span class="mini-player__artist">ECHODOME</span>
+    <div class="mini-progress-bar" id="miniProgressBar">
+      <div class="mini-progress-fill" id="miniProgressFill"></div>
     </div>
-    <div class="mini-player__controls">
-      <button class="ctrl-btn" id="miniPrev" aria-label="Anterior">&#9664;&#9664;</button>
-      <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause">&#9654;</button>
-      <button class="ctrl-btn" id="miniNext" aria-label="Próximo">&#9654;&#9654;</button>
-    </div>
-    <div class="mini-player__right">
-      <div class="mini-progress-bar" id="miniProgressBar">
-        <div class="mini-progress-fill" id="miniProgressFill"></div>
+    <div class="mini-player__body">
+      <div class="mini-player__cover" id="expandPlayer" aria-label="Abrir player fullscreen">
+        <img id="miniCoverImg" src="" alt="" onerror="this.style.display='none';document.getElementById('miniCoverFallback').style.display='flex'">
+        <span id="miniCoverFallback" class="mini-cover-fallback">🎵</span>
       </div>
-      <button class="ctrl-btn ctrl-btn--expand" id="expandPlayer" aria-label="Abrir player fullscreen">&#x2B1D;</button>
+      <div class="mini-player__info">
+        <span class="mini-player__title" id="miniTitle">—</span>
+        <span class="mini-player__artist">ECHODOME</span>
+      </div>
+      <div class="mini-player__controls">
+        <button class="ctrl-btn" id="miniPrev" aria-label="Anterior">&#9664;&#9664;</button>
+        <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause">&#9654;</button>
+        <button class="ctrl-btn" id="miniNext" aria-label="Próximo">&#9654;&#9654;</button>
+      </div>
     </div>
   </div>
 

@@ -131,12 +131,18 @@ const app = (() => {
 
   /* ── Item de faixa ── */
   function _buildTrackItem(song, globalIdx) {
+    const album = ALBUMS.find(a => a.id === song.albumId);
+    const coverHTML = album?.cover
+      ? `<img src="${album.cover}" alt="${album.name}" class="track-cover-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
+      : '';
+    const fallbackHTML = `<span class="track-cover-fallback" ${album?.cover ? 'style="display:none"' : ''}>${album?.coverEmoji || '🎵'}</span>`;
+
     const item = document.createElement('div');
     item.className = 'track-item';
     item.dataset.idx = globalIdx;
     item.dataset.songId = song.id;
     item.innerHTML = `
-      <span class="track-num">${String(song.track).padStart(2,'0')}</span>
+      <div class="track-cover">${coverHTML}${fallbackHTML}</div>
       <div class="track-info">
         <span class="track-name">${song.title}</span>
         <div class="track-tags">

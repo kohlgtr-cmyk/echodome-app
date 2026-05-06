@@ -14,7 +14,7 @@ const Player = (() => {
   /* ---- DOM refs (populated on init) ---- */
   let elMiniPlayer, elMiniTitle, elMiniPlay,
       elMiniPrev, elMiniNext, elMiniFill,
-      elExpandPlayer,
+      elExpandPlayer, elMiniCoverImg, elMiniCoverFallback,
       elFS, elFSClose, elFSPlay, elFSPrev, elFSNext,
       elFSTitle, elFSCurrent, elFSDuration,
       elFSFill, elFSBar, elMiniFillBar,
@@ -64,6 +64,22 @@ const Player = (() => {
     // Mini player
     if (elMiniTitle) elMiniTitle.textContent = song.title;
     if (elMiniPlayer) elMiniPlayer.classList.remove("hidden");
+
+    // Cover do álbum no mini player
+    const album = typeof ALBUMS !== "undefined" ? ALBUMS.find(a => a.id === song.albumId) : null;
+    if (elMiniCoverImg && elMiniCoverFallback) {
+      if (album?.cover) {
+        elMiniCoverImg.src = album.cover;
+        elMiniCoverImg.alt = album.name || "";
+        elMiniCoverImg.style.display = "block";
+        elMiniCoverFallback.style.display = "none";
+      } else {
+        elMiniCoverImg.src = "";
+        elMiniCoverImg.style.display = "none";
+        elMiniCoverFallback.style.display = "flex";
+        elMiniCoverFallback.textContent = album?.coverEmoji || "🎵";
+      }
+    }
 
     // Fullscreen
     if (elFSTitle)    elFSTitle.textContent    = song.title;
@@ -183,7 +199,9 @@ const Player = (() => {
     elMiniNext     = document.getElementById("miniNext");
     elMiniFill     = document.getElementById("miniProgressFill");
     elMiniFillBar  = document.getElementById("miniProgressBar");
-    elExpandPlayer = document.getElementById("expandPlayer");
+    elExpandPlayer      = document.getElementById("expandPlayer");
+    elMiniCoverImg      = document.getElementById("miniCoverImg");
+    elMiniCoverFallback = document.getElementById("miniCoverFallback");
 
     elFS         = document.getElementById("fullscreenPlayer");
     elFSClose    = document.getElementById("fsCloseBtn");

@@ -10,26 +10,83 @@
 .mini-player {
   position: fixed;
   bottom: 0; left: 0; right: 0;
-  height: var(--mini-player-h);
   background: var(--bg-glass);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-top: 1px solid var(--neon-20);
-  display: grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items: center;
-  padding: 0 var(--gap-lg);
-  gap: var(--gap-lg);
+  display: flex;
+  flex-direction: column;
   z-index: 150;
   transition: transform 0.3s var(--ease);
 }
 .mini-player.hidden { transform: translateY(100%); }
 
+/* Barra de progresso no topo do player */
+.mini-progress-bar {
+  width: 100%;
+  height: 2px;
+  background: var(--neon-15);
+  cursor: pointer;
+  position: relative;
+  flex-shrink: 0;
+}
+.mini-progress-bar:hover { height: 3px; }
+.mini-progress-fill {
+  height: 100%;
+  background: var(--neon);
+  box-shadow: 0 0 6px var(--neon-60);
+  width: 0%;
+  transition: width 0.3s linear;
+  pointer-events: none;
+}
+
+/* Corpo principal do mini player */
+.mini-player__body {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  padding: 8px var(--gap-lg);
+  height: calc(var(--mini-player-h) - 2px);
+}
+
+/* Capa do álbum clicável para abrir o fullscreen */
+.mini-player__cover {
+  width: 44px;
+  height: 44px;
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+  position: relative;
+  background: var(--neon-08);
+  border: 1px solid var(--neon-20);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.mini-player__cover:hover {
+  border-color: var(--neon-40);
+  box-shadow: 0 0 10px var(--neon-20);
+}
+.mini-player__cover img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+}
+.mini-cover-fallback {
+  font-size: 1.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .mini-player__info {
+  flex: 1;
+  min-width: 0;
   display: flex;
   flex-direction: column;
   gap: 2px;
-  min-width: 0;
 }
 .mini-player__title {
   font-family: var(--font-display);
@@ -52,6 +109,7 @@
   display: flex;
   align-items: center;
   gap: var(--gap-sm);
+  flex-shrink: 0;
 }
 
 .ctrl-btn {
@@ -81,36 +139,6 @@
   box-shadow: 0 0 12px var(--neon-30);
 }
 .ctrl-btn--play.paused { color: var(--fg-dim); }
-
-.ctrl-btn--expand {
-  color: var(--neon-40);
-  font-size: 0.8rem;
-}
-.ctrl-btn--expand:hover { color: var(--neon); }
-
-.mini-player__right {
-  display: flex;
-  align-items: center;
-  gap: var(--gap-md);
-  justify-content: flex-end;
-}
-
-.mini-progress-bar {
-  flex: 1;
-  height: 2px;
-  background: var(--neon-15);
-  cursor: pointer;
-  position: relative;
-  max-width: 200px;
-}
-.mini-progress-fill {
-  height: 100%;
-  background: var(--neon);
-  box-shadow: 0 0 6px var(--neon-60);
-  width: 0%;
-  transition: width 0.3s linear;
-  pointer-events: none;
-}
 
 /* ============================
    FULLSCREEN PLAYER
