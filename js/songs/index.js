@@ -40,7 +40,7 @@ const SONGS = [
     title: "Love Story",
     albumId: "album1",
     track: 1,
-    file: "assets/music/love-story.mp3", // ← caminho do seu MP3
+    file: "assets/songs/love-story.mp3", // ← caminho do seu MP3
     duration: "4:05",
     lyrics: `VERSE 1
 
@@ -132,7 +132,7 @@ Só tenta ser verdadeira dentro do que restou dele.`
     title: "Eu Não Queria Sentir Assim",
     albumId: "album1",
     track: 2,
-    file: "assets/music/eu-nao-queria-sentir-assim.mp3",
+    file: "assets/songs/eu-nao-queria-sentir-assim.mp3",
     duration: "4:15",
     lyrics: `VERSE 1
 
@@ -228,7 +228,7 @@ Como deveria ser.`
     title: "Somewhere Between Us",
     albumId: "album1",
     track: 3,
-    file: "assets/music/somewhere-between-us.mp3",
+    file: "assets/songs/somewhere-between-us.mp3",
     duration: "4:34",
     lyrics: `Verse 1
 You say it softly, almost kind
@@ -313,7 +313,7 @@ Fala do que acontece antes dela.`
     title: "Te Voy A Cambiar",
     albumId: "album1",
     track: 4,
-    file: "assets/music/te-voy-a-cambiar.mp3",
+    file: "assets/songs/te-voy-a-cambiar.mp3",
     duration: "4:35",
     lyrics: `VERSO 1
 Siempre hay dos reglas en tu voz
@@ -427,7 +427,7 @@ E do momento em que suportar deixa de ser uma opção.`
     title: "I Feel Stuck",
     albumId: "album1",
     track: 5,
-    file: "assets/music/i-feel-stuck.mp3",
+    file: "assets/songs/i-feel-stuck.mp3",
     duration: "4:20",
     lyrics: `VERSE 1
 
@@ -525,7 +525,7 @@ Só o início de movimento.`
     title: "Nunca Es Suficiente",
     albumId: "album1",
     track: 6,
-    file: "assets/music/nunca-es-suficiente.mp3",
+    file: "assets/songs/nunca-es-suficiente.mp3",
     duration: "3:25",
     lyrics: `Verso 1
 
@@ -619,7 +619,7 @@ e ainda assim não ser suficiente.`
     title: "Até Onde Vale",
     albumId: "album1",
     track: 7,
-    file: "assets/music/ate-onde-vale.mp3",
+    file: "assets/songs/ate-onde-vale.mp3",
     duration: "3:51",
     lyrics: `(verso 1)
 Mais um dia que pesa mais que ontem
@@ -714,7 +714,7 @@ E que, às vezes, parar não é fraqueza —
     title: "Vozes Em Mim",
     albumId: "album1",
     track: 8,
-    file: "assets/music/vozes-em-mim.mp3",
+    file: "assets/songs/vozes-em-mim.mp3",
     duration: "3:15",
     lyrics: `(verso 1)
 Eu sei exatamente onde isso vai dar
@@ -818,7 +818,7 @@ Busca coexistência.`
     title: "Between The Lines",
     albumId: "album2",
     track: 1,
-    file: "assets/music/between-the-lines.mp3",
+    file: "assets/songs/between-the-lines.mp3",
     duration: "4:30",
     lyrics: `VERSE 1
 
@@ -905,7 +905,7 @@ Só precisam existir.`
     title: "Echoes Of Yesterday",
     albumId: "album2",
     track: 2,
-    file: "assets/music/echos.mp3",
+    file: "assets/songs/echos.mp3",
     duration: "4:22",
     lyrics: `VERSE
 
@@ -982,7 +982,7 @@ Elas se apagam porque nunca foram sólidas o suficiente para permanecer.`
     title: "What If",
     albumId: "album2",
     track: 3,
-    file: "assets/music/what-if.mp3",
+    file: "assets/songs/what-if.mp3",
     duration: "4:59",
     lyrics: `Verse 1
 
@@ -1066,7 +1066,7 @@ e aceitar que ela nunca vai acontecer.`
     title: "Depois Das 2 Da Manhã",
     albumId: "album2",
     track: 4,
-    file: "assets/music/depois-das-duas-da-manha.mp3",
+    file: "assets/songs/depois-das-duas-da-manha.mp3",
     duration: "3:33",
     lyrics: `[Verso 1]
 Depois das duas da manhã
@@ -1146,7 +1146,7 @@ Ela gira.`
     title: "The Boy I Was",
     albumId: "album2",
     track: 5,
-    file: "assets/music/the-boy-i-was.mp3",
+    file: "assets/songs/the-boy-i-was.mp3",
     duration: "4:49",
     lyrics: `Verse 1
     I found a picture of you today
@@ -1275,7 +1275,7 @@ Só precisam ser ditas.`
     title: "After Everyone Sleeps",
     albumId: "album2",
     track: 6,
-    file: "assets/music/after-everyone-sleeps.mp3",
+    file: "assets/songs/after-everyone-sleeps.mp3",
     duration: "4:29",
     lyrics: `Verse 1
     The house goes quiet after midnight
@@ -1365,7 +1365,7 @@ Fala do que fica.`
     title: "Letters I've Never Send",
     albumId: "album2",
     track: 7,
-    file: "assets/music/letters-i-ve-never-send.mp3",
+    file: "assets/songs/letters-i-ve-never-send.mp3",
     duration: "4:34",
     lyrics: `Verse 1
 If you’re reading this someday
