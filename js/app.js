@@ -16,13 +16,7 @@ const BAND_MEMBERS = [
     bio:'Lyra plays synths and keyboards with a coldness that borders on algorithmic. Her patches are built from field recordings, FM synthesis, and sounds she refuses to name.' },
 ];
 
-const GALLERY_ITEMS = [
-  { label:'TRACE — LIVE', file:'assets/gallery/trace-live.jpg', placeholder:'◈' },
-  { label:'EMBER — LIVE', file:'assets/gallery/ember-live.jpg', placeholder:'★' },
-  { label:'LYRA — LIVE',  file:'assets/gallery/lyra-live.jpg',  placeholder:'⟁' },
-  { label:'OD — LIVE',    file:'assets/gallery/od-live.jpg',    placeholder:'◆' },
-  { label:'DUSK — LIVE',  file:'assets/gallery/dusk-live.jpg',  placeholder:'✶' },
-];
+/* GALLERY_ITEMS → js/gallery.js */
 
 /* ============================================================
    NAVEGAÇÃO
@@ -229,26 +223,6 @@ const app = (() => {
           ? `↻ BAIXANDO… ${allStatus.done}/${allStatus.total}`
           : '⬇ DOWNLOAD ALL';
     }
-  }
-
-  /* ── Gallery ── */
-  function renderGallery() {
-    const container = document.getElementById('galleryGrid');
-    if (!container) return;
-    container.innerHTML = '';
-    GALLERY_ITEMS.forEach(item => {
-      const el = document.createElement('div');
-      el.className = 'gallery-item';
-      el.innerHTML = `<div class="gallery-placeholder">${item.placeholder}</div>
-        <span class="gallery-item-label">${item.label}</span>`;
-      const img = new Image();
-      img.onload = () => {
-        el.innerHTML = `<img src="${item.file}" alt="${item.label}" loading="lazy" />
-          <span class="gallery-item-label">${item.label}</span>`;
-      };
-      img.src = item.file;
-      container.appendChild(el);
-    });
   }
 
   /* ── Band ── */
