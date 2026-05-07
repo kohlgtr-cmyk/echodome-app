@@ -50,8 +50,6 @@ const Player = (() => {
 
     // Remove any previous one-shot canplay listener
     audio.src = "";
-    audio.src = song.file;
-    audio.load();
 
     if (playAfterLoad) {
       const onCanPlay = () => {
@@ -60,6 +58,9 @@ const Player = (() => {
       };
       audio.addEventListener("canplay", onCanPlay);
     }
+
+    audio.src = song.file;
+    audio.load();
 
     // Mini player
     if (elMiniTitle) elMiniTitle.textContent = song.title;
@@ -256,6 +257,8 @@ const Player = (() => {
     // Keyboard shortcuts
     document.addEventListener("keydown", e => {
       if (e.target.tagName === "INPUT") return;
+      // Não interfere quando o lightbox da galeria está aberto
+      if (document.body.classList.contains("lb-active")) return;
       if (e.code === "Space") { e.preventDefault(); togglePlay(); }
       if (e.code === "ArrowRight") next();
       if (e.code === "ArrowLeft")  prev();
