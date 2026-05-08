@@ -158,63 +158,55 @@
   color: var(--neon);
 }
 
-/* ── Banner "Download All" no topo da seção ── */
-.download-all-bar {
-  display: flex;
+/* ── Pill "Download All" discreto no header da seção ── */
+.dl-all-pill {
+  display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--gap-md);
-  background: var(--neon-08);
-  border: 1px solid var(--neon-15);
-  padding: var(--gap-sm) var(--gap-md);
-  margin-bottom: var(--gap-lg);
-  flex-wrap: wrap;
-}
-
-.download-all-info {
-  font-family: var(--font-mono);
-  font-size: 0.7rem;
-  color: var(--fg-dim);
-  letter-spacing: 0.08em;
-}
-.download-all-info strong {
-  color: var(--neon);
-}
-
-.download-all-btn {
+  gap: 5px;
   background: none;
-  border: 1px solid var(--neon-30);
-  color: var(--neon);
+  border: 1px solid var(--neon-20);
+  color: var(--fg-dim);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
-  padding: 6px 16px;
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  padding: 3px 9px;
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
   white-space: nowrap;
+  flex-shrink: 0;
 }
-.download-all-btn:hover {
-  background: var(--neon-15);
-  box-shadow: 0 0 12px var(--neon-20);
+.dl-all-pill:hover {
+  color: var(--neon);
+  border-color: var(--neon-40);
+  box-shadow: 0 0 8px var(--neon-15);
 }
-.download-all-btn:disabled {
-  opacity: 0.5;
+.dl-all-pill:disabled {
   cursor: default;
   pointer-events: none;
 }
+.dl-all-pill.is-complete {
+  color: var(--neon);
+  border-color: var(--neon-30);
+}
+.dl-all-pill.is-in-progress .dl-all-pill__icon {
+  display: inline-block;
+  animation: dl-spin 1s linear infinite;
+}
+.dl-all-pill__count {
+  opacity: 0.6;
+  font-size: 0.55rem;
+}
 
-/* Barra de progresso geral */
-.download-all-progress {
+/* Barra de progresso geral (abaixo do section-header) */
+.dl-all-pill__progress {
   width: 100%;
   height: 2px;
-  background: var(--neon-15);
-  margin-top: 6px;
+  background: var(--neon-08);
+  margin-top: -1px;
+  margin-bottom: var(--gap-md);
   display: none;
 }
-.download-all-progress.visible { display: block; }
+.dl-all-pill__progress.visible { display: block; }
 .download-all-progress-fill {
   height: 100%;
   background: var(--neon);
@@ -236,3 +228,8 @@
 
 /* ── Mobile ── (será centralizado no mobile.css) ── */
 /* Placeholder — as regras mobile ficam em mobile.css */
+
+/* Section header variant when progress bar is directly below */
+.section-header--has-progress {
+  margin-bottom: 0;
+}

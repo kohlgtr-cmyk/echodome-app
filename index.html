@@ -111,9 +111,17 @@
 
     <!-- MUSIC SECTION -->
     <section class="section" id="section-music">
-      <div class="section-header">
+      <div class="section-header section-header--has-progress">
         <h2 class="section-title">MUSIC</h2>
         <div class="section-line"></div>
+        <button class="dl-all-pill" id="dlAllPill" aria-label="Download all tracks">
+          <span class="dl-all-pill__icon" id="dlAllPillIcon">⬇</span>
+          <span class="dl-all-pill__label" id="dlAllPillLabel">OFFLINE</span>
+          <span class="dl-all-pill__count" id="dlAllPillCount"></span>
+        </button>
+      </div>
+      <div class="dl-all-pill__progress" id="dlAllProgress">
+        <div class="download-all-progress-fill" id="dlAllFill" style="width:0%"></div>
       </div>
       <div class="tracklist" id="tracklist"></div>
     </section>

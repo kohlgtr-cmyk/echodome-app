@@ -45,10 +45,6 @@ const app = (() => {
     if (!container) return;
     container.innerHTML = '';
 
-    // Banner "Download All"
-    const allBar = _buildDownloadAllBar();
-    container.appendChild(allBar);
-
     // Agrupa por álbum
     const albumIds = [...new Set(SONGS.map(s => s.albumId))];
     albumIds.forEach(albumId => {
@@ -69,32 +65,18 @@ const app = (() => {
     });
 
     // Atualiza visuais de download ao mudar estado
+    _initDownloadAllPill();
     Downloader.onStateChange(() => _refreshDownloadUI());
     _refreshDownloadUI();
   }
 
-  /* ── Download All Bar ── */
-  function _buildDownloadAllBar() {
-    const bar = document.createElement('div');
-    bar.className = 'download-all-bar';
-    bar.id = 'downloadAllBar';
-    bar.innerHTML = `
-      <div>
-        <div class="download-all-info">
-          OFFLINE LIBRARY — <strong id="dlAllStatus">0 / ${SONGS.length}</strong> faixas
-        </div>
-        <div class="download-all-progress" id="dlAllProgress">
-          <div class="download-all-progress-fill" id="dlAllFill" style="width:0%"></div>
-        </div>
-      </div>
-      <button class="download-all-btn" id="dlAllBtn">
-        ⬇ DOWNLOAD ALL
-      </button>
-    `;
-    bar.querySelector('#dlAllBtn').addEventListener('click', () => {
+  /* ── Download All Pill (no section header) ── */
+  function _initDownloadAllPill() {
+    const pill = document.getElementById('dlAllPill');
+    if (!pill) return;
+    pill.addEventListener('click', () => {
       Downloader.downloadAll();
     });
-    return bar;
   }
 
   /* ── Header de álbum ── */
@@ -209,26 +191,37 @@ const app = (() => {
       }
     });
 
-    // Download All bar
-    const allStatus = Downloader.allStatus();
-    const statusEl  = document.getElementById('dlAllStatus');
-    const fillEl    = document.getElementById('dlAllFill');
+    // Download All pill (no section header)
+    const allStatus  = Downloader.allStatus();
+    const pillEl     = document.getElementById('dlAllPill');
+    const pillIcon   = document.getElementById('dlAllPillIcon');
+    const pillLabel  = document.getElementById('dlAllPillLabel');
+    const pillCount  = document.getElementById('dlAllPillCount');
+    const fillEl     = document.getElementById('dlAllFill');
     const progressEl = document.getElementById('dlAllProgress');
-    const btnEl     = document.getElementById('dlAllBtn');
 
-    if (statusEl) statusEl.textContent = `${allStatus.done} / ${allStatus.total}`;
+    if (pillEl) {
+      pillEl.disabled = allStatus.allDone || allStatus.inProgress;
+      pillEl.classList.toggle('is-complete',   allStatus.allDone);
+      pillEl.classList.toggle('is-in-progress', allStatus.inProgress);
+    }
+    if (pillIcon) {
+      pillIcon.textContent = allStatus.allDone ? '✓' : allStatus.inProgress ? '↻' : '⬇';
+    }
+    if (pillLabel) {
+      pillLabel.textContent = allStatus.allDone
+        ? 'OFFLINE'
+        : allStatus.inProgress ? 'BAIXANDO' : 'OFFLINE';
+    }
+    if (pillCount) {
+      pillCount.textContent = allStatus.allDone
+        ? `${allStatus.total}/${allStatus.total}`
+        : `${allStatus.done}/${allStatus.total}`;
+    }
     if (fillEl && allStatus.total > 0) {
       fillEl.style.width = (allStatus.done / allStatus.total * 100) + '%';
     }
-    if (progressEl) progressEl.classList.toggle('visible', allStatus.done > 0 || allStatus.inProgress);
-    if (btnEl) {
-      btnEl.disabled = allStatus.allDone || allStatus.inProgress;
-      btnEl.innerHTML = allStatus.allDone
-        ? '✓ TUDO BAIXADO'
-        : allStatus.inProgress
-          ? `↻ BAIXANDO… ${allStatus.done}/${allStatus.total}`
-          : '⬇ DOWNLOAD ALL';
-    }
+    if (progressEl) progressEl.classList.toggle('visible', allStatus.inProgress || allStatus.done > 0);
   }
 
   /* ── Band ── */
