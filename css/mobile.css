@@ -137,3 +137,23 @@
     padding: var(--gap-md) var(--gap-sm) var(--gap-sm);
 
 }
+
+  /* ── player.css — fullscreen imersivo ──────────────── */
+
+  .fs-char-silhouette { display: none; }
+
+  .fs-cover-wrap { width: 170px; height: 170px; }
+
+  .fs-mode-btns { gap: 4px; right: var(--gap-md); }
+  .fs-mode-btn  { width: 28px; height: 28px; font-size: 0.75rem; }
+
+  .fs-content {
+    padding: 72px var(--gap-md) var(--gap-md);
+    gap: var(--gap-sm);
+  }
+
+  .fs-title { font-size: 1.1rem; }
+
+  .fs-band-mode { gap: 4px; }
+  .band-eq-canvas { height: 48px; }
+}

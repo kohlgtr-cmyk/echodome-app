@@ -39,6 +39,9 @@ const ThemeManager = (() => {
     // Update meta theme-color
     const meta = document.querySelector('meta[name="theme-color"]');
     if (meta) meta.setAttribute("content", THEMES[themeKey].color);
+
+    // Notifica o player para atualizar o personagem (ponto 3)
+    document.dispatchEvent(new CustomEvent('themeChanged', { detail: { theme: themeKey } }));
   }
 
   function init() {
