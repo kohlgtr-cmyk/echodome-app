@@ -101,8 +101,8 @@
           <h1 class="hero-title">ECHODOME</h1>
           <p class="hero-sub">THE SOUND INSIDE THE MASK</p>
           <div class="hero-actions">
-            <button class="btn-primary" onclick="app.navigate('music')">LISTEN NOW</button>
-            <button class="btn-ghost" onclick="app.navigate('about')">MEET THE BAND</button>
+            <button class="btn-primary" data-nav="music">LISTEN NOW</button>
+            <button class="btn-ghost" data-nav="about">MEET THE BAND</button>
           </div>
         </div>
         
@@ -156,6 +156,7 @@
       <div class="mini-player__cover" id="expandPlayer" aria-label="Abrir player fullscreen">
         <img id="miniCoverImg" src="" alt="" onerror="this.style.display='none';document.getElementById('miniCoverFallback').style.display='flex'">
         <span id="miniCoverFallback" class="mini-cover-fallback">🎵</span>
+        <span class="mini-expand-icon">&#8599;</span>
       </div>
       <div class="mini-player__info">
         <span class="mini-player__title" id="miniTitle">—</span>
@@ -169,49 +170,109 @@
     </div>
   </div>
 
-  <!-- FULLSCREEN PLAYER -->
+  <!-- FULLSCREEN PLAYER (MODO IMERSIVO) -->
   <div class="fullscreen-player" id="fullscreenPlayer" aria-hidden="true">
+
+    <!-- Botão fechar -->
     <button class="fs-close-btn" id="fsCloseBtn" aria-label="Fechar">&#x2715;</button>
-    <div class="fs-geo-bg"><div class="fs-geo-lines"></div></div>
-    <!-- Canvas partículas: só usado por visualizer-particles.js -->
+
+    <!-- Botões de modo: Loop / Focus / Boost / Band -->
+    <div class="fs-mode-btns">
+      <button class="fs-mode-btn" id="fsLoopBtn"      aria-label="Loop">&#9854;</button>
+      <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode">&#9673;</button>
+      <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost">&#9889;</button>
+      <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode">&#9836;</button>
+    </div>
+
+    <!-- Fundo dinâmico: capa desfocada + overlay gradiente -->
+    <div class="fs-dynamic-bg">
+      <div class="fs-bg-cover" id="fsBgCover"></div>
+      <div class="fs-bg-overlay"></div>
+    </div>
+
+
     <canvas id="vizCanvasParticles" class="viz-canvas-particles"></canvas>
+
+    <!-- Silhueta do personagem (lado direito, sutil) -->
+    <div class="fs-char-silhouette">
+      <span class="fs-char-icon" id="fsCharIcon">◈</span>
+      <span class="fs-char-name" id="fsCharName">TRACE</span>
+      <span class="fs-char-role" id="fsCharRole">VOX / GTR</span>
+    </div>
+
+    <!-- Conteúdo central -->
     <div class="fs-content">
-      <!-- Meta compacta: ícone pequeno + título lado a lado -->
-      <div class="fs-meta">
-        <div class="fs-artwork-small">
-          <div class="fs-artwork-ring"></div>
-          <div class="fs-artwork-inner">
-            <span class="fs-artwork-icon" id="fsArtworkIcon">◈</span>
-          </div>
-        </div>
-        <div class="fs-meta-text">
-          <h2 class="fs-title" id="fsTitle">—</h2>
-          <p class="fs-artist">ECHODOME</p>
+
+      <!-- CAPA GRANDE com glow pulsante e anel girando -->
+      <div class="fs-cover-wrap">
+        <div class="fs-cover-glow" id="fsCoverGlow"></div>
+        <div class="fs-cover-ring" id="fsCoverRing"></div>
+        <div class="fs-cover-img-wrap">
+          <img class="fs-cover-img" id="fsCoverImg" src="" alt=""
+               onerror="this.style.display='none';document.getElementById('fsCoverFallback').style.display='flex'">
+          <span class="fs-cover-fallback" id="fsCoverFallback" style="display:none">◈</span>
         </div>
       </div>
-      <!-- Waveform central — destaque principal -->
+
+      <!-- Título + artista -->
+      <div class="fs-meta">
+        <h2 class="fs-title" id="fsTitle">—</h2>
+        <p class="fs-artist">ECHODOME</p>
+      </div>
+
+      <!-- Waveform reagindo ao som -->
       <div class="fs-waveform-wrap">
         <canvas id="vizCanvasFS" class="viz-canvas-fs"></canvas>
       </div>
-      <!-- Tempo abaixo da waveform -->
+
+      <!-- Tempo -->
       <div class="fs-time">
         <span id="fsCurrent">0:00</span>
         <span id="fsDuration">0:00</span>
       </div>
+
+      <!-- Barra de progresso estilo energia -->
       <div class="fs-progress-wrap">
         <div class="fs-progress-bar" id="fsProgressBar">
           <div class="fs-progress-fill" id="fsProgressFill"></div>
+          <div class="fs-progress-head" id="fsProgressHead"></div>
         </div>
       </div>
+
+      <!-- Controles principais -->
       <div class="fs-controls">
         <button class="fs-ctrl-btn" id="fsPrev">&#9664;&#9664;</button>
         <button class="fs-ctrl-btn fs-ctrl-btn--play" id="fsPlay">&#9654;</button>
         <button class="fs-ctrl-btn" id="fsNext">&#9654;&#9654;</button>
       </div>
+
+      <!-- Volume -->
       <div class="fs-volume-wrap">
         <span>&#128264;</span>
         <input type="range" class="fs-volume-slider" id="fsVolume" min="0" max="1" step="0.01" value="1" />
       </div>
+
+      <!-- Band Mode: equalizadores por instrumento -->
+      <div class="fs-band-mode" id="fsBandModePanel">
+        <div class="band-channel">
+          <canvas class="band-eq-canvas" id="eqBass"></canvas>
+          <span class="band-channel-label">BASS</span>
+        </div>
+        <div class="band-channel">
+          <canvas class="band-eq-canvas" id="eqGuitar"></canvas>
+          <span class="band-channel-label">GTR</span>
+        </div>
+        <div class="band-channel">
+          <canvas class="band-eq-canvas" id="eqKeys"></canvas>
+          <span class="band-channel-label">KEYS</span>
+        </div>
+        <div class="band-channel">
+          <canvas class="band-eq-canvas" id="eqDrums"></canvas>
+          <span class="band-channel-label">DRUMS</span>
+        </div>
+      </div>
+
+      <!-- Tabs: Lyrics / Story -->
       <div class="fs-tabs">
         <button class="fs-tab active" data-tab="lyrics">LYRICS</button>
         <button class="fs-tab" data-tab="story">STORY</button>
@@ -224,8 +285,9 @@
           <div class="fs-story" id="fsStory"><p class="placeholder-text">// no story loaded</p></div>
         </div>
       </div>
-    </div>
-  </div>
+
+    </div><!-- /fs-content -->
+  </div><!-- /fullscreen-player -->
 
   <audio id="audioEngine" preload="metadata"></audio>
 
@@ -233,7 +295,7 @@
   <script src="js/downloader.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/character-design.js"></script>
-  <!-- VISUALIZER: troque a linha abaixo para testar com/sem partículas -->
+  <!-- VISUALIZER -->
   <script src="js/visualizer.js"></script>
   <script src="js/player.js"></script>
   <script src="js/char-bg.js"></script>

@@ -156,4 +156,12 @@
 
   .fs-band-mode { gap: 4px; }
   .band-eq-canvas { height: 48px; }
+
+  /* ── gallery.css ─────────────────────────────────────── */
+
+  .lb-prev  { left: 6px; width: 36px; height: 50px; font-size: 1rem; }
+  .lb-next  { right: 6px; width: 36px; height: 50px; font-size: 1rem; }
+  .lb-close { top: 12px; right: 12px; width: 34px; height: 34px; }
+  .lb-img   { max-width: 92vw; max-height: 72vh; }
+
 }

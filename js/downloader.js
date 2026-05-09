@@ -102,7 +102,7 @@ const Downloader = (() => {
 
     try {
       await _waitForController();
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         const channel = new MessageChannel();
         channel.port1.onmessage = e => {
           const { type, songId } = e.data;
@@ -144,7 +144,7 @@ const Downloader = (() => {
 
     try {
       await _waitForController();
-      await new Promise((resolve, reject) => {
+      await new Promise(resolve => {
         const channel = new MessageChannel();
         channel.port1.onmessage = e => {
           const { type, songId } = e.data;

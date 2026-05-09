@@ -56,7 +56,6 @@
       enterAnim:     'trace-enter',
       glowIntensity: '0.3',
       textTransform: 'none',
-      _desc: 'Minimalismo monospace. Silêncio visual.',
     },
 
     // ╔══════════════════════════════════╗
@@ -76,7 +75,6 @@
       enterAnim:     'od-enter',
       glowIntensity: '1.0',
       textTransform: 'uppercase',
-      _desc: 'Zero curvas. Verde que queima. Uppercase sempre.',
     },
 
     // ╔══════════════════════════════════╗
@@ -96,7 +94,6 @@
       enterAnim:     'dusk-enter',
       glowIntensity: '0.6',
       textTransform: 'none',
-      _desc: 'Metal, ferrugem, resistência. O ritmo é mecânico mas vivo.',
     },
 
     // ╔══════════════════════════════════╗
@@ -116,7 +113,6 @@
       enterAnim:     'ember-enter',
       glowIntensity: '0.85',
       textTransform: 'none',
-      _desc: 'Tudo pulsa. Calor âmbar. Urgência constante.',
     },
 
     // ╔══════════════════════════════════╗
@@ -136,7 +132,6 @@
       enterAnim:     'lyra-enter',
       glowIntensity: '0.5',
       textTransform: 'none',
-      _desc: 'Etéreo. Amplo. Cada nota é uma estrela.',
     },
   };
 
@@ -157,8 +152,6 @@
     _applyBodyClass(d);
     _injectCSS(id, d);
     _triggerEnter();
-
-    console.log(`[CharDesign] ${id} — ${d._desc}`);
   }
 
   function _applyVars(d) {

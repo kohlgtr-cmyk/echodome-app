@@ -247,6 +247,9 @@ const app = (() => {
     document.querySelectorAll('.nav-btn').forEach(btn => {
       btn.addEventListener('click', () => navigate(btn.dataset.section));
     });
+    document.querySelectorAll('[data-nav]').forEach(btn => {
+      btn.addEventListener('click', () => navigate(btn.dataset.nav));
+    });
   }
 
   /* ── Indicador offline ── */

@@ -330,27 +330,8 @@
   color: var(--neon);
 }
 
-/* ---- Conteúdo ---- */
-.fs-content {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 480px;
-  padding: 80px var(--gap-lg) var(--gap-lg);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--gap-md);
-}
-
 /* ---- Capa grande com glow pulsante (pontos 1, 2) ---- */
-.fs-cover-wrap {
-  position: relative;
-  width: 220px;
-  height: 220px;
-  flex-shrink: 0;
-  transition: transform 0.4s var(--ease);
-}
+/* (dimensões finais definidas no bloco abaixo) */
 
 .fs-cover-glow {
   position: absolute;
@@ -567,37 +548,8 @@
   cursor: pointer;
 }
 
-/* ---- Band Mode (ponto 5) ---- */
-.fs-band-mode {
-  display: none;
-  width: 100%;
-  gap: var(--gap-sm);
-  padding: var(--gap-sm);
-  background: var(--neon-05);
-  border: 1px solid var(--neon-15);
-  border-radius: 6px;
-}
-.fs-band-mode.visible { display: flex; }
-.band-channel {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4px;
-}
-.band-eq-canvas {
-  width: 100%;
-  height: 60px;
-  border-radius: 3px;
-  background: var(--neon-05);
-}
-.band-channel-label {
-  font-family: var(--font-mono);
-  font-size: 0.55rem;
-  color: var(--neon);
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-}
+/* ---- Band Mode (ponto 5) — definição final no bloco de overrides abaixo ---- */
+
 
 /* ---- Tabs ---- */
 .fs-tabs {
@@ -649,3 +601,68 @@
   display: block;
   margin: var(--gap-md) 0 var(--gap-sm);
 }
+
+/* ============================
+   FULLSCREEN — CAPA GRANDE
+   (garante tamanho e centralização corretos)
+   ============================ */
+.fs-cover-wrap {
+  position: relative;
+  width: clamp(200px, 55vw, 280px);
+  height: clamp(200px, 55vw, 280px);
+  flex-shrink: 0;
+  transition: transform 0.4s var(--ease);
+  margin: 0 auto;
+}
+
+/* ============================
+   FULLSCREEN — WAVEFORM MAIOR
+   ============================ */
+.fs-waveform-wrap {
+  width: 100%;
+  height: 80px;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 6px;
+  background: var(--neon-05);
+  overflow: hidden;
+  border: 1px solid var(--neon-15);
+}
+
+/* ============================
+   FULLSCREEN — LAYOUT GERAL
+   ============================ */
+.fs-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 500px;
+  padding: 70px var(--gap-lg) 120px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin: 0 auto;
+}
+
+/* ============================
+   MINI PLAYER — GLOW ATIVO
+   ============================ */
+.mini-player.is-playing .mini-progress-fill {
+  box-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon-40);
+}
+
+/* ============================
+   BAND MODE — visível
+   ============================ */
+.fs-band-mode {
+  display: none;
+  width: 100%;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  background: var(--neon-05);
+  border: 1px solid var(--neon-15);
+  border-radius: 6px;
+  margin-top: 4px;
+}
+.fs-band-mode.visible { display: flex; }

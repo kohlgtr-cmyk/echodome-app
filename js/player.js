@@ -34,7 +34,7 @@ const Player = (() => {
       elFSTitle, elFSCurrent, elFSDuration,
       elFSFill, elFSBar, elFSHead,
       elFSVolume, elFSLyrics, elFSStory,
-      elFSBg, elFSBgCover,
+      elFSBgCover,
       elFSCharIcon, elFSCharName, elFSCharRole,
       elFSCoverImg, elFSCoverFallback, elFSCoverGlow, elFSCoverRing,
       elFSBandMode, elFSBandBtn, elFSFocusBtn, elFSBoostBtn, elFSLoopBtn;
