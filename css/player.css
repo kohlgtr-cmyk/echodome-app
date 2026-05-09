@@ -199,7 +199,6 @@
 
 /* Focus mode: sem UI, só música (ponto 7) */
 .fullscreen-player.focus-mode .fs-char-silhouette,
-.fullscreen-player.focus-mode .fs-mode-btns,
 .fullscreen-player.focus-mode .fs-tabs,
 .fullscreen-player.focus-mode .fs-tab-content,
 .fullscreen-player.focus-mode .fs-band-mode,
@@ -207,6 +206,25 @@
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s;
+}
+/* No focus mode, esconde os botões de modo EXCETO o de fechar e o de focus */
+.fullscreen-player.focus-mode .fs-mode-btn:not(#fsFocusModeBtn) {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+/* Botão fechar sempre visível, mas bem discreto no focus mode */
+.fullscreen-player.focus-mode .fs-close-btn {
+  opacity: 0.3;
+  transition: opacity 0.2s;
+}
+.fullscreen-player.focus-mode .fs-close-btn:hover { opacity: 1; }
+/* Botão focus fica destacado para o user saber como sair */
+.fullscreen-player.focus-mode #fsFocusModeBtn {
+  opacity: 1 !important;
+  pointer-events: all !important;
+  color: var(--neon);
+  border-color: var(--neon-40);
 }
 .fullscreen-player.focus-mode .fs-cover-wrap { transform: scale(1.1); }
 

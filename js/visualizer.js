@@ -24,7 +24,7 @@ const Visualizer = (() => {
   let cvBands     = {};
 
   /* ---- Partículas ---- */
-  const PARTICLE_COUNT = 55;
+  const PARTICLE_COUNT = 70;
   let particles = [];
 
   /* ---- Config ---- */
@@ -71,18 +71,23 @@ const Visualizer = (() => {
   function initParticles(W, H) {
     particles = [];
     for (var i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(newParticle(W, H, true));
+      particles.push(newParticle(W, H));
     }
   }
 
-  function newParticle(W, H, randomY) {
+  function newParticle(W, H) {
+    var angle = Math.random() * Math.PI * 2;
+    var speed = Math.random() * 0.25 + 0.05;
     return {
-      x     : Math.random() * W,
-      y     : randomY ? Math.random() * H : H + 10,
-      size  : Math.random() * 2 + 0.5,
-      speedX: (Math.random() - 0.5) * 0.4,
-      speedY: -(Math.random() * 0.6 + 0.2),
-      alpha : Math.random() * 0.4 + 0.1,
+      x      : Math.random() * W,
+      y      : Math.random() * H,
+      size   : Math.random() * 1.8 + 0.3,
+      speedX : Math.cos(angle) * speed,
+      speedY : Math.sin(angle) * speed,
+      alpha  : Math.random() * 0.35 + 0.05,
+      alphaDir: Math.random() > 0.5 ? 1 : -1,
+      alphaSpeed: Math.random() * 0.003 + 0.001,
+      baseSize: 0,
     };
   }
 
@@ -92,31 +97,42 @@ const Visualizer = (() => {
     const W = cvParticles.width;
     const H = cvParticles.height;
 
-    c.fillStyle = 'rgba(0,0,0,0.14)';
+    // fade suave sem rastro pesado
+    c.fillStyle = 'rgba(0,0,0,0.06)';
     c.fillRect(0, 0, W, H);
 
-    const boost = energy / 255;
-    const glow  = boostMode ? 8 : 4;
+    const boost    = energy / 255;
+    const speedMul = 1 + boost * 2.5;
+    const glow     = boostMode ? 10 : 5;
 
     for (var i = 0; i < particles.length; i++) {
       var p = particles[i];
-      p.y     += p.speedY * (1 + boost * 4);
-      p.x     += p.speedX * (1 + boost * 1.5);
-      p.size  += boost * 0.06;
-      p.alpha  = Math.min(0.85, p.alpha + boost * 0.04);
 
-      if (p.y < -10 || p.x < -20 || p.x > W + 20) {
-        var np = newParticle(W, H, false);
-        p.x = np.x; p.y = np.y; p.speedX = np.speedX; p.speedY = np.speedY;
-        p.size  = Math.random() * 2 + 0.5;
-        p.alpha = Math.random() * 0.3 + 0.05;
+      // movimento suave em todas as direções
+      p.x += p.speedX * speedMul;
+      p.y += p.speedY * speedMul;
+
+      // wrap nas bordas (teleporta pro lado oposto)
+      if (p.x < -4)  p.x = W + 4;
+      if (p.x > W+4) p.x = -4;
+      if (p.y < -4)  p.y = H + 4;
+      if (p.y > H+4) p.y = -4;
+
+      // pulsa o alpha levemente (respiração)
+      p.alpha += p.alphaDir * p.alphaSpeed * (1 + boost * 3);
+      if (p.alpha > 0.55 || p.alpha < 0.03) {
+        p.alphaDir *= -1;
+        p.alpha = Math.max(0.03, Math.min(0.55, p.alpha));
       }
 
+      // cresce levemente no beat
+      var drawSize = p.size + boost * 1.2;
+
       c.beginPath();
-      c.arc(p.x, p.y, Math.max(0.1, p.size), 0, Math.PI * 2);
+      c.arc(p.x, p.y, Math.max(0.1, drawSize), 0, Math.PI * 2);
       c.fillStyle   = neonColor(p.alpha);
-      c.shadowColor = neonColor(0.4);
-      c.shadowBlur  = p.size * glow * (1 + boost);
+      c.shadowColor = neonColor(p.alpha * 0.7);
+      c.shadowBlur  = drawSize * glow;
       c.fill();
     }
   }
