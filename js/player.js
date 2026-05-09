@@ -48,7 +48,7 @@ const Player = (() => {
   }
 
   function setPlayIcon(playing) {
-    const icon = playing ? '&#9646;&#9646;' : '&#9654;';
+    const icon = playing ? Icons.get('pause') : Icons.get('play');
     if (elMiniPlay) elMiniPlay.innerHTML = icon;
     if (elFSPlay)   elFSPlay.innerHTML   = icon;
   }
@@ -165,7 +165,7 @@ const Player = (() => {
         elMiniCoverImg.src   = '';
         elMiniCoverImg.style.display      = 'none';
         elMiniCoverFallback.style.display = 'flex';
-        elMiniCoverFallback.textContent   = (album && album.coverEmoji) || '🎵';
+        elMiniCoverFallback.innerHTML = Icons.get('music');
       }
     }
 
@@ -192,7 +192,7 @@ const Player = (() => {
     document.querySelectorAll('.track-item').forEach(function(el, i) {
       el.classList.toggle('playing', i === idx);
       const btn = el.querySelector('.track-play-btn');
-      if (btn) btn.innerHTML = (i === idx && isPlaying) ? '&#9646;&#9646;' : '&#9654;';
+      if (btn) btn.innerHTML = (i === idx && isPlaying) ? Icons.get('pause') : Icons.get('play');
     });
   }
 
@@ -237,7 +237,7 @@ const Player = (() => {
   function updateTracklistBtns() {
     document.querySelectorAll('.track-item').forEach(function(el, i) {
       const btn = el.querySelector('.track-play-btn');
-      if (btn) btn.innerHTML = (i === currentIdx && isPlaying) ? '&#9646;&#9646;' : '&#9654;';
+      if (btn) btn.innerHTML = (i === currentIdx && isPlaying) ? Icons.get('pause') : Icons.get('play');
     });
   }
 

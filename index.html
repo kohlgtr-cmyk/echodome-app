@@ -115,7 +115,7 @@
         <h2 class="section-title">MUSIC</h2>
         <div class="section-line"></div>
         <button class="dl-all-pill" id="dlAllPill" aria-label="Download all tracks">
-          <span class="dl-all-pill__icon" id="dlAllPillIcon">⬇</span>
+          <span class="dl-all-pill__icon" id="dlAllPillIcon" data-icon="download"></span>
           <span class="dl-all-pill__label" id="dlAllPillLabel">OFFLINE</span>
           <span class="dl-all-pill__count" id="dlAllPillCount"></span>
         </button>
@@ -155,17 +155,17 @@
     <div class="mini-player__body">
       <div class="mini-player__cover" id="expandPlayer" aria-label="Abrir player fullscreen">
         <img id="miniCoverImg" src="" alt="" onerror="this.style.display='none';document.getElementById('miniCoverFallback').style.display='flex'">
-        <span id="miniCoverFallback" class="mini-cover-fallback">🎵</span>
-        <span class="mini-expand-icon">&#8599;</span>
+        <span id="miniCoverFallback" class="mini-cover-fallback" data-icon="music"></span>
+        <span class="mini-expand-icon" data-icon="expand"></span>
       </div>
       <div class="mini-player__info">
         <span class="mini-player__title" id="miniTitle">—</span>
         <span class="mini-player__artist">ECHODOME</span>
       </div>
       <div class="mini-player__controls">
-        <button class="ctrl-btn" id="miniPrev" aria-label="Anterior">&#9664;&#9664;</button>
-        <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause">&#9654;</button>
-        <button class="ctrl-btn" id="miniNext" aria-label="Próximo">&#9654;&#9654;</button>
+        <button class="ctrl-btn" id="miniPrev" aria-label="Anterior" data-icon="prev"></button>
+        <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause" data-icon="play"></button>
+        <button class="ctrl-btn" id="miniNext" aria-label="Próximo" data-icon="next"></button>
       </div>
     </div>
   </div>
@@ -174,14 +174,14 @@
   <div class="fullscreen-player" id="fullscreenPlayer" aria-hidden="true">
 
     <!-- Botão fechar -->
-    <button class="fs-close-btn" id="fsCloseBtn" aria-label="Fechar">&#x2715;</button>
+    <button class="fs-close-btn" id="fsCloseBtn" aria-label="Fechar" data-icon="close"></button>
 
     <!-- Botões de modo: Loop / Focus / Boost / Band -->
     <div class="fs-mode-btns">
-      <button class="fs-mode-btn" id="fsLoopBtn"      aria-label="Loop">&#9854;</button>
-      <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode">&#9673;</button>
-      <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost">&#9889;</button>
-      <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode">&#9836;</button>
+      <button class="fs-mode-btn" id="fsLoopBtn"      aria-label="Loop"      data-icon="loop"></button>
+      <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode" data-icon="focus"></button>
+      <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost"     data-icon="boost"></button>
+      <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode" data-icon="band"></button>
     </div>
 
     <!-- Fundo dinâmico: capa desfocada + overlay gradiente -->
@@ -241,14 +241,14 @@
 
       <!-- Controles principais -->
       <div class="fs-controls">
-        <button class="fs-ctrl-btn" id="fsPrev">&#9664;&#9664;</button>
-        <button class="fs-ctrl-btn fs-ctrl-btn--play" id="fsPlay">&#9654;</button>
-        <button class="fs-ctrl-btn" id="fsNext">&#9654;&#9654;</button>
+        <button class="fs-ctrl-btn" id="fsPrev" data-icon="prev"></button>
+        <button class="fs-ctrl-btn fs-ctrl-btn--play" id="fsPlay" data-icon="play"></button>
+        <button class="fs-ctrl-btn" id="fsNext" data-icon="next"></button>
       </div>
 
       <!-- Volume -->
       <div class="fs-volume-wrap">
-        <span>&#128264;</span>
+        <span class="vol-icon" data-icon="volume"></span>
         <input type="range" class="fs-volume-slider" id="fsVolume" min="0" max="1" step="0.01" value="1" />
       </div>
 
@@ -291,6 +291,7 @@
 
   <audio id="audioEngine" preload="metadata"></audio>
 
+  <script src="js/icons.js"></script>
   <script src="js/songs/index.js"></script>
   <script src="js/downloader.js"></script>
   <script src="js/themes.js"></script>

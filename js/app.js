@@ -86,8 +86,8 @@ const app = (() => {
     header.dataset.albumId = album.id;
 
     const coverHTML = album.cover
-      ? `<img src="${album.cover}" alt="${album.name}" onerror="this.parentElement.textContent='${album.coverEmoji || '🎵'}'"/>`
-      : `<span>${album.coverEmoji || '🎵'}</span>`;
+      ? `<img src="${album.cover}" alt="${album.name}" onerror="this.parentElement.innerHTML=Icons.get('music')"/>`
+      : `<span class="cover-fallback-icon">${Icons.get('music')}</span>`;
 
     header.innerHTML = `
       <div class="album-cover">${coverHTML}</div>
@@ -98,7 +98,7 @@ const app = (() => {
         </span>
       </div>
       <button class="album-dl-btn" data-album-id="${album.id}" aria-label="Download ${album.name}">
-        <span class="dl-icon">⬇</span>
+        <span class="dl-icon" data-icon="download"></span>
         <span class="dl-label">DOWNLOAD</span>
         <span class="dl-progress"></span>
       </button>
@@ -117,7 +117,7 @@ const app = (() => {
     const coverHTML = album?.cover
       ? `<img src="${album.cover}" alt="${album.name}" class="track-cover-img" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`
       : '';
-    const fallbackHTML = `<span class="track-cover-fallback" ${album?.cover ? 'style="display:none"' : ''}>${album?.coverEmoji || '🎵'}</span>`;
+    const fallbackHTML = `<span class="track-cover-fallback" ${album?.cover ? 'style="display:none"' : ''}>${Icons.get('music')}</span>`;
 
     const item = document.createElement('div');
     item.className = 'track-item';
@@ -134,8 +134,8 @@ const app = (() => {
       <span class="track-duration">${song.duration}</span>
       <button class="track-dl-btn" data-song-id="${song.id}"
         aria-label="Download ${song.title}"
-        data-remove-label="REMOVER">⬇</button>
-      <button class="track-play-btn" aria-label="Play ${song.title}">&#9654;</button>
+        data-remove-label="REMOVER"></button>
+      <button class="track-play-btn" aria-label="Play ${song.title}">${Icons.get('play')}</button>
     `;
     item.addEventListener('click', e => {
       if (!e.target.closest('.track-dl-btn')) Player.playIndex(globalIdx);
@@ -161,7 +161,7 @@ const app = (() => {
       const downloading = Downloader.isDownloading(songId);
       btn.classList.toggle('is-downloaded', downloaded && !downloading);
       btn.classList.toggle('is-downloading', downloading);
-      btn.innerHTML = downloading ? '↻' : downloaded ? '✓' : '⬇';
+      btn.innerHTML = downloading ? Icons.get('loading') : downloaded ? Icons.get('check') : Icons.get('download');
       btn.title = downloading ? 'Baixando…' : downloaded ? 'Baixado — clique para remover' : 'Baixar para ouvir offline';
     });
 
@@ -177,15 +177,15 @@ const app = (() => {
       btn.classList.toggle('is-loading',  status.inProgress);
 
       if (status.inProgress) {
-        icon.textContent  = '↻';
+        icon.innerHTML  = Icons.get('loading');
         label.textContent = 'BAIXANDO';
         if (prog) prog.textContent = ` ${status.done}/${status.total}`;
       } else if (status.allDone) {
-        icon.textContent  = '✓';
+        icon.innerHTML  = Icons.get('check');
         label.textContent = 'BAIXADO';
         if (prog) prog.textContent = '';
       } else {
-        icon.textContent  = '⬇';
+        icon.innerHTML  = Icons.get('download');
         label.textContent = 'DOWNLOAD';
         if (prog) prog.textContent = status.done > 0 ? ` ${status.done}/${status.total}` : '';
       }
@@ -206,7 +206,7 @@ const app = (() => {
       pillEl.classList.toggle('is-in-progress', allStatus.inProgress);
     }
     if (pillIcon) {
-      pillIcon.textContent = allStatus.allDone ? '✓' : allStatus.inProgress ? '↻' : '⬇';
+      pillIcon.innerHTML = allStatus.allDone ? Icons.get('check') : allStatus.inProgress ? Icons.get('loading') : Icons.get('download');
     }
     if (pillLabel) {
       pillLabel.textContent = allStatus.allDone
@@ -277,6 +277,7 @@ const app = (() => {
     initOfflineIndicator();
     await Downloader.init(SONGS);
     _refreshDownloadUI();
+    Icons.applyAll();
   }
 
   return { init, navigate };

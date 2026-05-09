@@ -95,9 +95,9 @@ const GalleryLightbox = (() => {
     overlay.setAttribute('aria-label', 'Visualizador de imagem');
 
     overlay.innerHTML = `
-      <button class="lb-btn lb-close" id="lbClose"  aria-label="Fechar">&#x2715;</button>
-      <button class="lb-btn lb-prev"  id="lbPrev"   aria-label="Anterior">&#10094;</button>
-      <button class="lb-btn lb-next"  id="lbNext"   aria-label="Próximo">&#10095;</button>
+      <button class="lb-btn lb-close" id="lbClose" aria-label="Fechar" data-icon="close"></button>
+      <button class="lb-btn lb-prev"  id="lbPrev"   aria-label="Anterior" data-icon="prev"></button>
+      <button class="lb-btn lb-next"  id="lbNext"   aria-label="Próximo"  data-icon="next"></button>
 
       <div class="lb-stage">
         <img class="lb-img" id="lbImg" src="" alt="" />
@@ -110,6 +110,7 @@ const GalleryLightbox = (() => {
     `;
 
     document.body.appendChild(overlay);
+    Icons.applyAll();
 
     /* Guarda referências */
     el = {

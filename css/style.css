@@ -593,3 +593,102 @@ body {
 
 /* ---------- Responsive ---------- */
 /* ---------- Mobile overrides ---------- */
+
+/* =========================================================
+   SVG ICON SYSTEM
+   ========================================================= */
+
+/* All SVG icons inherit color from parent */
+[data-icon] svg,
+.track-play-btn svg,
+.track-dl-btn svg,
+.ctrl-btn svg,
+.fs-ctrl-btn svg,
+.fs-mode-btn svg,
+.fs-close-btn svg,
+.lb-btn svg,
+.album-dl-btn svg,
+.mini-expand-icon svg,
+.mini-cover-fallback svg,
+.fs-cover-fallback svg,
+.track-cover-fallback svg,
+.cover-fallback-icon svg,
+.vol-icon svg,
+.dl-all-pill__icon svg,
+.band-card-icon svg,
+.member-icon svg {
+  width: 1em;
+  height: 1em;
+  display: block;
+  fill: currentColor;
+  stroke: none;
+}
+
+/* Buttons that contain only an SVG: center it */
+.ctrl-btn,
+.fs-ctrl-btn,
+.fs-mode-btn,
+.fs-close-btn,
+.lb-btn,
+.track-play-btn,
+.track-dl-btn,
+.album-dl-btn .dl-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Volume icon sizing */
+.vol-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1.1rem;
+  color: var(--fg-dim);
+}
+.vol-icon svg { width: 1.1em; height: 1.1em; }
+
+/* Download icon in pill */
+.dl-all-pill__icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+/* Inline icons in dl buttons */
+.dl-icon {
+  display: inline-flex;
+  align-items: center;
+  font-size: 1em;
+}
+
+/* Mini player expand icon sizing */
+.mini-expand-icon {
+  font-size: 1.1rem;
+}
+.mini-expand-icon svg { width: 1.1em; height: 1.1em; }
+
+/* Music note fallback sizing */
+.mini-cover-fallback svg,
+.track-cover-fallback svg,
+.cover-fallback-icon svg {
+  width: 1.4em;
+  height: 1.4em;
+  opacity: 0.4;
+}
+
+/* Band & member icons keep decorative chars (◈ ◆ ✶ ★ ⟁) */
+.band-card-icon,
+.member-icon,
+.fs-char-icon {
+  /* these remain text/unicode symbols, not SVG */
+}
+
+/* Spin animation for loading icon */
+@keyframes icon-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+.icon-spin {
+  animation: icon-spin 0.8s linear infinite;
+  transform-origin: center;
+}
