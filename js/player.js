@@ -1,5 +1,5 @@
 /* =========================================================
-   ECHODOME — js/player.js
+   ECHODOME — js/player.js  v2
    Audio engine + mini player + fullscreen imersivo.
    Implementa todos os 9 pontos do redesign.
    ========================================================= */
@@ -16,7 +16,7 @@ const Player = (() => {
   let isFocusMode = false;
   let isBoost     = false;
 
-  /* ---- Personagens da banda (para ponto 3) ---- */
+  /* ---- Personagens (ponto 3) ---- */
   const CHARS = {
     trace: { name:'TRACE', role:'VOX / GTR', icon:'◈' },
     od:    { name:'OD',    role:'GUITAR',    icon:'◆' },
@@ -44,7 +44,7 @@ const Player = (() => {
     if (isNaN(sec)) return '0:00';
     const m = Math.floor(sec / 60);
     const s = Math.floor(sec % 60).toString().padStart(2, '0');
-    return `${m}:${s}`;
+    return m + ':' + s;
   }
 
   function setPlayIcon(playing) {
@@ -53,13 +53,13 @@ const Player = (() => {
     if (elFSPlay)   elFSPlay.innerHTML   = icon;
   }
 
-  /* Pulso animado: aplica classe e remove após a animação (ponto 2) */
+  /* Pulso animado: força reflow e adiciona classe */
   function pulse(el, cls) {
     if (!el) return;
     el.classList.remove(cls);
-    void el.offsetWidth; // force reflow
+    void el.offsetWidth;
     el.classList.add(cls);
-    el.addEventListener('animationend', () => el.classList.remove(cls), { once: true });
+    el.addEventListener('animationend', function() { el.classList.remove(cls); }, { once: true });
   }
 
   /* ---- Progresso ---- */
@@ -72,28 +72,28 @@ const Player = (() => {
     if (elFSCurrent) elFSCurrent.textContent = fmt(audio.currentTime);
   }
 
-  /* ---- Fundo dinâmico por música (ponto 8) ---- */
+  /* ---- Fundo dinâmico (ponto 8) ---- */
   function updateDynamicBg(album) {
     if (!elFSBgCover) return;
-    if (album?.cover) {
-      elFSBgCover.style.backgroundImage = `url("${album.cover}")`;
-      elFSBgCover.style.opacity = '0.3';
+    if (album && album.cover) {
+      elFSBgCover.style.backgroundImage = 'url("' + album.cover + '")';
+      elFSBgCover.style.opacity = '0.28';
     } else {
       elFSBgCover.style.backgroundImage = 'none';
       elFSBgCover.style.opacity = '0';
     }
   }
 
-  /* ---- Capa grande no fullscreen (ponto 1) ---- */
+  /* ---- Capa no fullscreen (ponto 1) ---- */
   function updateFSCover(album) {
     if (!elFSCoverImg || !elFSCoverFallback) return;
-    if (album?.cover) {
+    if (album && album.cover) {
       elFSCoverImg.src     = album.cover;
       elFSCoverImg.style.display = 'block';
       elFSCoverFallback.style.display = 'none';
     } else {
       elFSCoverImg.src     = '';
-      elFSCoverImg.style.display = 'none';
+      elFSCoverImg.style.display     = 'none';
       elFSCoverFallback.style.display = 'flex';
     }
   }
@@ -114,18 +114,35 @@ const Player = (() => {
     elFSTitle.textContent = text;
   }
 
+  /* ---- Transição da capa: explode e volta (ponto 6) ---- */
+  function transitionCover(album) {
+    if (!elFSCoverImg) return;
+    const wrap = elFSCoverImg.closest('.fs-cover-img-wrap');
+    if (!wrap) { updateFSCover(album); return; }
+    // Escala para cima rápido, troca a imagem, volta
+    wrap.style.transition = 'transform 0.15s ease-in, opacity 0.15s ease-in';
+    wrap.style.transform  = 'scale(1.08)';
+    wrap.style.opacity    = '0.4';
+    setTimeout(function() {
+      updateFSCover(album);
+      wrap.style.transition = 'transform 0.3s cubic-bezier(.2,1.4,.4,1), opacity 0.25s ease-out';
+      wrap.style.transform  = 'scale(1)';
+      wrap.style.opacity    = '1';
+    }, 160);
+  }
+
   /* ---- Carregar música ---- */
-  function loadSong(idx, playAfterLoad = false) {
+  function loadSong(idx, playAfterLoad) {
     if (idx < 0 || idx >= playlist.length) return;
     currentIdx = idx;
     const song  = playlist[idx];
-    const album = typeof ALBUMS !== 'undefined'
-      ? ALBUMS.find(a => a.id === song.albumId)
+    const album = (typeof ALBUMS !== 'undefined')
+      ? ALBUMS.find(function(a) { return a.id === song.albumId; })
       : null;
 
     audio.src = '';
     if (playAfterLoad) {
-      const onCanPlay = () => {
+      const onCanPlay = function() {
         audio.removeEventListener('canplay', onCanPlay);
         play();
       };
@@ -139,7 +156,7 @@ const Player = (() => {
     if (elMiniPlayer) elMiniPlayer.classList.remove('hidden');
 
     if (elMiniCoverImg && elMiniCoverFallback) {
-      if (album?.cover) {
+      if (album && album.cover) {
         elMiniCoverImg.src   = album.cover;
         elMiniCoverImg.alt   = album.name || '';
         elMiniCoverImg.style.display      = 'block';
@@ -148,34 +165,34 @@ const Player = (() => {
         elMiniCoverImg.src   = '';
         elMiniCoverImg.style.display      = 'none';
         elMiniCoverFallback.style.display = 'flex';
-        elMiniCoverFallback.textContent   = album?.coverEmoji || '🎵';
+        elMiniCoverFallback.textContent   = (album && album.coverEmoji) || '🎵';
       }
     }
 
     /* Fullscreen */
     glitchTitle(song.title);
+    transitionCover(album);
     if (elFSDuration) elFSDuration.textContent = song.duration;
     if (elFSCurrent)  elFSCurrent.textContent  = '0:00';
     if (elFSFill)     elFSFill.style.width      = '0%';
     if (elFSHead)     elFSHead.style.left        = '0%';
     if (elMiniFill)   elMiniFill.style.width    = '0%';
 
-    updateFSCover(album);
     updateDynamicBg(album);
     updateCharacter();
 
     /* Lyrics & story */
     if (elFSLyrics) elFSLyrics.innerHTML =
-      `<p>${(song.lyrics || '// no lyrics').replace(/\[([^\]]+)\]/g,
-        '<strong>[$1]</strong>').replace(/\n/g, '<br>')}</p>`;
+      '<p>' + ((song.lyrics || '// no lyrics').replace(/\[([^\]]+)\]/g,
+        '<strong>[$1]</strong>').replace(/\n/g, '<br>')) + '</p>';
     if (elFSStory) elFSStory.innerHTML =
-      `<p>${(song.story || '// no story yet').replace(/\n\n/g, '</p><p>')}</p>`;
+      '<p>' + ((song.story || '// no story yet').replace(/\n\n/g, '</p><p>')) + '</p>';
 
     /* Highlight tracklist */
-    document.querySelectorAll('.track-item').forEach((el, i) => {
+    document.querySelectorAll('.track-item').forEach(function(el, i) {
       el.classList.toggle('playing', i === idx);
       const btn = el.querySelector('.track-play-btn');
-      if (btn) btn.innerHTML = i === idx && isPlaying ? '&#9646;&#9646;' : '&#9654;';
+      if (btn) btn.innerHTML = (i === idx && isPlaying) ? '&#9646;&#9646;' : '&#9654;';
     });
   }
 
@@ -183,13 +200,13 @@ const Player = (() => {
   function play() {
     const promise = audio.play();
     if (promise !== undefined) {
-      promise.then(() => {
+      promise.then(function() {
         isPlaying = true;
         setPlayIcon(true);
         updateTracklistBtns();
         if (elMiniPlayer) elMiniPlayer.classList.add('is-playing');
         if (typeof Visualizer !== 'undefined') Visualizer.start();
-      }).catch(err => {
+      }).catch(function(err) {
         console.warn('[Player] play() blocked:', err);
         isPlaying = false;
         setPlayIcon(false);
@@ -218,7 +235,7 @@ const Player = (() => {
   }
 
   function updateTracklistBtns() {
-    document.querySelectorAll('.track-item').forEach((el, i) => {
+    document.querySelectorAll('.track-item').forEach(function(el, i) {
       const btn = el.querySelector('.track-play-btn');
       if (btn) btn.innerHTML = (i === currentIdx && isPlaying) ? '&#9646;&#9646;' : '&#9654;';
     });
@@ -238,7 +255,7 @@ const Player = (() => {
     elFS.classList.add('open');
     elFS.removeAttribute('aria-hidden');
     updateCharacter();
-    requestAnimationFrame(() => {
+    requestAnimationFrame(function() {
       if (typeof Visualizer !== 'undefined') Visualizer.resize();
     });
   }
@@ -249,28 +266,28 @@ const Player = (() => {
   /* ---- Modos extras (ponto 7) ---- */
   function toggleBandMode() {
     isBandMode = !isBandMode;
-    elFSBandMode?.classList.toggle('visible', isBandMode);
-    elFSBandBtn?.classList.toggle('active', isBandMode);
+    if (elFSBandMode) elFSBandMode.classList.toggle('visible', isBandMode);
+    if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
     if (isBandMode && typeof Visualizer !== 'undefined') Visualizer.initBandMode();
   }
   function toggleFocusMode() {
     isFocusMode = !isFocusMode;
-    elFS?.classList.toggle('focus-mode', isFocusMode);
-    elFSFocusBtn?.classList.toggle('active', isFocusMode);
+    if (elFS)        elFS.classList.toggle('focus-mode', isFocusMode);
+    if (elFSFocusBtn) elFSFocusBtn.classList.toggle('active', isFocusMode);
   }
   function toggleBoost() {
     isBoost = !isBoost;
-    elFS?.classList.toggle('boost-mode', isBoost);
-    elFSBoostBtn?.classList.toggle('active', isBoost);
+    if (elFS)        elFS.classList.toggle('boost-mode', isBoost);
+    if (elFSBoostBtn) elFSBoostBtn.classList.toggle('active', isBoost);
     if (typeof Visualizer !== 'undefined') Visualizer.setBoost(isBoost);
   }
   function toggleLoop() {
     isLooping = !isLooping;
     audio.loop = isLooping;
-    elFSLoopBtn?.classList.toggle('active', isLooping);
+    if (elFSLoopBtn) elFSLoopBtn.classList.toggle('active', isLooping);
   }
 
-  /* ---- Beat callbacks vindos do Visualizer (pontos 2, 4) ---- */
+  /* ---- Beat callbacks do Visualizer (pontos 2, 4) ---- */
   function onBeat() {
     pulse(elFSCoverGlow, 'beat-glow');
     pulse(elFSCoverRing, 'ring-beat');
@@ -281,12 +298,12 @@ const Player = (() => {
 
   /* ---- Tabs ---- */
   function initTabs() {
-    document.querySelectorAll('.fs-tab').forEach(tab => {
-      tab.addEventListener('click', () => {
-        document.querySelectorAll('.fs-tab').forEach(t => t.classList.remove('active'));
-        document.querySelectorAll('.fs-tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.fs-tab').forEach(function(tab) {
+      tab.addEventListener('click', function() {
+        document.querySelectorAll('.fs-tab').forEach(function(t) { t.classList.remove('active'); });
+        document.querySelectorAll('.fs-tab-pane').forEach(function(p) { p.classList.remove('active'); });
         tab.classList.add('active');
-        const pane = document.getElementById(`tab-${tab.dataset.tab}`);
+        const pane = document.getElementById('tab-' + tab.dataset.tab);
         if (pane) pane.classList.add('active');
       });
     });
@@ -339,57 +356,72 @@ const Player = (() => {
     elFSBoostBtn    = document.getElementById('fsBoostBtn');
     elFSLoopBtn     = document.getElementById('fsLoopBtn');
 
-    /* Boost on por padrão */
+    /* Boost ativo por padrão */
     isBoost = true;
-    elFS?.classList.add('boost-mode');
-    elFSBoostBtn?.classList.add('active');
+    if (elFS)        elFS.classList.add('boost-mode');
+    if (elFSBoostBtn) elFSBoostBtn.classList.add('active');
 
     /* Audio events */
     audio.addEventListener('timeupdate', updateProgress);
     audio.addEventListener('ended', next);
-    audio.addEventListener('loadedmetadata', () => {
+    audio.addEventListener('loadedmetadata', function() {
       if (elFSDuration) elFSDuration.textContent = fmt(audio.duration);
     });
 
     /* Mini player controls */
-    elMiniPlay?.addEventListener('click', togglePlay);
-    elMiniPrev?.addEventListener('click', prev);
-    elMiniNext?.addEventListener('click', next);
-    elExpandPlayer?.addEventListener('click', openFS);
-    elMiniFillBar?.addEventListener('click', e => seekOnClick(elMiniFillBar, e));
+    if (elMiniPlay)   elMiniPlay.addEventListener('click', togglePlay);
+    if (elMiniPrev)   elMiniPrev.addEventListener('click', prev);
+    if (elMiniNext)   elMiniNext.addEventListener('click', next);
+    if (elExpandPlayer) elExpandPlayer.addEventListener('click', openFS);
+    if (elMiniFillBar)  elMiniFillBar.addEventListener('click', function(e) { seekOnClick(elMiniFillBar, e); });
 
     /* Fullscreen controls */
-    elFSPlay?.addEventListener('click', togglePlay);
-    elFSPrev?.addEventListener('click', prev);
-    elFSNext?.addEventListener('click', next);
-    elFSClose?.addEventListener('click', closeFS);
-    elFSBar?.addEventListener('click', e => seekOnClick(elFSBar, e));
-    elFSVolume?.addEventListener('input', () => { audio.volume = parseFloat(elFSVolume.value); });
+    if (elFSPlay)  elFSPlay.addEventListener('click', togglePlay);
+    if (elFSPrev)  elFSPrev.addEventListener('click', prev);
+    if (elFSNext)  elFSNext.addEventListener('click', next);
+    if (elFSClose) elFSClose.addEventListener('click', closeFS);
+    if (elFSBar)   elFSBar.addEventListener('click', function(e) { seekOnClick(elFSBar, e); });
+    if (elFSVolume) elFSVolume.addEventListener('input', function() {
+      audio.volume = parseFloat(elFSVolume.value);
+    });
 
     /* Modos extras (ponto 7) */
-    elFSBandBtn?.addEventListener('click', toggleBandMode);
-    elFSFocusBtn?.addEventListener('click', toggleFocusMode);
-    elFSBoostBtn?.addEventListener('click', toggleBoost);
-    elFSLoopBtn?.addEventListener('click', toggleLoop);
+    if (elFSBandBtn)  elFSBandBtn.addEventListener('click', toggleBandMode);
+    if (elFSFocusBtn) elFSFocusBtn.addEventListener('click', toggleFocusMode);
+    if (elFSBoostBtn) elFSBoostBtn.addEventListener('click', toggleBoost);
+    if (elFSLoopBtn)  elFSLoopBtn.addEventListener('click', toggleLoop);
+
+    /* Swipe para fechar fullscreen (mobile) */
+    let touchStartY = 0;
+    if (elFS) {
+      elFS.addEventListener('touchstart', function(e) {
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+      elFS.addEventListener('touchend', function(e) {
+        const diff = e.changedTouches[0].clientY - touchStartY;
+        if (diff > 80) closeFS();
+      }, { passive: true });
+    }
 
     /* Keyboard shortcuts */
-    document.addEventListener('keydown', e => {
+    document.addEventListener('keydown', function(e) {
       if (e.target.tagName === 'INPUT') return;
       if (document.body.classList.contains('lb-active')) return;
       if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
       if (e.code === 'ArrowRight') next();
       if (e.code === 'ArrowLeft')  prev();
       if (e.code === 'Escape')     closeFS();
+      if (e.code === 'KeyF')       { if (elFS && elFS.classList.contains('open')) toggleFocusMode(); }
     });
 
-    /* Atualiza personagem quando muda o tema */
+    /* Atualiza personagem quando muda tema */
     document.addEventListener('themeChanged', updateCharacter);
 
     initTabs();
 
-    /* Inicializa visualizador e passa callback de beat */
+    /* Inicializa visualizador */
     if (typeof Visualizer !== 'undefined') {
-      Visualizer.init(audio, { onBeat });
+      Visualizer.init(audio, { onBeat: onBeat });
     }
   }
 
@@ -399,7 +431,7 @@ const Player = (() => {
     togglePlay,
     next,
     prev,
-    isPlaying: () => isPlaying,
+    isPlaying: function() { return isPlaying; },
     onThemeChange: updateCharacter,
   };
 })();

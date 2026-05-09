@@ -1,7 +1,6 @@
 /* =========================================================
-   ECHODOME — player.css
-   Mini player + Fullscreen imersivo com todos os 9 pontos.
-   Completamente isolado de style.css e themes.css.
+   ECHODOME — player.css  v2
+   Mini player + Fullscreen imersivo (todos os 9 pontos).
    ========================================================= */
 
 /* ============================
@@ -17,38 +16,44 @@
   display: flex;
   flex-direction: column;
   z-index: 150;
-  transition: transform 0.3s var(--ease);
+  transition: transform 0.3s cubic-bezier(.4,0,.2,1),
+              border-top-color 0.4s ease,
+              box-shadow 0.4s ease;
 }
 .mini-player.hidden { transform: translateY(100%); }
 
-/* Glow ativo quando tocando (ponto 9) */
+/* Glow ativo quando tocando */
 .mini-player.is-playing {
   border-top-color: var(--neon-40);
-  box-shadow: 0 -2px 20px var(--neon-15);
+  box-shadow: 0 -2px 24px var(--neon-15);
 }
 
-/* Barra de progresso com waveform integrada (ponto 9) */
+/* Barra de progresso com waveform */
 .mini-progress-bar {
   width: 100%;
-  height: 28px;
-  background: var(--neon-08);
+  height: 32px;
+  background: var(--neon-05);
   cursor: pointer;
   position: relative;
   flex-shrink: 0;
   overflow: hidden;
+  transition: height 0.15s ease;
 }
-.mini-progress-bar:hover { height: 30px; }
+.mini-progress-bar:hover { height: 36px; }
 
 .mini-progress-fill {
   position: absolute;
   bottom: 0; left: 0;
   height: 2px;
-  background: var(--neon);
-  box-shadow: 0 0 6px var(--neon-60);
+  background: linear-gradient(90deg, var(--neon-60), var(--neon));
+  box-shadow: 0 0 8px var(--neon-60);
   width: 0%;
   transition: width 0.3s linear;
   pointer-events: none;
   z-index: 2;
+}
+.mini-player.is-playing .mini-progress-fill {
+  box-shadow: 0 0 12px var(--neon), 0 0 24px var(--neon-40);
 }
 
 /* Corpo principal */
@@ -57,14 +62,14 @@
   align-items: center;
   gap: var(--gap-md);
   padding: 8px var(--gap-lg);
-  height: 60px;
+  height: 64px;
 }
 
-/* Capa com botão expand (ponto 9) */
+/* Capa com botão expand */
 .mini-player__cover {
-  width: 44px;
-  height: 44px;
-  border-radius: 6px;
+  width: 48px;
+  height: 48px;
+  border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
@@ -74,13 +79,13 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
 }
+.mini-player__cover:hover { transform: scale(1.04); border-color: var(--neon-60); }
 .mini-player.is-playing .mini-player__cover {
   border-color: var(--neon-40);
-  box-shadow: 0 0 12px var(--neon-20);
+  box-shadow: 0 0 14px var(--neon-20);
 }
-.mini-player__cover:hover { border-color: var(--neon-60); }
 .mini-player__cover img {
   width: 100%; height: 100%;
   object-fit: cover;
@@ -92,12 +97,10 @@
   align-items: center;
   justify-content: center;
 }
-
-/* Ícone expand visível no hover (ponto 9) */
 .mini-expand-icon {
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.65);
   color: var(--neon);
   font-size: 1rem;
   display: flex;
@@ -113,7 +116,7 @@
   min-width: 0;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 .mini-player__title {
   font-family: var(--font-display);
@@ -126,7 +129,7 @@
 }
 .mini-player__artist {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--neon);
   letter-spacing: 0.15em;
   opacity: 0.7;
@@ -149,21 +152,23 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: color 0.15s;
+  transition: color 0.15s, transform 0.15s;
+  border-radius: 4px;
 }
-.ctrl-btn:hover { color: var(--neon); }
+.ctrl-btn:hover { color: var(--neon); transform: scale(1.1); }
 
 .ctrl-btn--play {
-  width: 40px; height: 40px;
+  width: 42px; height: 42px;
   border: 1px solid var(--neon-40);
   border-radius: 50%;
   color: var(--neon);
   font-size: 1rem;
-  transition: background 0.15s, box-shadow 0.15s;
+  transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 .ctrl-btn--play:hover {
   background: var(--neon-15);
-  box-shadow: 0 0 12px var(--neon-30);
+  box-shadow: 0 0 16px var(--neon-30);
+  transform: scale(1.08);
 }
 
 /* ============================
@@ -183,21 +188,13 @@
   opacity: 0;
   pointer-events: none;
   transform: translateY(100%);
-  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+  transition: opacity 0.45s cubic-bezier(.4,0,.2,1),
+              transform 0.45s cubic-bezier(.4,0,.2,1);
 }
 .fullscreen-player.open {
   opacity: 1;
   pointer-events: all;
   transform: translateY(0);
-}
-
-/* Glitch na transição de música (ponto 6) */
-@keyframes fsGlitch {
-  0%   { opacity: 0; transform: translateY(100%) scaleY(0.95); }
-  40%  { opacity: 1; transform: translateY(0) scaleY(1); }
-  45%  { clip-path: inset(20% 0 30% 0); transform: translateX(-3px); }
-  50%  { clip-path: inset(0); transform: translateX(0); }
-  100% { opacity: 1; transform: translateY(0); }
 }
 
 /* Focus mode: sem UI, só música (ponto 7) */
@@ -206,12 +203,15 @@
 .fullscreen-player.focus-mode .fs-tabs,
 .fullscreen-player.focus-mode .fs-tab-content,
 .fullscreen-player.focus-mode .fs-band-mode,
-.fullscreen-player.focus-mode .fs-volume-wrap { opacity: 0; pointer-events: none; transition: opacity 0.4s; }
-.fullscreen-player.focus-mode .fs-cover-wrap { transform: scale(1.08); }
-.fullscreen-player.focus-mode #fsFocusModeBtn { color: var(--neon); }
+.fullscreen-player.focus-mode .fs-volume-wrap {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
+}
+.fullscreen-player.focus-mode .fs-cover-wrap { transform: scale(1.1); }
 
-/* Boost mode: efeitos visuais intensificados (ponto 7) */
-.fullscreen-player.boost-mode .fs-cover-glow { opacity: 0.9 !important; }
+/* Boost mode */
+.fullscreen-player.boost-mode .fs-cover-glow { opacity: 0.95 !important; }
 .fullscreen-player.boost-mode .fs-cover-ring { animation-duration: 1s !important; }
 .fullscreen-player.boost-mode #fsBoostBtn { color: var(--neon); }
 
@@ -227,20 +227,31 @@
   inset: -30px;
   background-size: cover;
   background-position: center;
-  filter: blur(40px) saturate(1.6);
+  filter: blur(50px) saturate(1.8);
   transform: scale(1.1);
-  opacity: 0.3;
-  transition: opacity 0.8s ease;
+  opacity: 0.28;
+  transition: opacity 1s ease, background-image 0.6s ease;
 }
 .fs-bg-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    to bottom,
+    180deg,
     var(--bg) 0%,
-    rgba(0,0,0,0.6) 40%,
+    rgba(0,0,0,0.55) 45%,
     var(--bg) 100%
   );
+}
+
+/* ---- Partículas ---- */
+.viz-canvas-particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.55;
 }
 
 /* ---- Silhueta do personagem (ponto 3) ---- */
@@ -255,29 +266,29 @@
   gap: 6px;
   z-index: 2;
   pointer-events: none;
-  opacity: 0.2;
-  transition: opacity 0.4s ease;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
-.fullscreen-player.open .fs-char-silhouette { opacity: 0.25; }
+.fullscreen-player.open .fs-char-silhouette { opacity: 0.22; }
 .fs-char-icon {
-  font-size: 5rem;
+  font-size: 5.5rem;
   color: var(--neon);
-  text-shadow: 0 0 40px var(--neon), 0 0 80px var(--neon-40);
+  text-shadow: 0 0 40px var(--neon), 0 0 80px var(--neon-30);
   animation: charFloat 4s ease-in-out infinite;
 }
 @keyframes charFloat {
   0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-12px); }
+  50%       { transform: translateY(-14px); }
 }
 .fs-char-name {
   font-family: var(--font-display);
-  font-size: 0.9rem;
-  letter-spacing: 0.2em;
+  font-size: 0.85rem;
+  letter-spacing: 0.22em;
   color: var(--neon);
 }
 .fs-char-role {
   font-family: var(--font-mono);
-  font-size: 0.55rem;
+  font-size: 0.52rem;
   letter-spacing: 0.15em;
   color: var(--fg-dim);
 }
@@ -290,16 +301,21 @@
   background: none;
   border: none;
   color: var(--fg-dim);
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   cursor: pointer;
   z-index: 10;
-  transition: color 0.15s;
+  transition: color 0.15s, transform 0.15s;
   width: 40px; height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
-.fs-close-btn:hover { color: var(--neon); }
+.fs-close-btn:hover {
+  color: var(--neon);
+  background: var(--neon-08);
+  transform: rotate(90deg);
+}
 
 /* ---- Botões de modo (ponto 7) ---- */
 .fs-mode-btns {
@@ -307,57 +323,69 @@
   top: var(--gap-md);
   right: var(--gap-lg);
   display: flex;
-  gap: var(--gap-sm);
+  gap: 6px;
   z-index: 10;
 }
 .fs-mode-btn {
   background: var(--neon-08);
   border: 1px solid var(--neon-20);
-  border-radius: 4px;
+  border-radius: 6px;
   color: var(--fg-dim);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   width: 34px; height: 34px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.2s, border-color 0.2s, color 0.2s;
+  transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.15s;
 }
-.fs-mode-btn:hover,
+.fs-mode-btn:hover { transform: scale(1.08); }
 .fs-mode-btn.active {
   background: var(--neon-15);
-  border-color: var(--neon-40);
+  border-color: var(--neon-50);
   color: var(--neon);
+  box-shadow: 0 0 10px var(--neon-20);
 }
 
 /* ---- Capa grande com glow pulsante (pontos 1, 2) ---- */
-/* (dimensões finais definidas no bloco abaixo) */
+.fs-cover-wrap {
+  position: relative;
+  width: clamp(200px, 55vw, 290px);
+  height: clamp(200px, 55vw, 290px);
+  flex-shrink: 0;
+  transition: transform 0.5s cubic-bezier(.4,0,.2,1);
+  margin: 0 auto;
+}
 
 .fs-cover-glow {
   position: absolute;
-  inset: -24px;
+  inset: -28px;
   border-radius: 50%;
   background: radial-gradient(circle, var(--neon-30) 0%, transparent 70%);
-  opacity: 0.5;
+  opacity: 0.45;
   transition: opacity 0.3s ease;
   pointer-events: none;
 }
 .fs-cover-glow.beat-glow {
-  animation: glowBeat 0.15s ease-out;
+  animation: glowBeat 0.18s ease-out;
 }
 @keyframes glowBeat {
-  0%   { opacity: 0.3; transform: scale(0.9); }
-  50%  { opacity: 1;   transform: scale(1.2); }
-  100% { opacity: 0.5; transform: scale(1); }
+  0%   { opacity: 0.3; transform: scale(0.88); }
+  50%  { opacity: 1;   transform: scale(1.22); }
+  100% { opacity: 0.45; transform: scale(1); }
 }
 
 .fs-cover-img-wrap {
   position: relative;
   width: 100%; height: 100%;
-  border-radius: 12px;
+  border-radius: 14px;
   overflow: hidden;
   border: 2px solid var(--neon-30);
-  box-shadow: 0 0 30px var(--neon-20), inset 0 0 20px rgba(0,0,0,0.3);
+  box-shadow: 0 0 35px var(--neon-20), inset 0 0 20px rgba(0,0,0,0.3);
+  transition: box-shadow 0.3s ease;
+}
+.fullscreen-player.boost-mode .fs-cover-img-wrap {
+  box-shadow: 0 0 60px var(--neon-40), 0 0 100px var(--neon-15), inset 0 0 20px rgba(0,0,0,0.3);
 }
 .fs-cover-img {
   width: 100%; height: 100%;
@@ -379,19 +407,19 @@
 /* Anel girando ao redor da capa (ponto 1) */
 .fs-cover-ring {
   position: absolute;
-  inset: -14px;
+  inset: -16px;
   border-radius: 50%;
   border: 1.5px solid transparent;
   border-top-color: var(--neon);
-  border-right-color: var(--neon-40);
-  animation: coverRing 6s linear infinite;
+  border-right-color: var(--neon-30);
+  animation: coverRing 7s linear infinite;
   pointer-events: none;
 }
 @keyframes coverRing {
   from { transform: rotate(0deg); }
   to   { transform: rotate(360deg); }
 }
-.fs-cover-ring.ring-beat { animation-duration: 0.6s; }
+.fs-cover-ring.ring-beat { animation-duration: 0.5s; }
 
 /* ---- Meta ---- */
 .fs-meta {
@@ -400,32 +428,52 @@
 }
 .fs-title {
   font-family: var(--font-display);
-  font-size: clamp(1.2rem, 5vw, 1.8rem);
+  font-size: clamp(1.2rem, 5vw, 1.9rem);
   letter-spacing: 0.1em;
   color: var(--fg);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-/* Glitch no título ao trocar música (ponto 6) */
+/* Glitch ao trocar música (ponto 6) */
 .fs-title.glitch-text {
-  animation: titleGlitch 0.4s ease;
+  animation: titleGlitch 0.38s ease;
 }
 @keyframes titleGlitch {
-  0%   { opacity: 1; transform: translateX(0); }
-  20%  { opacity: 0.3; transform: translateX(-5px); }
-  40%  { opacity: 1; transform: translateX(5px); }
-  60%  { opacity: 0.6; transform: translateX(-2px); }
-  80%  { opacity: 1; transform: translateX(0); }
-  100% { opacity: 1; }
+  0%   { opacity: 1; transform: translateX(0) skewX(0deg); }
+  18%  { opacity: 0.3; transform: translateX(-6px) skewX(-3deg); }
+  36%  { opacity: 1; transform: translateX(5px) skewX(2deg); }
+  55%  { opacity: 0.6; transform: translateX(-2px) skewX(0deg); }
+  75%  { opacity: 1; transform: translateX(1px); }
+  100% { opacity: 1; transform: translateX(0); }
 }
 .fs-artist {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.62rem;
   color: var(--neon);
-  letter-spacing: 0.2em;
+  letter-spacing: 0.22em;
   margin-top: 4px;
-  opacity: 0.8;
+  opacity: 0.75;
+}
+
+/* ---- Waveform reagindo ao som ---- */
+.fs-waveform-wrap {
+  width: 100%;
+  height: 90px;
+  position: relative;
+  flex-shrink: 0;
+  border-radius: 8px;
+  background: var(--neon-05);
+  overflow: hidden;
+  border: 1px solid var(--neon-15);
+}
+.viz-canvas-fs {
+  position: absolute;
+  inset: 0;
+  width: 100% !important;
+  height: 100% !important;
+  pointer-events: none;
+  opacity: 0.9;
 }
 
 /* ---- Tempo ---- */
@@ -434,27 +482,28 @@
   display: flex;
   justify-content: space-between;
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.68rem;
   color: var(--fg-dim);
   letter-spacing: 0.08em;
-  margin-top: -6px;
+  margin-top: -4px;
 }
 
 /* ---- Barra de progresso estilo energia (ponto 4) ---- */
 .fs-progress-wrap { width: 100%; }
 .fs-progress-bar {
   width: 100%;
-  height: 4px;
+  height: 5px;
   background: var(--neon-15);
   cursor: pointer;
   position: relative;
-  border-radius: 2px;
+  border-radius: 3px;
+  transition: height 0.15s ease;
 }
-.fs-progress-bar:hover { height: 6px; }
+.fs-progress-bar:hover { height: 7px; }
 .fs-progress-fill {
   height: 100%;
   background: linear-gradient(90deg, var(--neon-40) 0%, var(--neon) 100%);
-  box-shadow: 0 0 10px var(--neon-60), 0 0 20px var(--neon-30);
+  box-shadow: 0 0 12px var(--neon-60), 0 0 24px var(--neon-30);
   width: 0%;
   border-radius: inherit;
   transition: width 0.3s linear;
@@ -464,22 +513,22 @@
 .fs-progress-head {
   position: absolute;
   top: 50%;
-  width: 10px; height: 10px;
+  width: 12px; height: 12px;
   background: var(--neon);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  box-shadow: 0 0 8px var(--neon), 0 0 16px var(--neon-60);
+  box-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon-50);
   pointer-events: none;
   left: 0%;
   transition: left 0.3s linear;
 }
 .fs-progress-head.beat-pulse {
-  animation: headBeat 0.15s ease-out;
+  animation: headBeat 0.18s ease-out;
 }
 @keyframes headBeat {
-  0%   { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 8px var(--neon); }
-  50%  { transform: translate(-50%,-50%) scale(2); box-shadow: 0 0 30px var(--neon), 0 0 50px var(--neon-40); }
-  100% { transform: translate(-50%,-50%) scale(1); box-shadow: 0 0 8px var(--neon); }
+  0%   { transform: translate(-50%,-50%) scale(1); }
+  50%  { transform: translate(-50%,-50%) scale(2.2); box-shadow: 0 0 30px var(--neon), 0 0 55px var(--neon-40); }
+  100% { transform: translate(-50%,-50%) scale(1); }
 }
 
 /* ---- Controles ---- */
@@ -494,33 +543,34 @@
   color: var(--fg-dim);
   font-size: 1rem;
   cursor: pointer;
-  width: 40px; height: 40px;
+  width: 42px; height: 42px;
   display: flex; align-items: center; justify-content: center;
-  transition: color 0.15s;
+  transition: color 0.15s, transform 0.15s;
+  border-radius: 6px;
 }
-.fs-ctrl-btn:hover { color: var(--neon); }
+.fs-ctrl-btn:hover { color: var(--neon); transform: scale(1.12); }
 
 .fs-ctrl-btn--play {
-  width: 68px; height: 68px;
+  width: 72px; height: 72px;
   border-radius: 50%;
   border: 2px solid var(--neon);
   color: var(--neon);
-  font-size: 1.5rem;
-  box-shadow: 0 0 20px var(--neon-20);
+  font-size: 1.6rem;
+  box-shadow: 0 0 22px var(--neon-20);
   transition: background 0.15s, box-shadow 0.2s, transform 0.15s;
 }
 .fs-ctrl-btn--play:hover {
   background: var(--neon-20);
-  box-shadow: 0 0 40px var(--neon-40);
-  transform: scale(1.05);
+  box-shadow: 0 0 45px var(--neon-50);
+  transform: scale(1.06);
 }
 .fs-ctrl-btn--play.beat-pulse {
-  animation: playBeat 0.15s ease-out;
+  animation: playBeat 0.18s ease-out;
 }
 @keyframes playBeat {
-  0%   { box-shadow: 0 0 20px var(--neon-20); }
-  50%  { box-shadow: 0 0 60px var(--neon-60), 0 0 90px var(--neon-30); }
-  100% { box-shadow: 0 0 20px var(--neon-20); }
+  0%   { box-shadow: 0 0 22px var(--neon-20); }
+  50%  { box-shadow: 0 0 70px var(--neon-60), 0 0 100px var(--neon-30); }
+  100% { box-shadow: 0 0 22px var(--neon-20); }
 }
 
 /* ---- Volume ---- */
@@ -530,7 +580,7 @@
   gap: var(--gap-sm);
   width: 100%;
 }
-.fs-volume-wrap span { font-size: 0.9rem; color: var(--fg-dim); }
+.fs-volume-wrap span { font-size: 0.85rem; color: var(--fg-dim); }
 .fs-volume-slider {
   flex: 1;
   -webkit-appearance: none;
@@ -538,18 +588,51 @@
   background: var(--neon-20);
   outline: none;
   cursor: pointer;
+  border-radius: 1px;
 }
 .fs-volume-slider::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 12px; height: 12px;
+  width: 14px; height: 14px;
   border-radius: 50%;
   background: var(--neon);
-  box-shadow: 0 0 6px var(--neon);
+  box-shadow: 0 0 8px var(--neon);
   cursor: pointer;
 }
 
-/* ---- Band Mode (ponto 5) — definição final no bloco de overrides abaixo ---- */
+/* ---- Band Mode (ponto 5) ---- */
+.fs-band-mode {
+  display: none;
+  width: 100%;
+  gap: var(--gap-sm);
+  padding: var(--gap-sm);
+  background: var(--neon-05);
+  border: 1px solid var(--neon-15);
+  border-radius: 8px;
+  margin-top: 4px;
+}
+.fs-band-mode.visible { display: flex; }
 
+.band-channel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.band-eq-canvas {
+  width: 100%;
+  height: 60px;
+  border-radius: 4px;
+  background: var(--neon-05);
+  border: 1px solid var(--neon-10, var(--neon-08));
+}
+.band-channel-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: var(--neon);
+  opacity: 0.7;
+}
 
 /* ---- Tabs ---- */
 .fs-tabs {
@@ -564,9 +647,9 @@
   border-bottom: 2px solid transparent;
   color: var(--fg-dim);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  padding: 8px 20px;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  padding: 8px 22px;
   cursor: pointer;
   margin-bottom: -1px;
   transition: color 0.2s, border-color 0.2s;
@@ -586,8 +669,8 @@
 .fs-lyrics p,
 .fs-story p {
   font-family: var(--font-body);
-  font-size: 0.9rem;
-  line-height: 1.9;
+  font-size: 0.88rem;
+  line-height: 1.95;
   color: var(--fg-dim);
   margin-bottom: var(--gap-md);
   white-space: pre-line;
@@ -596,48 +679,19 @@
 .fs-story strong {
   color: var(--neon);
   font-family: var(--font-mono);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   display: block;
   margin: var(--gap-md) 0 var(--gap-sm);
 }
 
-/* ============================
-   FULLSCREEN — CAPA GRANDE
-   (garante tamanho e centralização corretos)
-   ============================ */
-.fs-cover-wrap {
-  position: relative;
-  width: clamp(200px, 55vw, 280px);
-  height: clamp(200px, 55vw, 280px);
-  flex-shrink: 0;
-  transition: transform 0.4s var(--ease);
-  margin: 0 auto;
-}
-
-/* ============================
-   FULLSCREEN — WAVEFORM MAIOR
-   ============================ */
-.fs-waveform-wrap {
-  width: 100%;
-  height: 80px;
-  position: relative;
-  flex-shrink: 0;
-  border-radius: 6px;
-  background: var(--neon-05);
-  overflow: hidden;
-  border: 1px solid var(--neon-15);
-}
-
-/* ============================
-   FULLSCREEN — LAYOUT GERAL
-   ============================ */
+/* ---- Layout geral do conteúdo central ---- */
 .fs-content {
   position: relative;
   z-index: 1;
   width: 100%;
   max-width: 500px;
-  padding: 70px var(--gap-lg) 120px;
+  padding: 72px var(--gap-lg) 120px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -646,23 +700,28 @@
 }
 
 /* ============================
-   MINI PLAYER — GLOW ATIVO
+   VISUALIZER — mini waveform
    ============================ */
-.mini-player.is-playing .mini-progress-fill {
-  box-shadow: 0 0 10px var(--neon), 0 0 20px var(--neon-40);
+.viz-canvas-mini {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.55;
+  z-index: 1;
 }
+.mini-progress-bar { position: relative; overflow: hidden; }
 
 /* ============================
-   BAND MODE — visível
+   PULSE na progress bar
    ============================ */
-.fs-band-mode {
-  display: none;
-  width: 100%;
-  gap: var(--gap-sm);
-  padding: var(--gap-sm);
-  background: var(--neon-05);
-  border: 1px solid var(--neon-15);
-  border-radius: 6px;
-  margin-top: 4px;
+@keyframes progressPulse {
+  0%   { box-shadow: 0 0 4px var(--neon-60); }
+  50%  { box-shadow: 0 0 20px var(--neon), 0 0 40px var(--neon-40); }
+  100% { box-shadow: 0 0 4px var(--neon-60); }
 }
-.fs-band-mode.visible { display: flex; }
+.mini-progress-fill.pulse-beat,
+.fs-progress-fill.pulse-beat {
+  animation: progressPulse 0.14s ease-out;
+}
