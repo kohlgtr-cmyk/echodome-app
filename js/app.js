@@ -278,6 +278,7 @@ const app = (() => {
     await Downloader.init(SONGS);
     _refreshDownloadUI();
     Icons.applyAll();
+    CharViewer.init();
   }
 
   return { init, navigate };
