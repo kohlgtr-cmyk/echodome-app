@@ -3,7 +3,7 @@
    v3.1 — cache-first estático + fontes Google + download de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.3.5';
+const STATIC_CACHE = 'echodome-static-v3.3.6';
 const AUDIO_CACHE  = 'echodome-audio-v3';
 const FONT_CACHE   = 'echodome-fonts-v2';
 
@@ -18,7 +18,7 @@ const STATIC_ASSETS = [
   '/css/character-design.css','/css/char-bg.css','/css/mobile.css',
   '/css/downloader.css','/css/gallery.css','/css/visualizer.css',
   '/js/app.js','/js/gallery.js','/js/player.js','/js/themes.js',
-  '/js/character-design.js','/js/char-bg.js','/js/songs/index.js',
+  '/js/character-design.js','/js/char-bg.js','/js/char-viewer.js','/js/songs/index.js',
   '/js/downloader.js','/js/visualizer.js',
   '/js/plays.js','/js/queue.js','/js/lyrics-browser.js','/js/push-notifications.js',
   '/manifest.json',
