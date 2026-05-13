@@ -1,10 +1,11 @@
 /* =========================================================
    ECHODOME — service-worker.js
-   v3.0 — cache-first estático + download explícito de áudio.
+   v3.1 — cache-first estático + fontes Google + download de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.2.8';
+const STATIC_CACHE = 'echodome-static-v3.3.0';
 const AUDIO_CACHE  = 'echodome-audio-v3';
+const FONT_CACHE   = 'echodome-fonts-v1';
 
 const STATIC_ASSETS = [
   '/','/index.html',
@@ -26,15 +27,34 @@ self.addEventListener('install', event => {
 });
 
 self.addEventListener('activate', event => {
+  const KEEP = [STATIC_CACHE, AUDIO_CACHE, FONT_CACHE];
   event.waitUntil(
     caches.keys().then(keys =>
-      Promise.all(keys.filter(k => k !== STATIC_CACHE && k !== AUDIO_CACHE).map(k => caches.delete(k)))
+      Promise.all(keys.filter(k => !KEEP.includes(k)).map(k => caches.delete(k)))
     ).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   const url = event.request.url;
+
+  /* ── Fontes Google: cache-first, stale-while-revalidate ── */
+  if (url.includes('fonts.googleapis.com') || url.includes('fonts.gstatic.com')) {
+    event.respondWith(
+      caches.open(FONT_CACHE).then(cache =>
+        cache.match(event.request).then(cached => {
+          const network = fetch(event.request).then(res => {
+            if (res && res.ok) cache.put(event.request, res.clone());
+            return res;
+          }).catch(() => null);
+          return cached || network;
+        })
+      )
+    );
+    return;
+  }
+
+  /* ── Áudio: cache-first (download explícito via downloader.js) ── */
   if (url.includes('/assets/songs/')) {
     event.respondWith(
       caches.open(AUDIO_CACHE).then(cache =>

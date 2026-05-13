@@ -41,6 +41,13 @@ const Icons = (() => {
     </svg>`,
 
     /* ── Mode buttons ── */
+    shuffle: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="16,3 21,3 21,8"/>
+      <line x1="4" y1="20" x2="21" y2="3"/>
+      <polyline points="21,16 21,21 16,21"/>
+      <line x1="15" y1="15" x2="21" y2="21"/>
+    </svg>`,
+
     loop: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <polyline points="17,1 21,5 17,9"/>
       <path d="M3,11V9a4,4,0,0,1,4-4h14"/>

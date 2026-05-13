@@ -7,11 +7,14 @@
 const Player = (() => {
 
   /* ---- Estado ---- */
-  let audio       = null;
-  let playlist    = [];
+  let audio        = null;
+  let playlist     = [];
+  let shuffleOrder = [];   // índices embaralhados (ponto 4)
   let currentIdx  = -1;
   let isPlaying   = false;
   let isLooping   = false;
+  let isShuffling = false;   // ponto 4
+  let shufflePos  = 0;       // posição atual dentro de shuffleOrder
   let isBandMode  = false;
   let isFocusMode = false;
   let isBoost     = false;
@@ -37,7 +40,8 @@ const Player = (() => {
       elFSBgCover,
       elFSCharIcon, elFSCharName, elFSCharRole,
       elFSCoverImg, elFSCoverFallback, elFSCoverGlow, elFSCoverRing,
-      elFSBandMode, elFSBandBtn, elFSFocusBtn, elFSBoostBtn, elFSLoopBtn;
+      elFSBandMode, elFSBandBtn, elFSFocusBtn, elFSBoostBtn, elFSLoopBtn,
+      elFSShuffleBtn;
 
   /* ---- Helpers ---- */
   function fmt(sec) {
@@ -180,6 +184,7 @@ const Player = (() => {
 
     updateDynamicBg(album);
     updateCharacter();
+    updateMediaSession(song, album);  /* ponto 2 — tela de lock */
 
     /* Lyrics & story */
     if (elFSLyrics) elFSLyrics.innerHTML =
@@ -196,6 +201,70 @@ const Player = (() => {
     });
   }
 
+  /* ---- Media Session API (ponto 2) ---- */
+  /* Preenche os metadados e controles na tela de lock / notificação de mídia */
+  function updateMediaSession(song, album) {
+    if (!('mediaSession' in navigator)) return;
+
+    // Artwork: prefere capa de single (assets/single/<id>.svg),
+    // fallback para capa do álbum, fallback para ícone do app.
+    const artworkSrc = song.singleCover
+      ? song.singleCover
+      : album && album.cover
+        ? album.cover
+        : 'assets/icons/icon-512.png';
+
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title:  song.title,
+      artist: 'Echodome',
+      album:  album ? album.name : 'Echodome',
+      artwork: [
+        { src: artworkSrc, sizes: '512x512', type: 'image/png' },
+      ],
+    });
+
+    navigator.mediaSession.setActionHandler('play',          () => play());
+    navigator.mediaSession.setActionHandler('pause',         () => pause());
+    navigator.mediaSession.setActionHandler('previoustrack', () => prev());
+    navigator.mediaSession.setActionHandler('nexttrack',     () => next());
+    navigator.mediaSession.setActionHandler('seekto', details => {
+      if (audio && details.seekTime != null) {
+        audio.currentTime = details.seekTime;
+      }
+    });
+  }
+
+  /* Mantém o estado playback do Media Session em sincronia */
+  function syncMediaSessionState() {
+    if (!('mediaSession' in navigator)) return;
+    navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+    if (audio && audio.duration) {
+      navigator.mediaSession.setPositionState({
+        duration:     audio.duration,
+        playbackRate: audio.playbackRate,
+        position:     audio.currentTime,
+      });
+    }
+  }
+
+  /* ---- Shuffle (ponto 4) ---- */
+  /* Fisher-Yates colocando o índice atual na primeira posição */
+  function buildShuffleOrder(currentSongIdx) {
+    const arr = playlist.map((_, i) => i).filter(i => i !== currentSongIdx);
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+    shuffleOrder = [currentSongIdx, ...arr];
+    shufflePos   = 0;
+  }
+
+  function toggleShuffle() {
+    isShuffling = !isShuffling;
+    if (isShuffling) buildShuffleOrder(currentIdx);
+    if (elFSShuffleBtn) elFSShuffleBtn.classList.toggle('active', isShuffling);
+  }
+
   /* ---- Play / Pause ---- */
   function play() {
     const promise = audio.play();
@@ -206,6 +275,7 @@ const Player = (() => {
         updateTracklistBtns();
         if (elMiniPlayer) elMiniPlayer.classList.add('is-playing');
         if (typeof Visualizer !== 'undefined') Visualizer.start();
+        syncMediaSessionState();
       }).catch(function(err) {
         console.warn('[Player] play() blocked:', err);
         isPlaying = false;
@@ -221,13 +291,28 @@ const Player = (() => {
     updateTracklistBtns();
     if (elMiniPlayer) elMiniPlayer.classList.remove('is-playing');
     if (typeof Visualizer !== 'undefined') Visualizer.stop();
+    syncMediaSessionState();
   }
 
   function togglePlay() { isPlaying ? pause() : play(); }
-  function next() { loadSong((currentIdx + 1) % playlist.length, isPlaying); }
+
+  function next() {
+    if (isShuffling) {
+      shufflePos = (shufflePos + 1) % shuffleOrder.length;
+      loadSong(shuffleOrder[shufflePos], isPlaying);
+    } else {
+      loadSong((currentIdx + 1) % playlist.length, isPlaying);
+    }
+  }
+
   function prev() {
     if (audio.currentTime > 3) { audio.currentTime = 0; return; }
-    loadSong((currentIdx - 1 + playlist.length) % playlist.length, isPlaying);
+    if (isShuffling) {
+      shufflePos = (shufflePos - 1 + shuffleOrder.length) % shuffleOrder.length;
+      loadSong(shuffleOrder[shufflePos], isPlaying);
+    } else {
+      loadSong((currentIdx - 1 + playlist.length) % playlist.length, isPlaying);
+    }
   }
   function playIndex(idx) {
     if (idx === currentIdx) { togglePlay(); return; }
@@ -356,13 +441,18 @@ const Player = (() => {
     elFSBoostBtn    = document.getElementById('fsBoostBtn');
     elFSLoopBtn     = document.getElementById('fsLoopBtn');
 
+    elFSShuffleBtn  = document.getElementById('fsShuffleBtn');
+
     /* Boost ativo por padrão */
     isBoost = true;
     if (elFS)        elFS.classList.add('boost-mode');
     if (elFSBoostBtn) elFSBoostBtn.classList.add('active');
 
     /* Audio events */
-    audio.addEventListener('timeupdate', updateProgress);
+    audio.addEventListener('timeupdate', function() {
+      updateProgress();
+      syncMediaSessionState();
+    });
     audio.addEventListener('ended', next);
     audio.addEventListener('loadedmetadata', function() {
       if (elFSDuration) elFSDuration.textContent = fmt(audio.duration);
@@ -386,10 +476,11 @@ const Player = (() => {
     });
 
     /* Modos extras (ponto 7) */
-    if (elFSBandBtn)  elFSBandBtn.addEventListener('click', toggleBandMode);
-    if (elFSFocusBtn) elFSFocusBtn.addEventListener('click', toggleFocusMode);
-    if (elFSBoostBtn) elFSBoostBtn.addEventListener('click', toggleBoost);
-    if (elFSLoopBtn)  elFSLoopBtn.addEventListener('click', toggleLoop);
+    if (elFSBandBtn)    elFSBandBtn.addEventListener('click', toggleBandMode);
+    if (elFSFocusBtn)   elFSFocusBtn.addEventListener('click', toggleFocusMode);
+    if (elFSBoostBtn)   elFSBoostBtn.addEventListener('click', toggleBoost);
+    if (elFSLoopBtn)    elFSLoopBtn.addEventListener('click', toggleLoop);
+    if (elFSShuffleBtn) elFSShuffleBtn.addEventListener('click', toggleShuffle);
 
     /* Swipe para fechar fullscreen (mobile) */
     let touchStartY = 0;
@@ -431,7 +522,9 @@ const Player = (() => {
     togglePlay,
     next,
     prev,
-    isPlaying: function() { return isPlaying; },
+    toggleShuffle,
+    isPlaying:   function() { return isPlaying; },
+    isShuffling: function() { return isShuffling; },
     onThemeChange: updateCharacter,
   };
 })();
