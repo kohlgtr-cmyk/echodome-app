@@ -23,6 +23,11 @@
   border-color: var(--neon-40);
   box-shadow: 0 0 10px var(--neon-20);
 }
+.char-view-btn.is-active {
+  color: var(--neon);
+  border-color: var(--neon-40);
+  box-shadow: 0 0 10px var(--neon-20), inset 0 0 8px var(--neon-10);
+}
 .char-view-btn svg {
   width: 15px;
   height: 15px;

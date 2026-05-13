@@ -21,6 +21,7 @@ const CharViewer = (() => {
   let img       = null;
   let nameEl    = null;
   let isOpen    = false;
+  let triggerBtn = null;
 
   /* ── Drag-to-close state ── */
   let dragStartY  = 0;
@@ -47,6 +48,9 @@ const CharViewer = (() => {
       </div>
     `;
 
+    /* Start hidden — revealed on open() */
+    viewer.style.display = 'none';
+
     document.body.appendChild(viewer);
 
     panel   = viewer.querySelector('.char-viewer__panel');
@@ -56,6 +60,13 @@ const CharViewer = (() => {
     /* Close on backdrop click */
     viewer.querySelector('.char-viewer__backdrop')
       .addEventListener('click', close);
+
+    /* Hide overlay after close transition completes */
+    panel.addEventListener('transitionend', e => {
+      if (e.propertyName === 'transform' && !isOpen) {
+        viewer.style.display = 'none';
+      }
+    });
 
     /* ESC key */
     document.addEventListener('keydown', e => {
@@ -128,8 +139,11 @@ const CharViewer = (() => {
     panel.style.transform = '';
     viewer.querySelector('.char-viewer__backdrop').style.background = '';
 
-    /* Trigger open animation on next frame so transition fires */
+    /* Show overlay before transition */
     viewer.style.display = '';
+    if (triggerBtn) triggerBtn.classList.add('is-active');
+
+    /* Trigger open animation on next frame so transition fires */
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
         viewer.classList.add('is-open');
@@ -145,6 +159,7 @@ const CharViewer = (() => {
     viewer.classList.remove('is-open');
     isOpen = false;
     document.body.style.overflow = '';
+    if (triggerBtn) triggerBtn.classList.remove('is-active');
 
     /* Cleanup inline styles from drag */
     panel.style.transform = '';
@@ -164,6 +179,7 @@ const CharViewer = (() => {
   function init() {
     const btn = document.getElementById('charViewBtn');
     if (!btn) return;
+    triggerBtn = btn;
 
     btn.addEventListener('click', () => {
       const theme = ThemeManager.current();
