@@ -108,11 +108,9 @@
   body.section-home     .char-bg__img.active { --char-opacity: 0.5;  }
   body.section-music    .char-bg__img.active { --char-opacity: 0.15; }
   body.section-gallery  .char-bg__img.active { --char-opacity: 0.15; }
-  body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
+body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
 
-}
-
-  /* ── downloader.css ─────────────────────────────────── */
+/* ── downloader.css ─────────────────────────────────── */
 
   .track-item {
     grid-template-columns: 36px 1fr auto auto;
@@ -133,12 +131,11 @@
     display: none;
   }
 
-  .album-header {
-    padding: var(--gap-md) var(--gap-sm) var(--gap-sm);
-
+.album-header {
+  padding: var(--gap-md) var(--gap-sm) var(--gap-sm);
 }
 
-  /* ── player.css — fullscreen imersivo ──────────────── */
+/* ── player.css — fullscreen imersivo ──────────────── */
 
   .fs-char-silhouette { display: none; }
 
