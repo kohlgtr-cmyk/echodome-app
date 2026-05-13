@@ -3,7 +3,7 @@
    v3.0 — cache-first estático + download explícito de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.2.7';
+const STATIC_CACHE = 'echodome-static-v3.2.8';
 const AUDIO_CACHE  = 'echodome-audio-v3';
 
 const STATIC_ASSETS = [

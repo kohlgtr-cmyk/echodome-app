@@ -18,7 +18,7 @@ const CharViewer = (() => {
 
   let viewer    = null;
   let panel     = null;
-  let img       = null;
+  let imgWrap   = null;
   let nameEl    = null;
   let isOpen    = false;
   let triggerBtn = null;
@@ -42,7 +42,7 @@ const CharViewer = (() => {
       <div class="char-viewer__panel">
         <div class="char-viewer__drag-hint"></div>
         <span class="char-viewer__close-hint">ESC TO CLOSE</span>
-        <img class="char-viewer__img" src="" alt="" draggable="false" />
+        <div class="char-viewer__img-wrap"></div>
         <div class="char-viewer__base-line"></div>
         <span class="char-viewer__name"></span>
       </div>
@@ -54,7 +54,7 @@ const CharViewer = (() => {
     document.body.appendChild(viewer);
 
     panel   = viewer.querySelector('.char-viewer__panel');
-    img     = viewer.querySelector('.char-viewer__img');
+    imgWrap = viewer.querySelector('.char-viewer__img-wrap');
     nameEl  = viewer.querySelector('.char-viewer__name');
 
     /* Close on backdrop click */
@@ -124,6 +124,24 @@ const CharViewer = (() => {
     dragCurrent = 0;
   }
 
+  /* ── Load SVG inline so currentColor works ── */
+  async function _loadSVG(src) {
+    try {
+      const res  = await fetch(src);
+      const text = await res.text();
+      /* Inject into wrap, then patch the root <svg> element */
+      imgWrap.innerHTML = text;
+      const svgEl = imgWrap.querySelector('svg');
+      if (svgEl) {
+        svgEl.removeAttribute('width');
+        svgEl.removeAttribute('height');
+        svgEl.classList.add('char-viewer__svg');
+      }
+    } catch (e) {
+      imgWrap.innerHTML = '';
+    }
+  }
+
   /* ── Open ── */
   function open(themeKey) {
     if (!viewer) _build();
@@ -131,9 +149,8 @@ const CharViewer = (() => {
     const src  = SVG_MAP[themeKey];
     const name = ThemeManager.themes[themeKey]?.label || themeKey.toUpperCase();
 
-    img.src     = src || '';
-    img.alt     = name;
     nameEl.textContent = name;
+    if (src) _loadSVG(src);
 
     /* Reset any leftover drag state */
     panel.style.transform = '';
@@ -191,9 +208,8 @@ const CharViewer = (() => {
       if (!isOpen || !viewer) return;
       const key  = e.detail.theme;
       const name = ThemeManager.themes[key]?.label || key.toUpperCase();
-      img.src    = SVG_MAP[key] || '';
-      img.alt    = name;
       nameEl.textContent = name;
+      if (SVG_MAP[key]) _loadSVG(SVG_MAP[key]);
     });
   }
 
