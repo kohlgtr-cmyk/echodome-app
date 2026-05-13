@@ -16,6 +16,14 @@ const BAND_MEMBERS = [
     bio:'Lyra plays synths and keyboards with a coldness that borders on algorithmic. Her patches are built from field recordings, FM synthesis, and sounds she refuses to name.' },
 ];
 
+/* Links de redes sociais da banda — atualize com os URLs reais */
+const BAND_SOCIALS = [
+  { id: 'instagram', label: 'INSTAGRAM', url: 'https://instagram.com/echodome',   icon: 'ig'      },
+  { id: 'spotify',   label: 'SPOTIFY',   url: 'https://open.spotify.com/artist/', icon: 'spotify' },
+  { id: 'youtube',   label: 'YOUTUBE',   url: 'https://youtube.com/@echodome',    icon: 'yt'      },
+  { id: 'tiktok',    label: 'TIKTOK',    url: 'https://tiktok.com/@echodome',     icon: 'tiktok'  },
+];
+
 /* GALLERY_ITEMS → js/gallery.js */
 
 /* ============================================================
@@ -68,6 +76,8 @@ const app = (() => {
     _initDownloadAllPill();
     Downloader.onStateChange(() => _refreshDownloadUI());
     _refreshDownloadUI();
+    /* #16 — aplica badges de plays */
+    if (typeof Plays !== 'undefined') Plays.applyToDOM();
 
     /* Busca na tracklist */
     const musicSearch = document.getElementById('musicSearch');
@@ -276,6 +286,36 @@ const app = (() => {
       `;
       container.appendChild(card);
     });
+
+    /* ── Redes sociais ── */
+    const existing = document.getElementById('bandSocials');
+    if (existing) existing.remove();
+
+    const socialsSection = document.createElement('div');
+    socialsSection.id        = 'bandSocials';
+    socialsSection.className = 'band-socials';
+
+    const heading = document.createElement('p');
+    heading.className   = 'band-socials-label';
+    heading.textContent = 'FIND US';
+    socialsSection.appendChild(heading);
+
+    const links = document.createElement('div');
+    links.className = 'band-socials-links';
+
+    BAND_SOCIALS.forEach(s => {
+      const a = document.createElement('a');
+      a.href            = s.url;
+      a.target          = '_blank';
+      a.rel             = 'noopener noreferrer';
+      a.className       = 'band-social-btn';
+      a.setAttribute('aria-label', s.label);
+      a.textContent     = s.label;
+      links.appendChild(a);
+    });
+
+    socialsSection.appendChild(links);
+    container.parentElement.appendChild(socialsSection);
   }
 
   /* ── Nav ── */
@@ -315,6 +355,14 @@ const app = (() => {
     _refreshDownloadUI();
     Icons.applyAll();
     CharViewer.init();
+    /* #16 — Plays */
+    if (typeof Plays !== 'undefined') Plays.applyToDOM();
+    /* #17 — Push Notifications */
+    if (typeof PushNotifs !== 'undefined') PushNotifs.init();
+    /* #19 — Fila */
+    if (typeof Queue !== 'undefined') Queue.init();
+    /* #20 — Lyrics browser */
+    if (typeof LyricsBrowser !== 'undefined') LyricsBrowser.init();
   }
 
   return { init, navigate };

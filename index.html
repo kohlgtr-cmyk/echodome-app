@@ -197,6 +197,10 @@
         <button class="ctrl-btn" id="miniPrev" aria-label="Anterior" data-icon="prev"></button>
         <button class="ctrl-btn ctrl-btn--play" id="miniPlay" aria-label="Play/Pause" data-icon="play"></button>
         <button class="ctrl-btn" id="miniNext" aria-label="Próximo" data-icon="next"></button>
+        <button class="ctrl-btn queue-open-btn" id="queueBtn" aria-label="Fila de reprodução" title="Ver fila">
+          <span class="queue-btn-icon">☰</span>
+          <span class="queue-badge" id="queueBadge"></span>
+        </button>
       </div>
     </div>
   </div>
@@ -214,6 +218,7 @@
       <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode"  data-icon="focus"   data-tooltip="FOCUS — oculta a UI"></button>
       <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost"       data-icon="boost"   data-tooltip="BOOST — amplifica o visualizador"></button>
       <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode"   data-icon="band"    data-tooltip="BAND MODE — equalizers por instrumento"></button>
+      <button class="fs-mode-btn" id="fsShareBtn"     aria-label="Compartilhar" data-icon="share"  data-tooltip="COMPARTILHAR MÚSICA"></button>
     </div>
 
     <!-- Fundo dinâmico: capa desfocada + overlay gradiente -->
@@ -328,6 +333,10 @@
 
   <script src="js/icons.js"></script>
   <script src="js/songs/index.js"></script>
+  <script src="js/plays.js"></script>
+  <script src="js/queue.js"></script>
+  <script src="js/lyrics-browser.js"></script>
+  <script src="js/push-notifications.js"></script>
   <script src="js/downloader.js"></script>
   <script src="js/themes.js"></script>
   <script src="js/character-design.js"></script>

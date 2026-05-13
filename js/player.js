@@ -18,6 +18,7 @@ const Player = (() => {
   let isBandMode  = false;
   let isFocusMode = false;
   let isBoost     = false;
+  let _playRecorded = false;
 
   /* ---- Personagens (ponto 3) ---- */
   const CHARS = {
@@ -140,6 +141,7 @@ const Player = (() => {
   function loadSong(idx, playAfterLoad) {
     if (idx < 0 || idx >= playlist.length) return;
     currentIdx = idx;
+    _playRecorded = false;  /* reset para nova música */
     const song  = playlist[idx];
     const album = (typeof ALBUMS !== 'undefined')
       ? ALBUMS.find(function(a) { return a.id === song.albumId; })
@@ -320,6 +322,17 @@ const Player = (() => {
     loadSong(idx, true);
   }
 
+  /* Toca uma música da fila (por objeto, não por índice da playlist) */
+  function playQueueItemInternal(song) {
+    const idx = playlist.findIndex(s => s.id === song.id);
+    if (idx !== -1) { loadSong(idx, true); }
+    else {
+      /* Música não está na playlist — injeta temporariamente */
+      playlist.push(song);
+      loadSong(playlist.length - 1, true);
+    }
+  }
+
   function updateTracklistBtns() {
     document.querySelectorAll('.track-item').forEach(function(el, i) {
       const btn = el.querySelector('.track-play-btn');
@@ -443,6 +456,7 @@ const Player = (() => {
     elFSLoopBtn     = document.getElementById('fsLoopBtn');
 
     elFSShuffleBtn  = document.getElementById('fsShuffleBtn');
+    const elFSShareBtn = document.getElementById('fsShareBtn');
 
     /* Boost ativo por padrão */
     isBoost = true;
@@ -454,9 +468,27 @@ const Player = (() => {
       updateProgress();
       syncMediaSessionState();
     });
-    audio.addEventListener('ended', next);
+    audio.addEventListener('ended', function() {
+      /* Verifica fila customizada antes de avançar normalmente */
+      if (typeof Queue !== 'undefined' && !Queue.isEmpty() && Queue.hasNext()) {
+        const nextSong = Queue.shiftNext();
+        if (nextSong) { playQueueItemInternal(nextSong); return; }
+      }
+      next();
+    });
     audio.addEventListener('loadedmetadata', function() {
       if (elFSDuration) elFSDuration.textContent = fmt(audio.duration);
+    });
+    /* Registra play quando passou >10s (confirmado que ouviu) */
+    audio.addEventListener('timeupdate', function() {
+      if (!_playRecorded && audio.currentTime > 10) {
+        _playRecorded = true;
+        const song = playlist[currentIdx];
+        if (song && typeof Plays !== 'undefined') {
+          Plays.record(song.id);
+          if (typeof LyricsBrowser !== 'undefined') LyricsBrowser.syncWithPlayer(song.id);
+        }
+      }
     });
 
     /* Mini player controls */
@@ -482,6 +514,27 @@ const Player = (() => {
     if (elFSBoostBtn)   elFSBoostBtn.addEventListener('click', toggleBoost);
     if (elFSLoopBtn)    elFSLoopBtn.addEventListener('click', toggleLoop);
     if (elFSShuffleBtn) elFSShuffleBtn.addEventListener('click', toggleShuffle);
+
+    /* Share (ponto 18) */
+    if (elFSShareBtn) elFSShareBtn.addEventListener('click', () => {
+      const song = playlist[currentIdx];
+      if (!song) return;
+      const shareData = {
+        title: song.title + ' — ECHODOME',
+        text:  `Ouça "${song.title}" da Echodome 🎸`,
+        url:   window.location.href,
+      };
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {});
+      } else {
+        /* Fallback: copia o link */
+        navigator.clipboard.writeText(shareData.url).then(() => {
+          const orig = elFSShareBtn.title;
+          elFSShareBtn.title = 'Link copiado!';
+          setTimeout(() => { elFSShareBtn.title = orig; }, 2000);
+        });
+      }
+    });
 
     /* Swipe para fechar fullscreen (mobile) */
     let touchStartY = 0;
@@ -514,7 +567,8 @@ const Player = (() => {
         } else { prev(); }
       }
       if (e.code === 'Escape')     closeFS();
-      if (e.code === 'KeyF')       { if (elFS && elFS.classList.contains('open')) toggleFocusMode(); }\n    });
+      if (e.code === 'KeyF')       { if (elFS && elFS.classList.contains('open')) toggleFocusMode(); }
+    });
 
     /* Atualiza personagem quando muda tema */
     document.addEventListener('themeChanged', updateCharacter);
@@ -530,6 +584,7 @@ const Player = (() => {
   return {
     init,
     playIndex,
+    playQueueItem: playQueueItemInternal,
     togglePlay,
     next,
     prev,

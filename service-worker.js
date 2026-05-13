@@ -3,9 +3,14 @@
    v3.1 — cache-first estático + fontes Google + download de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.3.3';
+const STATIC_CACHE = 'echodome-static-v3.3.4';
 const AUDIO_CACHE  = 'echodome-audio-v3';
-const FONT_CACHE   = 'echodome-fonts-v1';
+const FONT_CACHE   = 'echodome-fonts-v2';
+
+/* URLs das fontes Google — pré-cacheadas no install para funcionar offline */
+const FONT_URLS = [
+  'https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Share+Tech+Mono&family=Barlow:wght@400;500;600&display=swap',
+];
 
 const STATIC_ASSETS = [
   '/','/index.html',
@@ -15,14 +20,36 @@ const STATIC_ASSETS = [
   '/js/app.js','/js/gallery.js','/js/player.js','/js/themes.js',
   '/js/character-design.js','/js/char-bg.js','/js/songs/index.js',
   '/js/downloader.js','/js/visualizer.js',
+  '/js/plays.js','/js/queue.js','/js/lyrics-browser.js','/js/push-notifications.js',
   '/manifest.json',
 ];
 
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(STATIC_CACHE)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
+    Promise.all([
+      caches.open(STATIC_CACHE).then(cache => cache.addAll(STATIC_ASSETS)),
+      /* Pré-cacheia as fontes do Google no install para funcionar offline */
+      caches.open(FONT_CACHE).then(async cache => {
+        for (const url of FONT_URLS) {
+          try {
+            const res = await fetch(url);
+            if (res.ok) {
+              await cache.put(url, res.clone());
+              /* Extrai e cacheia também os arquivos .woff2 referenciados pelo CSS */
+              const css = await res.text();
+              const woff2Urls = [...css.matchAll(/url\((https:\/\/fonts\.gstatic\.com[^)]+)\)/g)]
+                .map(m => m[1]);
+              await Promise.all(woff2Urls.map(async wUrl => {
+                try {
+                  const wRes = await fetch(wUrl);
+                  if (wRes.ok) await cache.put(wUrl, wRes);
+                } catch (_) {}
+              }));
+            }
+          } catch (_) { /* offline durante install — tenta de novo na próxima visita */ }
+        }
+      }),
+    ]).then(() => self.skipWaiting())
   );
 });
 

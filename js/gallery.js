@@ -143,7 +143,15 @@ const GalleryLightbox = (() => {
 
   function _render() {
     const item = _visibleItems[currentIndex] || GALLERY_ITEMS[currentIndex];
-    el.img.src           = item.file;
+    /* Usa WebP no lightbox se disponível */
+    const webpMatch = item.file.match(/^(assets\/gallery\/)(.+)\.(png)$/);
+    if (webpMatch) {
+      const webpSrc = `assets/gallery/webp/${webpMatch[2]}.webp`;
+      el.img.src = webpSrc;
+      el.img.onerror = () => { el.img.src = item.file; el.img.onerror = null; };
+    } else {
+      el.img.src = item.file;
+    }
     el.img.alt           = item.label;
     el.label.textContent   = item.label;
     el.counter.textContent = `${currentIndex + 1} / ${_visibleItems.length || GALLERY_ITEMS.length}`;
@@ -263,14 +271,32 @@ function _renderGalleryItems() {
       <span class="gallery-item-label">${item.label}</span>
     `;
 
-    const img = new Image();
-    img.onload = () => {
-      card.innerHTML = `
-        <img src="${item.file}" alt="${item.label}" loading="lazy" />
-        <span class="gallery-item-label">${item.label}</span>
-      `;
+    /* Usa WebP se disponível (apenas PNGs grandes têm versão WebP) */
+    function _webpSrc(file) {
+      const match = file.match(/^(assets\/gallery\/)(.+)\.(png)$/);
+      if (!match) return null;
+      return `assets/gallery/webp/${match[2]}.webp`;
+    }
+
+    const webp = _webpSrc(item.file);
+    const imgEl = new Image();
+    imgEl.onload = () => {
+      if (webp) {
+        card.innerHTML = `
+          <picture>
+            <source srcset="${webp}" type="image/webp" />
+            <img src="${item.file}" alt="${item.label}" loading="lazy" />
+          </picture>
+          <span class="gallery-item-label">${item.label}</span>
+        `;
+      } else {
+        card.innerHTML = `
+          <img src="${item.file}" alt="${item.label}" loading="lazy" />
+          <span class="gallery-item-label">${item.label}</span>
+        `;
+      }
     };
-    img.src = item.file;
+    imgEl.src = webp || item.file;
 
     card.addEventListener('click',   ()  => GalleryLightbox.open(visIdx));
     card.addEventListener('keydown', (e) => {

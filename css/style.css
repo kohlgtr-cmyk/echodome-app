@@ -46,8 +46,8 @@ body {
   gap: var(--gap-lg);
   padding: 0 var(--gap-lg);
   background: var(--bg-glass);
-  -webkit-backdrop-filter: blur(6px);
   backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border-bottom: 1px solid var(--neon-20);
   z-index: 100;
 }
@@ -124,8 +124,8 @@ body {
   height: calc(100dvh - var(--header-h));
   background: var(--bg-panel);
   border-left: 1px solid var(--neon-20);
-  -webkit-backdrop-filter: blur(24px);
   backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
   padding: var(--gap-lg) var(--gap-md);
   display: flex;
   flex-direction: column;
@@ -359,8 +359,8 @@ body {
   flex-direction: column;
   gap: 2px;
   background: var(--bg-glass);
-  -webkit-backdrop-filter: blur(2px);
   backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   border-radius: 4px;
   padding: 4px;
 }
@@ -677,7 +677,11 @@ body {
 }
 
 /* Band & member icons keep decorative chars (◈ ◆ ✶ ★ ⟁) */
-/* .band-card-icon, .member-icon, .fs-char-icon remain text/unicode symbols, not SVG */
+.band-card-icon,
+.member-icon,
+.fs-char-icon {
+  /* these remain text/unicode symbols, not SVG */
+}
 
 /* Spin animation for loading icon */
 @keyframes icon-spin {
@@ -814,4 +818,440 @@ body {
   .gallery-filter-bar { gap: 4px; }
   .gallery-filter-btn { font-size: 0.58rem; padding: 4px 9px; }
   [data-tooltip]::after { display: none; } /* tooltips off no mobile */
+}
+
+/* =========================================================
+   BAND SOCIALS — links de redes sociais
+   ========================================================= */
+
+.band-socials {
+  margin-top: var(--gap-lg);
+  text-align: center;
+}
+
+.band-socials-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  margin-bottom: var(--gap-md);
+}
+
+.band-socials-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+}
+
+.band-social-btn {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: var(--fg-dim);
+  border: 1px solid var(--neon-20);
+  padding: 8px 18px;
+  text-decoration: none;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+  display: inline-block;
+}
+
+.band-social-btn:hover,
+.band-social-btn:focus {
+  color: var(--neon);
+  border-color: var(--neon-50);
+  box-shadow: 0 0 12px var(--neon-15);
+  outline: none;
+}
+
+/* =========================================================
+   #16 — PLAY COUNT BADGES
+   ========================================================= */
+
+.track-plays-badge {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.1em;
+  color: var(--neon);
+  background: var(--neon-08);
+  border: 1px solid var(--neon-30);
+  padding: 2px 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.track-play-count {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--fg-dim);
+  opacity: 0.6;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* =========================================================
+   #17 — PUSH NOTIFICATION BUTTON + TOAST
+   ========================================================= */
+
+.push-notif-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: var(--gap-md);
+  padding: 10px 20px;
+  border: 1px solid var(--neon-20);
+  background: transparent;
+  color: var(--fg-dim);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+  transition: color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.push-notif-btn:hover,
+.push-notif-btn.is-subscribed {
+  color: var(--neon);
+  border-color: var(--neon-50);
+  box-shadow: 0 0 12px var(--neon-15);
+}
+
+.push-toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: var(--neon);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  padding: 10px 20px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  z-index: 9999;
+  white-space: nowrap;
+  max-width: 90vw;
+  text-align: center;
+}
+
+.push-toast.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* =========================================================
+   #18 — SHARE BUTTON (já usa fs-mode-btn — sem CSS extra)
+   ========================================================= */
+
+/* =========================================================
+   #19 — FILA CUSTOMIZÁVEL
+   ========================================================= */
+
+/* Botão "+" na tracklist */
+.track-queue-btn {
+  background: transparent;
+  border: 1px solid var(--neon-20);
+  color: var(--fg-dim);
+  font-size: 1rem;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s, border-color 0.15s;
+  padding: 0;
+}
+.track-queue-btn:hover {
+  color: var(--neon);
+  border-color: var(--neon-50);
+}
+
+/* Botão na mini player */
+.queue-open-btn {
+  position: relative;
+  font-size: 1rem !important;
+  background: transparent !important;
+  border: none !important;
+  color: var(--fg-dim) !important;
+  padding: 0 6px !important;
+}
+.queue-open-btn.active { color: var(--neon) !important; }
+.queue-btn-icon { font-size: 1rem; }
+
+.queue-badge {
+  position: absolute;
+  top: 0; right: 0;
+  background: var(--neon);
+  color: #000;
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.queue-badge:empty { display: none; }
+
+@keyframes badge-pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+.badge-pop { animation: badge-pop 0.3s ease; }
+
+/* Painel da fila */
+.queue-panel {
+  position: fixed;
+  bottom: 72px;   /* acima do mini player */
+  right: 0;
+  width: min(360px, 100vw);
+  max-height: 60vh;
+  background: var(--bg, #0d0d12);
+  border: 1px solid var(--neon-20);
+  border-right: none;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(.2,1,.4,1);
+  z-index: 500;
+  overflow: hidden;
+}
+.queue-panel.open { transform: translateX(0); }
+
+.queue-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--neon-20);
+  gap: 8px;
+}
+.queue-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  flex: 1;
+  color: var(--fg);
+}
+.queue-clear-btn,
+.queue-close-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  background: transparent;
+  border: 1px solid var(--neon-20);
+  padding: 4px 8px;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.queue-clear-btn:hover, .queue-close-btn:hover {
+  color: var(--neon);
+  border-color: var(--neon-50);
+}
+
+.queue-list {
+  overflow-y: auto;
+  flex: 1;
+  padding: 8px 0;
+}
+
+.queue-empty {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--fg-dim);
+  padding: 16px;
+  text-align: center;
+  opacity: 0.6;
+}
+
+.queue-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.queue-item:hover { background: var(--neon-05); }
+.queue-item--current { background: var(--neon-08); }
+.queue-item.dragging { opacity: 0.4; }
+.queue-item.drag-over { border-top: 2px solid var(--neon); }
+
+.queue-item-num {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  min-width: 18px;
+}
+.queue-item-title {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  flex: 1;
+  color: var(--fg);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.queue-item-dur {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+}
+.queue-item-remove {
+  background: transparent;
+  border: none;
+  color: var(--fg-dim);
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 2px 4px;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+.queue-item-remove:hover { opacity: 1; color: var(--neon); }
+
+/* =========================================================
+   #20 — LYRICS BROWSER
+   ========================================================= */
+
+.lyrics-browser-wrap {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--gap-lg);
+  min-height: 400px;
+}
+
+@media (max-width: 640px) {
+  .lyrics-browser-wrap {
+    grid-template-columns: 1fr;
+  }
+}
+
+.lb-sidebar {
+  border-right: 1px solid var(--neon-20);
+  padding-right: var(--gap-md);
+}
+
+.lb-album-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.15em;
+  color: var(--neon);
+  padding: 12px 0 4px;
+  opacity: 0.7;
+}
+
+.lb-song-list-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+  padding: 6px 8px;
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+  border-left: 2px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.lb-song-list-item:hover {
+  color: var(--fg);
+  background: var(--neon-05);
+}
+.lb-song-list-item.active {
+  color: var(--neon);
+  border-left-color: var(--neon);
+  background: var(--neon-08);
+}
+
+.lb-no-lyrics {
+  opacity: 0.35;
+  font-size: 0.6rem;
+}
+
+.lb-content {
+  padding: 0 0 var(--gap-lg);
+  overflow-y: auto;
+  max-height: 70vh;
+}
+
+.lb-placeholder {
+  opacity: 0.4;
+  padding-top: var(--gap-lg);
+}
+
+.lb-song-header {
+  display: flex;
+  align-items: center;
+  gap: var(--gap-md);
+  margin-bottom: var(--gap-lg);
+  padding-bottom: var(--gap-md);
+  border-bottom: 1px solid var(--neon-20);
+  flex-wrap: wrap;
+}
+
+.lb-album-cover {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.lb-song-meta { flex: 1; min-width: 0; }
+
+.lb-song-title {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 0.06em;
+  color: var(--fg);
+  margin: 0;
+}
+
+.lb-song-album {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  margin: 0;
+}
+
+.lb-play-btn {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  color: var(--neon);
+  border: 1px solid var(--neon-30);
+  background: transparent;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.lb-play-btn:hover {
+  background: var(--neon-08);
+  box-shadow: 0 0 12px var(--neon-15);
+}
+
+.lb-lyrics-body {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  line-height: 2;
+  color: var(--fg-dim);
+  white-space: pre-wrap;
+}
+
+.lyrics-section-tag {
+  color: var(--neon);
+  display: block;
+  margin-top: 1.5em;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  opacity: 0.8;
 }
