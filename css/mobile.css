@@ -105,14 +105,12 @@
   }
 
   /* Opacidades por seção no mobile */
-  body.section-home     .char-bg__img.active { --char-opacity: 0.5;  }
-  body.section-music    .char-bg__img.active { --char-opacity: 0.15; }
-  body.section-gallery  .char-bg__img.active { --char-opacity: 0.15; }
-  body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
+body.section-home     .char-bg__img.active { --char-opacity: 0.5;  }
+body.section-music    .char-bg__img.active { --char-opacity: 0.15; }
+body.section-gallery  .char-bg__img.active { --char-opacity: 0.15; }
+body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
 
-}
-
-  /* ── downloader.css ─────────────────────────────────── */
+/* ── downloader.css ─────────────────────────────────── */
 
   .track-item {
     grid-template-columns: 36px 1fr auto auto;

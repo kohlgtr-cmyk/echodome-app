@@ -3,20 +3,13 @@
    Estilos do lightbox da galeria.
    Não toca em mais nada — só o lightbox vive aqui.
    ========================================================= */
-
-
-/* ── OVERLAY ──────────────────────────────────────────────
-   Cobre a tela inteira. Usa opacity + pointer-events
-   para o fade de entrada/saída (sem display:none).
-   ───────────────────────────────────────────────────────── */
-
 .lb-overlay {
   position: fixed;
   inset: 0;
-  z-index: 900;                        /* acima de tudo exceto modais do player */
+  z-index: 900;                        
   background: rgba(0, 0, 0, 0.93);
-  backdrop-filter: blur(6px);
   -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
 
   display: flex;
   flex-direction: column;
@@ -134,6 +127,7 @@ body.lb-active { overflow: hidden; }
 
 /* ── MOBILE ───────────────────────────────────────────────── */
 
+@media (max-width: 768px) {
   .lb-next { right: 6px; width: 36px; height: 50px; font-size: 1rem; }
   .lb-close { top: 12px; right: 12px; width: 34px; height: 34px; }
   .lb-img   { max-width: 92vw; max-height: 72vh; }
