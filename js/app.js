@@ -68,6 +68,41 @@ const app = (() => {
     _initDownloadAllPill();
     Downloader.onStateChange(() => _refreshDownloadUI());
     _refreshDownloadUI();
+
+    /* Busca na tracklist */
+    const musicSearch = document.getElementById('musicSearch');
+    if (musicSearch) {
+      musicSearch.addEventListener('input', () => {
+        const q = musicSearch.value.toLowerCase().trim();
+        document.querySelectorAll('.track-item').forEach(el => {
+          const title = el.querySelector('.track-name')?.textContent.toLowerCase() || '';
+          el.style.display = (!q || title.includes(q)) ? '' : 'none';
+        });
+        /* Mostra/esconde headers de álbum se todas as faixas estiverem ocultas */
+        document.querySelectorAll('.album-header').forEach(header => {
+          const albumId = header.dataset.albumId;
+          const anyVisible = [...document.querySelectorAll(`.track-item`)].some(el =>
+            el.dataset.albumId === albumId && el.style.display !== 'none'
+          );
+          header.style.display = anyVisible ? '' : 'none';
+        });
+        /* Mensagem de "sem resultados" */
+        let noResults = document.getElementById('musicNoResults');
+        const allHidden = [...document.querySelectorAll('.track-item')].every(el => el.style.display === 'none');
+        if (allHidden && q) {
+          if (!noResults) {
+            noResults = document.createElement('p');
+            noResults.id        = 'musicNoResults';
+            noResults.className = 'gallery-empty';
+            container.appendChild(noResults);
+          }
+          noResults.textContent = `// NO RESULTS FOR "${q.toUpperCase()}"`;
+          noResults.style.display = '';
+        } else if (noResults) {
+          noResults.style.display = 'none';
+        }
+      });
+    }
   }
 
   /* ── Download All Pill (no section header) ── */
@@ -121,8 +156,9 @@ const app = (() => {
 
     const item = document.createElement('div');
     item.className = 'track-item';
-    item.dataset.idx = globalIdx;
-    item.dataset.songId = song.id;
+    item.dataset.idx     = globalIdx;
+    item.dataset.songId  = song.id;
+    item.dataset.albumId = song.albumId;
     item.innerHTML = `
       <div class="track-cover">${coverHTML}${fallbackHTML}</div>
       <div class="track-info">

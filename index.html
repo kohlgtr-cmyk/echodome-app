@@ -123,6 +123,17 @@
       <div class="section-header section-header--has-progress">
         <h2 class="section-title">MUSIC</h2>
         <div class="section-line"></div>
+        <div class="section-search-wrap">
+          <input
+            class="section-search"
+            id="musicSearch"
+            type="search"
+            placeholder="SEARCH TRACKS…"
+            aria-label="Buscar faixa"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
         <button class="dl-all-pill" id="dlAllPill" aria-label="Download all tracks">
           <span class="dl-all-pill__icon" id="dlAllPillIcon" data-icon="download"></span>
           <span class="dl-all-pill__label" id="dlAllPillLabel">OFFLINE</span>
@@ -140,6 +151,17 @@
       <div class="section-header">
         <h2 class="section-title">GALLERY</h2>
         <div class="section-line"></div>
+        <div class="section-search-wrap">
+          <input
+            class="section-search"
+            id="gallerySearch"
+            type="search"
+            placeholder="SEARCH GALLERY…"
+            aria-label="Buscar na galeria"
+            autocomplete="off"
+            spellcheck="false"
+          />
+        </div>
       </div>
       <div class="gallery-grid" id="galleryGrid"></div>
     </section>
@@ -187,11 +209,11 @@
 
     <!-- Botões de modo: Loop / Focus / Boost / Band -->
     <div class="fs-mode-btns">
-      <button class="fs-mode-btn" id="fsShuffleBtn"   aria-label="Shuffle"     data-icon="shuffle"></button>
-      <button class="fs-mode-btn" id="fsLoopBtn"      aria-label="Loop"        data-icon="loop"></button>
-      <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode"  data-icon="focus"></button>
-      <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost"       data-icon="boost"></button>
-      <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode"   data-icon="band"></button>
+      <button class="fs-mode-btn" id="fsShuffleBtn"   aria-label="Shuffle"     data-icon="shuffle" data-tooltip="SHUFFLE"></button>
+      <button class="fs-mode-btn" id="fsLoopBtn"      aria-label="Loop"        data-icon="loop"    data-tooltip="LOOP"></button>
+      <button class="fs-mode-btn" id="fsFocusModeBtn" aria-label="Focus mode"  data-icon="focus"   data-tooltip="FOCUS — oculta a UI"></button>
+      <button class="fs-mode-btn" id="fsBoostBtn"     aria-label="Boost"       data-icon="boost"   data-tooltip="BOOST — amplifica o visualizador"></button>
+      <button class="fs-mode-btn" id="fsBandModeBtn"  aria-label="Band mode"   data-icon="band"    data-tooltip="BAND MODE — equalizers por instrumento"></button>
     </div>
 
     <!-- Fundo dinâmico: capa desfocada + overlay gradiente -->
@@ -243,7 +265,10 @@
 
       <!-- Barra de progresso estilo energia -->
       <div class="fs-progress-wrap">
-        <div class="fs-progress-bar" id="fsProgressBar">
+        <div class="fs-progress-bar" id="fsProgressBar"
+             role="slider" aria-label="Progresso da música"
+             aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"
+             tabindex="0">
           <div class="fs-progress-fill" id="fsProgressFill"></div>
           <div class="fs-progress-head" id="fsProgressHead"></div>
         </div>

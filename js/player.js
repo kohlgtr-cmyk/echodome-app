@@ -74,6 +74,7 @@ const Player = (() => {
     if (elFSFill)   elFSFill.style.width   = pct + '%';
     if (elFSHead)   elFSHead.style.left    = pct + '%';
     if (elFSCurrent) elFSCurrent.textContent = fmt(audio.currentTime);
+    if (elFSBar)    elFSBar.setAttribute('aria-valuenow', Math.round(pct));
   }
 
   /* ---- Fundo dinâmico (ponto 8) ---- */
@@ -499,11 +500,21 @@ const Player = (() => {
       if (e.target.tagName === 'INPUT') return;
       if (document.body.classList.contains('lb-active')) return;
       if (e.code === 'Space')      { e.preventDefault(); togglePlay(); }
-      if (e.code === 'ArrowRight') next();
-      if (e.code === 'ArrowLeft')  prev();
+      if (e.code === 'ArrowRight') {
+        /* Se o player fullscreen estiver aberto, busca +5s; senão, próxima faixa */
+        if (elFS && elFS.classList.contains('open')) {
+          e.preventDefault();
+          if (audio && audio.duration) audio.currentTime = Math.min(audio.currentTime + 5, audio.duration);
+        } else { next(); }
+      }
+      if (e.code === 'ArrowLeft') {
+        if (elFS && elFS.classList.contains('open')) {
+          e.preventDefault();
+          if (audio && audio.duration) audio.currentTime = Math.max(audio.currentTime - 5, 0);
+        } else { prev(); }
+      }
       if (e.code === 'Escape')     closeFS();
-      if (e.code === 'KeyF')       { if (elFS && elFS.classList.contains('open')) toggleFocusMode(); }
-    });
+      if (e.code === 'KeyF')       { if (elFS && elFS.classList.contains('open')) toggleFocusMode(); }\n    });
 
     /* Atualiza personagem quando muda tema */
     document.addEventListener('themeChanged', updateCharacter);
