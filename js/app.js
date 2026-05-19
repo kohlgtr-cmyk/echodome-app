@@ -345,6 +345,12 @@ const app = (() => {
     document.querySelectorAll('[data-nav]').forEach(btn => {
       btn.addEventListener('click', () => navigate(btn.dataset.nav));
     });
+    // Logo vira link para home
+    const logo = document.querySelector('.logo-text[data-section="home"]');
+    if (logo) {
+      logo.style.cursor = 'pointer';
+      logo.addEventListener('click', () => navigate('home'));
+    }
   }
 
   /* ── Indicador offline ── */

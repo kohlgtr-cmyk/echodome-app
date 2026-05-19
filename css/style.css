@@ -59,7 +59,10 @@ body {
   letter-spacing: 0.12em;
   color: var(--neon);
   text-shadow: 0 0 12px var(--neon-50);
+  cursor: pointer;
+  transition: opacity 0.15s;
 }
+.logo-text:hover { opacity: 0.75; }
 
 .main-nav {
   display: flex;
