@@ -125,27 +125,8 @@ const LyricsBrowser = (() => {
     if (first) _render(first.id);
   }
 
-  /* ── Adiciona botão LYRICS ao nav ── */
-  function _addNavBtn() {
-    if (document.querySelector('.nav-btn[data-section="lyrics"]')) return;
-    const nav = document.querySelector('.main-nav');
-    if (!nav) return;
-    const btn = document.createElement('button');
-    btn.className     = 'nav-btn';
-    btn.dataset.section = 'lyrics';
-    btn.textContent   = 'LYRICS';
-    /* Insere antes de BAND */
-    const bandBtn = nav.querySelector('[data-section="about"]');
-    if (bandBtn) nav.insertBefore(btn, bandBtn);
-    else nav.appendChild(btn);
-    btn.addEventListener('click', () => {
-      if (typeof app !== 'undefined') app.navigate('lyrics');
-    });
-  }
-
   function init() {
     _buildSection();
-    _addNavBtn();
   }
 
   /* Pode ser chamado externamente para sincronizar com a música tocando */

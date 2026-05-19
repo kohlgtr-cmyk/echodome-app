@@ -3,7 +3,7 @@
    v3.1 — cache-first estático + fontes Google + download de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.3.8';
+const STATIC_CACHE = 'echodome-static-v3.3.9';
 const AUDIO_CACHE  = 'echodome-audio-v3';
 const FONT_CACHE   = 'echodome-fonts-v2';
 
