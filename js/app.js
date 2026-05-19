@@ -316,6 +316,25 @@ const app = (() => {
 
     socialsSection.appendChild(links);
     container.parentElement.appendChild(socialsSection);
+
+    /* ── Botão Ver Letras ── */
+    const existingLyricsBtn = document.getElementById('bandLyricsBtn');
+    if (existingLyricsBtn) existingLyricsBtn.remove();
+
+    const lyricsWrap = document.createElement('div');
+    lyricsWrap.id        = 'bandLyricsBtn';
+    lyricsWrap.className = 'band-lyrics-cta';
+
+    lyricsWrap.innerHTML = `
+      <p class="band-lyrics-cta__label">// THE WORDS BEHIND THE SOUND</p>
+      <button class="btn-ghost band-lyrics-cta__btn">
+        VER LETRAS
+      </button>
+    `;
+
+    lyricsWrap.querySelector('button').addEventListener('click', () => navigate('lyrics'));
+
+    container.parentElement.appendChild(lyricsWrap);
   }
 
   /* ── Nav ── */

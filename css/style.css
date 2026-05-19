@@ -857,6 +857,30 @@ body {
   outline: none;
 }
 
+/* ── Band → Ver Letras CTA ── */
+.band-lyrics-cta {
+  margin-top: var(--gap-xl, 48px);
+  padding-top: var(--gap-lg);
+  border-top: 1px solid var(--neon-10);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--gap-md);
+}
+
+.band-lyrics-cta__label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--fg-dim);
+  opacity: 0.6;
+}
+
+.band-lyrics-cta__btn {
+  min-width: 200px;
+}
+
 /* =========================================================
    #16 — PLAY COUNT BADGES
    ========================================================= */
