@@ -311,17 +311,25 @@
         </div>
       </div>
 
-      <!-- Tabs: Lyrics / Story -->
-      <div class="fs-tabs">
-        <button class="fs-tab active" data-tab="lyrics">LYRICS</button>
-        <button class="fs-tab" data-tab="story">STORY</button>
-      </div>
-      <div class="fs-tab-content">
-        <div class="fs-tab-pane active" id="tab-lyrics">
-          <div class="fs-lyrics" id="fsLyrics"><p class="placeholder-text">// no lyrics loaded</p></div>
-        </div>
-        <div class="fs-tab-pane" id="tab-story">
-          <div class="fs-story" id="fsStory"><p class="placeholder-text">// no story loaded</p></div>
+      <!-- Tabs: Lyrics / Story — colapsáveis -->
+      <div class="fs-tabs-toggle" id="fsTabsToggle">
+        <button class="fs-tabs-toggle-btn" id="fsTabsToggleBtn" aria-expanded="false" aria-controls="fsTabsPanel">
+          <span class="fs-tabs-toggle-label" id="fsTabsToggleLabel">LYRICS</span>
+          <span class="fs-tabs-toggle-arrow" id="fsTabsToggleArrow">↓</span>
+        </button>
+        <div class="fs-tabs-panel" id="fsTabsPanel" aria-hidden="true">
+          <div class="fs-tabs">
+            <button class="fs-tab active" data-tab="lyrics">LYRICS</button>
+            <button class="fs-tab" data-tab="story">STORY</button>
+          </div>
+          <div class="fs-tab-content">
+            <div class="fs-tab-pane active" id="tab-lyrics">
+              <div class="fs-lyrics" id="fsLyrics"><p class="placeholder-text">// no lyrics loaded</p></div>
+            </div>
+            <div class="fs-tab-pane" id="tab-story">
+              <div class="fs-story" id="fsStory"><p class="placeholder-text">// no story loaded</p></div>
+            </div>
+          </div>
         </div>
       </div>
 

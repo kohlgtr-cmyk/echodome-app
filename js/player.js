@@ -395,15 +395,31 @@ const Player = (() => {
     if (elFSCharIcon) pulse(elFSCharIcon, 'beat-pulse');
   }
 
-  /* ---- Tabs ---- */
+  /* ---- Tabs colapsáveis ---- */
   function initTabs() {
+    var toggleBtn   = document.getElementById('fsTabsToggleBtn');
+    var togglePanel = document.getElementById('fsTabsPanel');
+    var toggleLabel = document.getElementById('fsTabsToggleLabel');
+
+    // Toggle abrir/fechar o painel
+    if (toggleBtn && togglePanel) {
+      toggleBtn.addEventListener('click', function() {
+        var isOpen = togglePanel.classList.toggle('is-open');
+        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+        togglePanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+      });
+    }
+
+    // Troca de abas internas (lyrics / story)
     document.querySelectorAll('.fs-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         document.querySelectorAll('.fs-tab').forEach(function(t) { t.classList.remove('active'); });
         document.querySelectorAll('.fs-tab-pane').forEach(function(p) { p.classList.remove('active'); });
         tab.classList.add('active');
-        const pane = document.getElementById('tab-' + tab.dataset.tab);
+        var pane = document.getElementById('tab-' + tab.dataset.tab);
         if (pane) pane.classList.add('active');
+        // Atualiza label do botão de toggle com a tab ativa
+        if (toggleLabel) toggleLabel.textContent = tab.textContent;
       });
     });
   }
