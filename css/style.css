@@ -370,7 +370,7 @@ body {
 
 .track-item {
   display: grid;
-  grid-template-columns: 44px 1fr auto auto;
+  grid-template-columns: 44px 1fr auto auto auto;
   align-items: center;
   gap: var(--gap-md);
   padding: var(--gap-md);
@@ -378,6 +378,7 @@ body {
   border-bottom: 1px solid var(--neon-08);
   cursor: pointer;
   transition: background 0.15s, border-color 0.15s;
+  position: relative;
 }
 .track-item:hover {
   background: var(--neon-05);
@@ -459,7 +460,7 @@ body {
   color: var(--fg-dim);
 }
 
-.track-play-btn {
+.track-more-btn {
   background: none;
   border: 1px solid var(--neon-30);
   color: var(--neon);
@@ -469,12 +470,49 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 1.1rem;
+  letter-spacing: -1px;
   transition: background 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
 }
-.track-play-btn:hover {
+.track-more-btn:hover {
   background: var(--neon-20);
   box-shadow: 0 0 8px var(--neon-30);
+}
+
+/* Mini-menu suspenso */
+.track-more-menu {
+  display: none;
+  position: absolute;
+  right: var(--gap-md);
+  top: calc(100% - 4px);
+  z-index: 200;
+  background: var(--bg);
+  border: 1px solid var(--neon-30);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 12px var(--neon-15);
+  min-width: 160px;
+  flex-direction: column;
+}
+.track-more-menu.open {
+  display: flex;
+}
+.track-more-item {
+  background: none;
+  border: none;
+  border-bottom: 1px solid var(--neon-08);
+  color: var(--fg);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.06em;
+  padding: 10px 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s;
+}
+.track-more-item:last-child { border-bottom: none; }
+.track-more-item:hover {
+  background: var(--neon-10);
+  color: var(--neon);
 }
 
 /* ---------- Gallery ---------- */
@@ -603,7 +641,7 @@ body {
 
 /* All SVG icons inherit color from parent */
 [data-icon] svg,
-.track-play-btn svg,
+.track-more-btn svg,
 .track-dl-btn svg,
 .ctrl-btn svg,
 .fs-ctrl-btn svg,
@@ -633,7 +671,7 @@ body {
 .fs-mode-btn,
 .fs-close-btn,
 .lb-btn,
-.track-play-btn,
+.track-more-btn,
 .track-dl-btn,
 .album-dl-btn .dl-icon {
   display: inline-flex;

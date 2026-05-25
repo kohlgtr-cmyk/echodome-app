@@ -65,7 +65,7 @@
 
   /* Tracklist */
   .track-item { grid-template-columns: 36px 1fr auto; }
-  .track-play-btn { display: none; }
+  /* ⋯ menu visível no mobile também — sem hide */
 
   /* ── player.css ─────────────────────────────────────── */
 

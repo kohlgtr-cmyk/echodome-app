@@ -181,11 +181,23 @@ const app = (() => {
       <button class="track-dl-btn" data-song-id="${song.id}"
         aria-label="Download ${song.title}"
         data-remove-label="REMOVER"></button>
-      <button class="track-play-btn" aria-label="Play ${song.title}">${Icons.get('play')}</button>
+      <button class="track-more-btn" aria-label="Mais opções para ${song.title}">⋯</button>
+      <div class="track-more-menu" role="menu">
+        <button class="track-more-item" data-action="lyrics">Ver letra</button>
+        <button class="track-more-item" data-action="story">Como foi feita</button>
+        <button class="track-more-item" data-action="download">Download</button>
+        <button class="track-more-item" data-action="playlist">Adicionar à playlist</button>
+      </div>
     `;
+
+    /* Clique na faixa → play (exceto nos botões de ação) */
     item.addEventListener('click', e => {
-      if (!e.target.closest('.track-dl-btn')) Player.playIndex(globalIdx);
+      if (!e.target.closest('.track-dl-btn') && !e.target.closest('.track-more-btn') && !e.target.closest('.track-more-menu')) {
+        Player.playIndex(globalIdx);
+      }
     });
+
+    /* Botão de download */
     item.querySelector('.track-dl-btn').addEventListener('click', e => {
       e.stopPropagation();
       const songId = parseInt(e.currentTarget.dataset.songId);
@@ -195,6 +207,60 @@ const app = (() => {
         Downloader.downloadSong(song);
       }
     });
+
+    /* Botão ⋯ — abre/fecha o mini-menu */
+    const moreBtn  = item.querySelector('.track-more-btn');
+    const moreMenu = item.querySelector('.track-more-menu');
+
+    moreBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const isOpen = moreMenu.classList.contains('open');
+      /* Fecha qualquer outro menu aberto */
+      document.querySelectorAll('.track-more-menu.open').forEach(m => m.classList.remove('open'));
+      if (!isOpen) moreMenu.classList.add('open');
+    });
+
+    /* Ações do mini-menu */
+    moreMenu.querySelectorAll('.track-more-item').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        moreMenu.classList.remove('open');
+        const action = btn.dataset.action;
+        if (action === 'lyrics') {
+          Player.playIndex(globalIdx);
+          setTimeout(() => {
+            const fsPlayer = document.getElementById('fullscreenPlayer');
+            if (fsPlayer) {
+              fsPlayer.classList.add('active');
+              fsPlayer.removeAttribute('aria-hidden');
+            }
+            const lyricsTab = document.querySelector('.fs-tab[data-tab="lyrics"]');
+            if (lyricsTab) lyricsTab.click();
+          }, 150);
+        } else if (action === 'story') {
+          Player.playIndex(globalIdx);
+          setTimeout(() => {
+            const fsPlayer = document.getElementById('fullscreenPlayer');
+            if (fsPlayer) {
+              fsPlayer.classList.add('active');
+              fsPlayer.removeAttribute('aria-hidden');
+            }
+            const storyTab = document.querySelector('.fs-tab[data-tab="story"]');
+            if (storyTab) storyTab.click();
+          }, 150);
+        } else if (action === 'download') {
+          const songId = song.id;
+          if (Downloader.isDownloaded(songId)) {
+            Downloader.removeSong(song);
+          } else {
+            Downloader.downloadSong(song);
+          }
+        } else if (action === 'playlist') {
+          if (typeof Queue !== 'undefined') Queue.add(globalIdx);
+        }
+      });
+    });
+
     return item;
   }
 
@@ -403,3 +469,8 @@ if ('serviceWorker' in navigator) {
 }
 
 document.addEventListener('DOMContentLoaded', app.init);
+
+/* Fecha mini-menus de faixa ao clicar fora */
+document.addEventListener('click', () => {
+  document.querySelectorAll('.track-more-menu.open').forEach(m => m.classList.remove('open'));
+});
