@@ -4,6 +4,37 @@
    Centraliza aqui. Não duplicar media queries nos outros CSS.
    ========================================================= */
 
+/* ── Remove highlight azul de toque (global, fora do media query) ── */
+* {
+  -webkit-tap-highlight-color: transparent;
+  tap-highlight-color: transparent;
+}
+
+/* Desabilita seleção de texto em elementos interativos do player */
+.mini-player,
+.mini-player__body,
+.mini-player__controls,
+.ctrl-btn,
+.fullscreen-player,
+.fs-controls,
+.fs-controls-overlay,
+.fs-ctrl-btn,
+.fs-mode-btn,
+.fs-mode-btns,
+.fs-close-btn,
+.fs-tabs,
+.fs-tab,
+.fs-progress-bar,
+.track-item,
+.track-more-btn,
+.track-dl-btn,
+.album-dl-btn,
+.nav-btn,
+.theme-toggle-btn {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 @media (max-width: 600px) {
 
   /* ── style.css ──────────────────────────────────────── */
