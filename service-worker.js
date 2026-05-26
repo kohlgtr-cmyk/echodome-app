@@ -1,9 +1,9 @@
 /* =========================================================
    ECHODOME — service-worker.js
-   v3.1 — cache-first estático + fontes Google + download de áudio.
+   v3.3.98 — cache-first estático + fontes Google + download de áudio.
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.3.97';
+const STATIC_CACHE = 'echodome-static-v3.3.98';
 const AUDIO_CACHE  = 'echodome-audio-v3';
 const FONT_CACHE   = 'echodome-fonts-v2';
 

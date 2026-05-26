@@ -42,6 +42,7 @@ const SONGS = [
     track: 1,
     file: "assets/songs/love-story.mp3", // ← caminho do seu MP3
     singleCover: "assets/single/love-story.svg", // ← coloque o SVG da capa aqui
+    tags: ["cover"],
     duration: "4:05",
     lyrics: `VERSE 1
 
@@ -135,6 +136,7 @@ Só tenta ser verdadeira dentro do que restou dele.`
     track: 2,
     file: "assets/songs/eu-nao-queria-sentir-assim.mp3",
     singleCover: "assets/single/eu-nao-queria-sentir-assim.svg", // ← coloque o SVG da capa aqui
+    tags: ["pt-br"],
     duration: "4:15",
     lyrics: `VERSE 1
 
@@ -232,6 +234,7 @@ Como deveria ser.`
     track: 3,
     file: "assets/songs/somewhere-between-us.mp3",
     singleCover: "assets/single/somewhere-between-us.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:34",
     lyrics: `Verse 1
 You say it softly, almost kind
@@ -318,6 +321,7 @@ Fala do que acontece antes dela.`
     track: 4,
     file: "assets/songs/te-voy-a-cambiar.mp3",
     singleCover: "assets/single/te-voy-a-cambiar.svg", // ← coloque o SVG da capa aqui
+    tags: ["spanish"],
     duration: "4:35",
     lyrics: `VERSO 1
 Siempre hay dos reglas en tu voz
@@ -433,6 +437,7 @@ E do momento em que suportar deixa de ser uma opção.`
     track: 5,
     file: "assets/songs/i-feel-stuck.mp3",
     singleCover: "assets/single/i-feel-stuck.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:20",
     lyrics: `VERSE 1
 
@@ -532,6 +537,7 @@ Só o início de movimento.`
     track: 6,
     file: "assets/songs/nunca-es-suficiente.mp3",
     singleCover: "assets/single/nunca-es-suficiente.svg", // ← coloque o SVG da capa aqui
+    tags: ["spanish"],
     duration: "3:25",
     lyrics: `Verso 1
 
@@ -627,6 +633,7 @@ e ainda assim não ser suficiente.`
     track: 7,
     file: "assets/songs/ate-onde-vale.mp3",
     singleCover: "assets/single/ate-onde-vale.svg", // ← coloque o SVG da capa aqui
+    tags: ["pt-br"],
     duration: "3:51",
     lyrics: `(verso 1)
 Mais um dia que pesa mais que ontem
@@ -723,6 +730,7 @@ E que, às vezes, parar não é fraqueza —
     track: 8,
     file: "assets/songs/vozes-em-mim.mp3",
     singleCover: "assets/single/vozes-em-mim.svg", // ← coloque o SVG da capa aqui
+    tags: ["pt-br"],
     duration: "3:15",
     lyrics: `(verso 1)
 Eu sei exatamente onde isso vai dar
@@ -828,6 +836,7 @@ Busca coexistência.`
     track: 1,
     file: "assets/songs/between-the-lines.mp3",
     singleCover: "assets/single/between-the-lines.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:30",
     lyrics: `VERSE 1
 
@@ -914,8 +923,9 @@ Só precisam existir.`
     title: "Echoes Of Yesterday",
     albumId: "album2",
     track: 2,
-    file: "assets/songs/echos.mp3",
+    file: "assets/songs/echoes-of-yesterday.mp3",
     singleCover: "assets/single/echoes-of-yesterday.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:22",
     lyrics: `VERSE
 
@@ -994,6 +1004,7 @@ Elas se apagam porque nunca foram sólidas o suficiente para permanecer.`
     track: 3,
     file: "assets/songs/what-if.mp3",
     singleCover: "assets/single/what-if.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:59",
     lyrics: `Verse 1
 
@@ -1079,6 +1090,7 @@ e aceitar que ela nunca vai acontecer.`
     track: 4,
     file: "assets/songs/depois-das-duas-da-manha.mp3",
     singleCover: "assets/single/depois-das-duas-da-manha.svg", // ← coloque o SVG da capa aqui
+    tags: ["pt-br"],
     duration: "3:33",
     lyrics: `[Verso 1]
 Depois das duas da manhã
@@ -1160,6 +1172,7 @@ Ela gira.`
     track: 5,
     file: "assets/songs/the-boy-i-was.mp3",
     singleCover: "assets/single/the-boy-i-was.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:49",
     lyrics: `Verse 1
     I found a picture of you today
@@ -1290,6 +1303,7 @@ Só precisam ser ditas.`
     track: 6,
     file: "assets/songs/after-everyone-sleeps.mp3",
     singleCover: "assets/single/after-everyone-sleeps.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:29",
     lyrics: `Verse 1
     The house goes quiet after midnight
@@ -1381,6 +1395,7 @@ Fala do que fica.`
     track: 7,
     file: "assets/songs/letters-i-ve-never-send.mp3",
     singleCover: "assets/single/letters-i-ve-never-send.svg", // ← coloque o SVG da capa aqui
+    tags: ["english"],
     duration: "4:34",
     lyrics: `Verse 1
 If you’re reading this someday

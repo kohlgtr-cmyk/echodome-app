@@ -6,11 +6,12 @@
 
 const PushNotifs = (() => {
 
-  /* VAPID public key — gere o seu em:
-     https://web-push-codelab.glitch.me/  ou com:
-     npx web-push generate-vapid-keys
-     e substitua abaixo. Sem a key correta o subscribe falha silenciosamente. */
-  const VAPID_PUBLIC_KEY = 'BEl62iUYgUivxIkv69yViEuiBIa-Ib9-SkvMeAtA3LFgDzkrxZJjSgSnfckjBJuBkr3qBUYIHBQFLXYp5Nksh8U';
+  /* ⚠️  ATENÇÃO: esta é uma VAPID key de EXEMPLO (web-push-codelab).
+     Notificações push NÃO funcionarão em produção com ela.
+     Gere sua própria key para o domínio real da banda:
+       npx web-push generate-vapid-keys
+     e substitua o valor abaixo (atualize também a chave privada no servidor). */
+  const VAPID_PUBLIC_KEY = 'SUBSTITUA_PELA_SUA_VAPID_PUBLIC_KEY';
 
   function _urlBase64ToUint8Array(base64String) {
     const padding = '='.repeat((4 - base64String.length % 4) % 4);

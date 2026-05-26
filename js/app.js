@@ -383,7 +383,10 @@ const app = (() => {
       </button>
     `;
 
-    lyricsWrap.querySelector('button').addEventListener('click', () => navigate('lyrics'));
+    lyricsWrap.querySelector('button').addEventListener('click', () => {
+      if (typeof LyricsBrowser !== 'undefined') LyricsBrowser.init();
+      navigate('lyrics');
+    });
 
     container.parentElement.appendChild(lyricsWrap);
   }
