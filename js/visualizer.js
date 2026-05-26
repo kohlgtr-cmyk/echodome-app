@@ -171,17 +171,39 @@ const Visualizer = (() => {
     c.clearRect(0, 0, W, H);
 
     const bins = endBin - startBin;
-    const barW = Math.max(2, W / bins - 1);
-    const col  = getComputedStyle(document.documentElement)
-                   .getPropertyValue('--neon').trim() || '#00ffe0';
+    if (bins <= 0) return;
+    /* Agrupa bins em ~16 barras visuais para legibilidade */
+    const BAR_COUNT = Math.min(bins, 16);
+    const barW = Math.max(2, (W / BAR_COUNT) - 1);
+    const gap  = Math.max(1, W / BAR_COUNT - barW);
 
-    for (var i = 0; i < bins; i++) {
-      const v  = freqData[startBin + i] / 255;
-      const bH = v * H;
+    const col = getComputedStyle(document.documentElement)
+                  .getPropertyValue('--neon').trim() || '#00ffe0';
+
+    for (var i = 0; i < BAR_COUNT; i++) {
+      /* Média dos bins correspondentes */
+      const binStart = startBin + Math.floor(i * bins / BAR_COUNT);
+      const binEnd   = startBin + Math.floor((i + 1) * bins / BAR_COUNT);
+      let sum = 0;
+      for (var b = binStart; b < binEnd; b++) sum += freqData[b];
+      const v  = (sum / (binEnd - binStart)) / 255;
+      const bH = Math.max(2, v * H);
+      const x  = i * (barW + gap);
+
+      /* Gradiente: neon na base, transparente no topo */
+      const grad = c.createLinearGradient(0, H - bH, 0, H);
+      grad.addColorStop(0,   col.replace(')', ',0.55)').replace('rgb(', 'rgba(').replace('#', 'rgba(').replace(/rgba\(([^)]+)\)/, (_m, g) => {
+        /* fallback simples se col não for rgba */
+        return col;
+      }));
+      grad.addColorStop(1, col);
+
       c.fillStyle   = col;
       c.shadowColor = col;
-      c.shadowBlur  = boostMode ? 8 : 4;
-      c.fillRect(i * (barW + 1), H - bH, barW, bH);
+      c.shadowBlur  = boostMode ? 12 : 5;
+      c.globalAlpha = 0.35 + v * 0.65;
+      c.fillRect(x, H - bH, barW, bH);
+      c.globalAlpha = 1;
     }
   }
 
@@ -282,12 +304,20 @@ const Visualizer = (() => {
   }
 
   function initBandMode() {
-    cvBands.guitar = document.getElementById('eqGuitar');
     cvBands.bass   = document.getElementById('eqBass');
+    cvBands.guitar = document.getElementById('eqGuitar');
     cvBands.keys   = document.getElementById('eqKeys');
     cvBands.drums  = document.getElementById('eqDrums');
-    Object.values(cvBands).forEach(function(cv) {
-      if (cv) { cv.width = cv.offsetWidth || 60; cv.height = 60; }
+    /* Aguarda o painel estar visível para dimensionar corretamente */
+    requestAnimationFrame(function() {
+      Object.values(cvBands).forEach(function(cv) {
+        if (!cv) return;
+        const parent = cv.parentElement;
+        const W = parent ? parent.offsetWidth  : 60;
+        const H = parent ? parent.offsetHeight - 20 : 55; /* 20 = label height */
+        cv.width  = Math.max(W, 10);
+        cv.height = Math.max(H, 20);
+      });
     });
   }
 

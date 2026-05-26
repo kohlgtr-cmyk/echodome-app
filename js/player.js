@@ -362,6 +362,9 @@ const Player = (() => {
   /* ---- Modos extras (ponto 7) ---- */
   function toggleBandMode() {
     isBandMode = !isBandMode;
+    /* Troca waveform ↔ band mode panel */
+    const waveWrap = document.querySelector('.fs-waveform-wrap');
+    if (waveWrap)    waveWrap.classList.toggle('band-active', isBandMode);
     if (elFSBandMode) elFSBandMode.classList.toggle('visible', isBandMode);
     if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
     if (isBandMode && typeof Visualizer !== 'undefined') Visualizer.initBandMode();

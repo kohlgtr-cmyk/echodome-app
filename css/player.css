@@ -701,39 +701,59 @@
   cursor: pointer;
 }
 
-/* ---- Band Mode (ponto 5) ---- */
+/* ---- Band Mode (ponto 7) ---- */
 .fs-band-mode {
   display: none;
   width: 100%;
   gap: var(--gap-sm);
-  padding: var(--gap-sm);
+  padding: 10px var(--gap-sm);
   background: var(--neon-05);
   border: 1px solid var(--neon-15);
   border-radius: 8px;
-  margin-top: 4px;
+  height: 90px;        /* mesma altura do waveform */
+  box-sizing: border-box;
+  animation: bandFadeIn 0.25s ease-out;
+}
+@keyframes bandFadeIn {
+  from { opacity: 0; transform: scaleY(0.88); }
+  to   { opacity: 1; transform: scaleY(1); }
 }
 .fs-band-mode.visible { display: flex; }
+
+/* Quando band mode ativa, esconde o waveform com fade */
+.fs-waveform-wrap.band-active {
+  opacity: 0;
+  pointer-events: none;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  border: none;
+  overflow: hidden;
+  transition: opacity 0.2s, height 0.25s;
+}
 
 .band-channel {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
+  gap: 5px;
+  min-width: 0;
 }
 .band-eq-canvas {
   width: 100%;
-  height: 60px;
+  flex: 1;
   border-radius: 4px;
-  background: var(--neon-05);
-  border: 1px solid var(--neon-10, var(--neon-08));
+  background: transparent;
+  display: block;
 }
 .band-channel-label {
   font-family: var(--font-mono);
-  font-size: 0.55rem;
-  letter-spacing: 0.15em;
+  font-size: 0.52rem;
+  letter-spacing: 0.18em;
   color: var(--neon);
-  opacity: 0.7;
+  opacity: 0.65;
+  line-height: 1;
 }
 
 /* ---- Tabs ---- */
