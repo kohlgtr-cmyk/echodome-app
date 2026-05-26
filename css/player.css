@@ -197,35 +197,119 @@
   transform: translateY(0);
 }
 
-/* Focus mode: sem UI, só música (ponto 7) */
+/* ── Focus mode: capa imersiva, controles sobrepostos ── */
+
+/* Oculta tudo que não é essencial */
 .fullscreen-player.focus-mode .fs-char-silhouette,
-.fullscreen-player.focus-mode .fs-tabs-toggle,
+.fullscreen-player.focus-mode .fs-tabs,
+.fullscreen-player.focus-mode .fs-tab-content,
 .fullscreen-player.focus-mode .fs-band-mode,
-.fullscreen-player.focus-mode .fs-volume-wrap {
+.fullscreen-player.focus-mode .fs-volume-wrap,
+.fullscreen-player.focus-mode .fs-meta,
+.fullscreen-player.focus-mode .fs-waveform-wrap,
+.fullscreen-player.focus-mode .fs-time,
+.fullscreen-player.focus-mode .fs-progress-wrap,
+.fullscreen-player.focus-mode .fs-controls {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s;
 }
-/* No focus mode, esconde os botões de modo EXCETO o de fechar e o de focus */
+
+/* Esconde botões de modo exceto focus e fechar */
 .fullscreen-player.focus-mode .fs-mode-btn:not(#fsFocusModeBtn) {
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.4s;
 }
-/* Botão fechar sempre visível, mas bem discreto no focus mode */
+
+/* Fechar discreto */
 .fullscreen-player.focus-mode .fs-close-btn {
-  opacity: 0.3;
+  opacity: 0.2;
   transition: opacity 0.2s;
 }
 .fullscreen-player.focus-mode .fs-close-btn:hover { opacity: 1; }
-/* Botão focus fica destacado para o user saber como sair */
+
+/* Botão focus destacado (indica como sair) */
 .fullscreen-player.focus-mode #fsFocusModeBtn {
   opacity: 1 !important;
   pointer-events: all !important;
   color: var(--neon);
   border-color: var(--neon-40);
 }
-.fullscreen-player.focus-mode .fs-cover-wrap { transform: scale(1.1); }
+
+/* Capa ocupa ~80% da viewport */
+.fullscreen-player.focus-mode .fs-cover-wrap {
+  width: min(80vw, 80vh, 540px);
+  height: min(80vw, 80vh, 540px);
+  transition: width 0.5s cubic-bezier(.4,0,.2,1),
+              height 0.5s cubic-bezier(.4,0,.2,1);
+}
+
+/* fs-content centraliza a capa na tela toda */
+.fullscreen-player.focus-mode .fs-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  gap: 0;
+  padding-bottom: 0;
+}
+
+/* ── Overlay de controles dentro da capa ── */
+.fs-controls-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-lg);
+  padding: 24px 0 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+  border-radius: 0 0 14px 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 5;
+}
+
+/* Overlay nunca aparece fora do focus mode */
+.fs-controls-overlay { display: none; }
+.fullscreen-player.focus-mode .fs-controls-overlay { display: flex; }
+
+/* Aparece ao hover na capa (desktop) */
+.fullscreen-player.focus-mode .fs-cover-wrap:hover .fs-controls-overlay {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* No mobile (sem hover), sempre visível */
+@media (hover: none) {
+  .fullscreen-player.focus-mode .fs-controls-overlay {
+    opacity: 1;
+    pointer-events: all;
+  }
+}
+
+/* Ícones em branco para contraste sobre a imagem */
+.fs-controls-overlay .fs-ctrl-btn {
+  color: rgba(255,255,255,0.9);
+  filter: drop-shadow(0 1px 6px rgba(0,0,0,0.8));
+}
+.fs-controls-overlay .fs-ctrl-btn:hover {
+  color: #fff;
+  transform: scale(1.14);
+}
+.fs-controls-overlay .fs-ctrl-btn--play {
+  border-color: rgba(255,255,255,0.75);
+  color: #fff;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+.fs-controls-overlay .fs-ctrl-btn--play:hover {
+  background: rgba(255,255,255,0.15);
+  box-shadow: 0 0 35px rgba(255,255,255,0.25);
+}
 
 /* Boost mode */
 .fullscreen-player.boost-mode .fs-cover-glow { opacity: 0.95 !important; }
@@ -652,63 +736,7 @@
   opacity: 0.7;
 }
 
-/* ---- Tabs colapsáveis ---- */
-.fs-tabs-toggle {
-  width: 100%;
-}
-
-/* Botão de toggle */
-.fs-tabs-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  background: none;
-  border: none;
-  border-top: 1px solid var(--neon-20);
-  color: var(--fg-dim);
-  font-family: var(--font-mono);
-  font-size: 0.68rem;
-  letter-spacing: 0.14em;
-  padding: 10px 4px;
-  cursor: pointer;
-  width: 100%;
-  text-align: left;
-  transition: color 0.2s;
-}
-.fs-tabs-toggle-btn:hover {
-  color: var(--neon);
-}
-.fs-tabs-toggle-btn[aria-expanded="true"] {
-  color: var(--neon);
-}
-
-.fs-tabs-toggle-label {
-  flex: 1;
-}
-
-.fs-tabs-toggle-arrow {
-  font-size: 0.7rem;
-  display: inline-block;
-  transition: transform 0.25s ease;
-  color: inherit;
-}
-.fs-tabs-toggle-btn[aria-expanded="true"] .fs-tabs-toggle-arrow {
-  transform: rotate(180deg);
-}
-
-/* Painel colapsável */
-.fs-tabs-panel {
-  overflow: hidden;
-  max-height: 0;
-  opacity: 0;
-  transition: max-height 0.35s ease, opacity 0.25s ease;
-}
-.fs-tabs-panel.is-open {
-  max-height: 420px;
-  opacity: 1;
-}
-
-/* Tabs internas */
+/* ---- Tabs ---- */
 .fs-tabs {
   display: flex;
   gap: 0;

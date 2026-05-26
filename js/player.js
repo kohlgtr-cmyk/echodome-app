@@ -56,6 +56,8 @@ const Player = (() => {
     const icon = playing ? Icons.get('pause') : Icons.get('play');
     if (elMiniPlay) elMiniPlay.innerHTML = icon;
     if (elFSPlay)   elFSPlay.innerHTML   = icon;
+    const ov = document.getElementById('fsPlayOverlay');
+    if (ov) ov.innerHTML = icon;
   }
 
   /* Pulso animado: força reflow e adiciona classe */
@@ -199,8 +201,6 @@ const Player = (() => {
     /* Highlight tracklist */
     document.querySelectorAll('.track-item').forEach(function(el, i) {
       el.classList.toggle('playing', i === idx);
-      const btn = el.querySelector('.track-play-btn');
-      if (btn) btn.innerHTML = (i === idx && isPlaying) ? Icons.get('pause') : Icons.get('play');
     });
   }
 
@@ -334,10 +334,7 @@ const Player = (() => {
   }
 
   function updateTracklistBtns() {
-    document.querySelectorAll('.track-item').forEach(function(el, i) {
-      const btn = el.querySelector('.track-play-btn');
-      if (btn) btn.innerHTML = (i === currentIdx && isPlaying) ? Icons.get('pause') : Icons.get('play');
-    });
+    /* track-play-btn removido (#3) — sem-op mantido para compatibilidade */
   }
 
   /* ---- Seek ---- */
@@ -395,31 +392,15 @@ const Player = (() => {
     if (elFSCharIcon) pulse(elFSCharIcon, 'beat-pulse');
   }
 
-  /* ---- Tabs colapsáveis ---- */
+  /* ---- Tabs ---- */
   function initTabs() {
-    var toggleBtn   = document.getElementById('fsTabsToggleBtn');
-    var togglePanel = document.getElementById('fsTabsPanel');
-    var toggleLabel = document.getElementById('fsTabsToggleLabel');
-
-    // Toggle abrir/fechar o painel
-    if (toggleBtn && togglePanel) {
-      toggleBtn.addEventListener('click', function() {
-        var isOpen = togglePanel.classList.toggle('is-open');
-        toggleBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-        togglePanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
-      });
-    }
-
-    // Troca de abas internas (lyrics / story)
     document.querySelectorAll('.fs-tab').forEach(function(tab) {
       tab.addEventListener('click', function() {
         document.querySelectorAll('.fs-tab').forEach(function(t) { t.classList.remove('active'); });
         document.querySelectorAll('.fs-tab-pane').forEach(function(p) { p.classList.remove('active'); });
         tab.classList.add('active');
-        var pane = document.getElementById('tab-' + tab.dataset.tab);
+        const pane = document.getElementById('tab-' + tab.dataset.tab);
         if (pane) pane.classList.add('active');
-        // Atualiza label do botão de toggle com a tab ativa
-        if (toggleLabel) toggleLabel.textContent = tab.textContent;
       });
     });
   }
@@ -523,6 +504,14 @@ const Player = (() => {
     if (elFSVolume) elFSVolume.addEventListener('input', function() {
       audio.volume = parseFloat(elFSVolume.value);
     });
+
+    /* Focus mode overlay controls (espelham os principais) */
+    const elFSPlayOverlay = document.getElementById('fsPlayOverlay');
+    const elFSPrevOverlay = document.getElementById('fsPrevOverlay');
+    const elFSNextOverlay = document.getElementById('fsNextOverlay');
+    if (elFSPlayOverlay) elFSPlayOverlay.addEventListener('click', togglePlay);
+    if (elFSPrevOverlay) elFSPrevOverlay.addEventListener('click', prev);
+    if (elFSNextOverlay) elFSNextOverlay.addEventListener('click', next);
 
     /* Modos extras (ponto 7) */
     if (elFSBandBtn)    elFSBandBtn.addEventListener('click', toggleBandMode);
