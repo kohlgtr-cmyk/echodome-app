@@ -313,7 +313,6 @@
 
 /* Boost mode */
 .fullscreen-player.boost-mode .fs-cover-glow { opacity: 0.95 !important; }
-.fullscreen-player.boost-mode .fs-cover-ring { animation-duration: 1s !important; }
 .fullscreen-player.boost-mode #fsBoostBtn { color: var(--neon); }
 
 /* ---- Fundo dinâmico (pontos 1, 8) ---- */
@@ -342,17 +341,6 @@
     rgba(0,0,0,0.55) 45%,
     var(--bg) 100%
   );
-}
-
-/* ---- Partículas ---- */
-.viz-canvas-particles {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  z-index: 0;
-  opacity: 0.55;
 }
 
 /* ---- Silhueta do personagem (ponto 3) ---- */
@@ -504,23 +492,6 @@
   text-shadow: 0 0 30px var(--neon);
   background: var(--neon-05);
 }
-
-/* Anel girando ao redor da capa (ponto 1) */
-.fs-cover-ring {
-  position: absolute;
-  inset: -16px;
-  border-radius: 50%;
-  border: 1.5px solid transparent;
-  border-top-color: var(--neon);
-  border-right-color: var(--neon-30);
-  animation: coverRing 7s linear infinite;
-  pointer-events: none;
-}
-@keyframes coverRing {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
-}
-.fs-cover-ring.ring-beat { animation-duration: 0.5s; }
 
 /* ---- Meta ---- */
 .fs-meta {

@@ -20,12 +20,7 @@ const Visualizer = (() => {
   /* ---- Canvas refs ---- */
   let cvFS        = null;
   let cvMini      = null;
-  let cvParticles = null;
   let cvBands     = {};
-
-  /* ---- Partículas ---- */
-  const PARTICLE_COUNT = 70;
-  let particles = [];
 
   /* ---- Config ---- */
   const CFG = {
@@ -58,83 +53,29 @@ const Visualizer = (() => {
     alpha = alpha === undefined ? 1 : alpha;
     const raw = getComputedStyle(document.documentElement)
       .getPropertyValue('--neon').trim() || '#00ffe0';
-    if (raw.startsWith('#')) {
+    /* Hex 6 dígitos */
+    if (/^#[0-9a-f]{6}$/i.test(raw)) {
       const r = parseInt(raw.slice(1,3), 16);
       const g = parseInt(raw.slice(3,5), 16);
       const b = parseInt(raw.slice(5,7), 16);
       return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
     }
-    return raw.replace(')', ',' + alpha + ')').replace('rgb(', 'rgba(');
-  }
-
-  /* ---- Partículas ---- */
-  function initParticles(W, H) {
-    particles = [];
-    for (var i = 0; i < PARTICLE_COUNT; i++) {
-      particles.push(newParticle(W, H));
+    /* Hex 3 dígitos */
+    if (/^#[0-9a-f]{3}$/i.test(raw)) {
+      const r = parseInt(raw[1]+raw[1], 16);
+      const g = parseInt(raw[2]+raw[2], 16);
+      const b = parseInt(raw[3]+raw[3], 16);
+      return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
     }
-  }
-
-  function newParticle(W, H) {
-    var angle = Math.random() * Math.PI * 2;
-    var speed = Math.random() * 0.25 + 0.05;
-    return {
-      x      : Math.random() * W,
-      y      : Math.random() * H,
-      size   : Math.random() * 1.8 + 0.3,
-      speedX : Math.cos(angle) * speed,
-      speedY : Math.sin(angle) * speed,
-      alpha  : Math.random() * 0.35 + 0.05,
-      alphaDir: Math.random() > 0.5 ? 1 : -1,
-      alphaSpeed: Math.random() * 0.003 + 0.001,
-      baseSize: 0,
-    };
-  }
-
-  function drawParticles(energy) {
-    if (!cvParticles || cvParticles.offsetParent === null) return;
-    const c = cvParticles.getContext('2d');
-    const W = cvParticles.width;
-    const H = cvParticles.height;
-
-    // fade suave sem rastro pesado
-    c.fillStyle = 'rgba(0,0,0,0.06)';
-    c.fillRect(0, 0, W, H);
-
-    const boost    = energy / 255;
-    const speedMul = 1 + boost * 2.5;
-    const glow     = boostMode ? 10 : 5;
-
-    for (var i = 0; i < particles.length; i++) {
-      var p = particles[i];
-
-      // movimento suave em todas as direções
-      p.x += p.speedX * speedMul;
-      p.y += p.speedY * speedMul;
-
-      // wrap nas bordas (teleporta pro lado oposto)
-      if (p.x < -4)  p.x = W + 4;
-      if (p.x > W+4) p.x = -4;
-      if (p.y < -4)  p.y = H + 4;
-      if (p.y > H+4) p.y = -4;
-
-      // pulsa o alpha levemente (respiração)
-      p.alpha += p.alphaDir * p.alphaSpeed * (1 + boost * 3);
-      if (p.alpha > 0.55 || p.alpha < 0.03) {
-        p.alphaDir *= -1;
-        p.alpha = Math.max(0.03, Math.min(0.55, p.alpha));
-      }
-
-      // cresce levemente no beat
-      var drawSize = p.size + boost * 1.2;
-
-      c.beginPath();
-      c.arc(p.x, p.y, Math.max(0.1, drawSize), 0, Math.PI * 2);
-      c.fillStyle   = neonColor(p.alpha);
-      c.shadowColor = neonColor(p.alpha * 0.7);
-      c.shadowBlur  = drawSize * glow;
-      c.fill();
+    /* rgb(...) */
+    if (raw.startsWith('rgb(')) {
+      return raw.replace('rgb(', 'rgba(').replace(')', ',' + alpha + ')');
     }
+    /* rgba(...) — substitui o alpha existente */
+    if (raw.startsWith('rgba(')) {
+      return raw.replace(/,[^,)]+\)$/, ',' + alpha + ')');
+    }
+    return raw;
   }
 
   /* ---- Waveform ---- */
@@ -233,11 +174,6 @@ const Visualizer = (() => {
     for (var i = 0; i < bassEnd; i++) bassSum += freqData[i];
     const bassEnergy = bassSum / bassEnd;
 
-    /* General energy for particles */
-    let totalSum = 0;
-    for (var j = 0; j < bufLen; j++) totalSum += freqData[j];
-    const avgEnergy = totalSum / bufLen;
-
     /* Fullscreen waveform */
     if (cvFS && cvFS.offsetParent !== null) {
       const wrap = cvFS.parentElement;
@@ -250,11 +186,6 @@ const Visualizer = (() => {
 
     /* Mini waveform */
     if (cvMini) drawWave(cvMini, timeData, bufLen, CFG.miniLine);
-
-    /* Particles */
-    if (cvParticles && cvParticles.offsetParent !== null) {
-      drawParticles(avgEnergy);
-    }
 
     /* Band mode EQ bars */
     const total = bufLen;
@@ -275,29 +206,21 @@ const Visualizer = (() => {
     const H = parent.offsetHeight || 120;
     if (W > 0) canvas.width  = W;
     if (H > 0) canvas.height = H;
-    if (canvas === cvParticles && particles.length > 0) {
-      initParticles(W, H);
-    }
   }
 
   /* ---- API pública ---- */
   function init(audioEl, callbacks) {
     callbacks = callbacks || {};
-    cvFS        = document.getElementById('vizCanvasFS');
-    cvMini      = document.getElementById('vizCanvasMini');
-    cvParticles = document.getElementById('vizCanvasParticles');
-    onBeatCb    = callbacks.onBeat || null;
+    cvFS   = document.getElementById('vizCanvasFS');
+    cvMini = document.getElementById('vizCanvasMini');
+    onBeatCb = callbacks.onBeat || null;
 
     sizeCanvas(cvFS);
     sizeCanvas(cvMini);
-    sizeCanvas(cvParticles);
-
-    if (cvParticles) initParticles(cvParticles.width || 300, cvParticles.height || 600);
 
     window.addEventListener('resize', function() {
       sizeCanvas(cvFS);
       sizeCanvas(cvMini);
-      sizeCanvas(cvParticles);
     });
 
     connect(audioEl);
@@ -333,7 +256,7 @@ const Visualizer = (() => {
   function stop() {
     isRunning = false;
     cancelAnimationFrame(rafId);
-    [cvFS, cvMini, cvParticles].forEach(function(cv) {
+    [cvFS, cvMini].forEach(function(cv) {
       if (cv) cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
     });
     document.getElementById('miniProgressFill')?.classList.remove('pulse-beat');
@@ -343,7 +266,6 @@ const Visualizer = (() => {
   function resize() {
     sizeCanvas(cvFS);
     sizeCanvas(cvMini);
-    sizeCanvas(cvParticles);
   }
 
   return { init, start, stop, resize, initBandMode, setBoost };

@@ -40,7 +40,7 @@ const Player = (() => {
       elFSVolume, elFSLyrics, elFSStory,
       elFSBgCover,
       elFSCharIcon, elFSCharName, elFSCharRole,
-      elFSCoverImg, elFSCoverFallback, elFSCoverGlow, elFSCoverRing,
+      elFSCoverImg, elFSCoverFallback, elFSCoverGlow,
       elFSBandMode, elFSBandBtn, elFSFocusBtn, elFSBoostBtn, elFSLoopBtn,
       elFSShuffleBtn;
 
@@ -389,7 +389,6 @@ const Player = (() => {
   /* ---- Beat callbacks do Visualizer (pontos 2, 4) ---- */
   function onBeat() {
     pulse(elFSCoverGlow, 'beat-glow');
-    pulse(elFSCoverRing, 'ring-beat');
     pulse(elFSHead,      'beat-pulse');
     pulse(elFSPlay,      'beat-pulse');
     if (elFSCharIcon) pulse(elFSCharIcon, 'beat-pulse');
@@ -448,7 +447,6 @@ const Player = (() => {
     elFSCoverImg    = document.getElementById('fsCoverImg');
     elFSCoverFallback = document.getElementById('fsCoverFallback');
     elFSCoverGlow   = document.getElementById('fsCoverGlow');
-    elFSCoverRing   = document.getElementById('fsCoverRing');
     elFSBandMode    = document.getElementById('fsBandModePanel');
     elFSBandBtn     = document.getElementById('fsBandModeBtn');
     elFSFocusBtn    = document.getElementById('fsFocusModeBtn');
