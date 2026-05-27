@@ -118,9 +118,6 @@ const Visualizer = (() => {
     const barW = Math.max(2, (W / BAR_COUNT) - 1);
     const gap  = Math.max(1, W / BAR_COUNT - barW);
 
-    const col = getComputedStyle(document.documentElement)
-                  .getPropertyValue('--neon').trim() || '#00ffe0';
-
     for (var i = 0; i < BAR_COUNT; i++) {
       /* Média dos bins correspondentes */
       const binStart = startBin + Math.floor(i * bins / BAR_COUNT);
@@ -131,16 +128,13 @@ const Visualizer = (() => {
       const bH = Math.max(2, v * H);
       const x  = i * (barW + gap);
 
-      /* Gradiente: neon na base, transparente no topo */
+      /* Gradiente usando neonColor() que já converte qualquer formato de cor */
       const grad = c.createLinearGradient(0, H - bH, 0, H);
-      grad.addColorStop(0,   col.replace(')', ',0.55)').replace('rgb(', 'rgba(').replace('#', 'rgba(').replace(/rgba\(([^)]+)\)/, (_m, g) => {
-        /* fallback simples se col não for rgba */
-        return col;
-      }));
-      grad.addColorStop(1, col);
+      grad.addColorStop(0, neonColor(0.45));
+      grad.addColorStop(1, neonColor(0.95));
 
-      c.fillStyle   = col;
-      c.shadowColor = col;
+      c.fillStyle   = grad;
+      c.shadowColor = neonColor(1);
       c.shadowBlur  = boostMode ? 12 : 5;
       c.globalAlpha = 0.35 + v * 0.65;
       c.fillRect(x, H - bH, barW, bH);
