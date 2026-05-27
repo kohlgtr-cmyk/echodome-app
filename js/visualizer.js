@@ -232,28 +232,48 @@ const Visualizer = (() => {
     cvBands.keys   = document.getElementById('eqKeys');
     cvBands.drums  = document.getElementById('eqDrums');
 
-    /* Dimensiona após o painel estar visível e o layout ter sido calculado */
-    function sizeBandCanvases() {
-      Object.values(cvBands).forEach(function(cv) {
-        if (!cv) return;
-        const parent = cv.parentElement; /* .band-channel */
-        if (!parent) return;
-        const W = parent.clientWidth  || 60;
-        const H = Math.max(parent.clientHeight - 22, 40); /* 22 = label height */
-        cv.width  = Math.max(W, 20);
-        cv.height = Math.max(H, 40);
-        /* Limpa para evitar artefatos do canvas vazio */
-        cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
-      });
+    /* Dimensiona um canvas individual usando getBoundingClientRect
+       (confiável logo após reflow, ao contrário de clientWidth/clientHeight
+        que podem retornar 0 quando o painel acabou de receber display:flex) */
+    function sizeBandCanvas(cv) {
+      if (!cv) return;
+      var parent = cv.parentElement; /* .band-channel */
+      if (!parent) return;
+      var rect    = parent.getBoundingClientRect();
+      var labelEl = parent.querySelector('.band-channel-label');
+      var labelH  = labelEl ? (labelEl.offsetHeight || 14) + 5 : 22;
+      var W = Math.max(Math.floor(rect.width),  20);
+      var H = Math.max(Math.floor(rect.height) - labelH, 40);
+      if (cv.width !== W || cv.height !== H) {
+        cv.width  = W;
+        cv.height = H;
+      }
+      cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
     }
 
-    /* Tenta dimensionar em múltiplos frames para garantir que o layout foi calculado */
+    function sizeAll() {
+      Object.values(cvBands).forEach(sizeBandCanvas);
+    }
+
+    /* rAF duplo: aguarda o navegador calcular o layout após display:flex */
     requestAnimationFrame(function() {
-      sizeBandCanvases();
-      requestAnimationFrame(function() {
-        sizeBandCanvases(); /* segunda passada para garantir */
-      });
+      sizeAll();
+      requestAnimationFrame(sizeAll);
     });
+
+    /* Fallbacks com setTimeout para casos em que a animação CSS atrasa o reflow */
+    setTimeout(sizeAll, 100);
+    setTimeout(sizeAll, 350);
+
+    /* ResizeObserver: redimensiona automaticamente se o painel mudar de tamanho
+       (ex.: rotação de tela, resize de janela, modo fullscreen) */
+    if (typeof ResizeObserver !== 'undefined') {
+      var panel = document.getElementById('fsBandModePanel');
+      if (panel && !panel._bandResizeObs) {
+        panel._bandResizeObs = new ResizeObserver(sizeAll);
+        panel._bandResizeObs.observe(panel);
+      }
+    }
   }
 
   function setBoost(active) { boostMode = active; }

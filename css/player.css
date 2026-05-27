@@ -257,26 +257,9 @@
 }
 
 /* ── Overlay de controles dentro da capa ── */
+/* Oculto por padrão; só existe no focus mode */
 .fs-controls-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0; right: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--gap-lg);
-  padding: 24px 0 20px;
-  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
-  border-radius: 0 0 14px 14px;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.25s ease;
-  z-index: 5;
-}
-
-/* Overlay nunca aparece fora do focus mode */
-.fs-controls-overlay {
-  display: none !important;
+  display: none;
   position: absolute;
   bottom: 0;
   left: 0; right: 0;
@@ -292,7 +275,7 @@
   z-index: 5;
 }
 .fullscreen-player.focus-mode .fs-controls-overlay {
-  display: flex !important;
+  display: flex;
 }
 
 /* Aparece ao hover na capa (desktop) */
@@ -456,8 +439,8 @@
 /* ---- Capa grande com glow pulsante (pontos 1, 2) ---- */
 .fs-cover-wrap {
   position: relative;
-  width: clamp(200px, 55vw, 290px);
-  height: clamp(200px, 55vw, 290px);
+  width: clamp(200px, 40vw, 420px);
+  height: clamp(200px, 40vw, 420px);
   flex-shrink: 0;
   transition: transform 0.5s cubic-bezier(.4,0,.2,1);
   margin: 0 auto;

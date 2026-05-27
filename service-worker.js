@@ -2,7 +2,7 @@
    ECHODOME — service-worker.js
    ========================================================= */
 
-const STATIC_CACHE = 'echodome-static-v3.4.01';
+const STATIC_CACHE = 'echodome-static-v3.4.02';
 const AUDIO_CACHE  = 'echodome-audio-v3';
 const FONT_CACHE   = 'echodome-fonts-v2';
 

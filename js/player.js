@@ -367,7 +367,13 @@ const Player = (() => {
     if (waveWrap)    waveWrap.classList.toggle('band-active', isBandMode);
     if (elFSBandMode) elFSBandMode.classList.toggle('visible', isBandMode);
     if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
-    if (isBandMode && typeof Visualizer !== 'undefined') Visualizer.initBandMode();
+    if (isBandMode && typeof Visualizer !== 'undefined') {
+      Visualizer.initBandMode();
+    } else if (!isBandMode && elFSBandMode && elFSBandMode._bandResizeObs) {
+      /* Libera o ResizeObserver quando band mode é desativado */
+      elFSBandMode._bandResizeObs.disconnect();
+      elFSBandMode._bandResizeObs = null;
+    }
   }
   function toggleFocusMode() {
     isFocusMode = !isFocusMode;
