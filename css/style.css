@@ -503,15 +503,14 @@ body {
 
 /* ── Mini-menu de faixa ── */
 .track-context-menu {
-  position: absolute;
-  right: 4px;
-  top: calc(100% - 4px);
-  z-index: 200;
+  position: fixed; /* posição controlada pelo JS */
+  z-index: 9999;
   background: var(--bg-card, #111);
   border: 1px solid var(--neon-30);
   min-width: 180px;
   box-shadow: 0 8px 24px rgba(0,0,0,0.6), 0 0 12px var(--neon-10);
   animation: tcm-in 0.12s ease-out;
+  border-radius: 6px;
 }
 @keyframes tcm-in {
   from { opacity: 0; transform: translateY(-6px) scale(0.97); }

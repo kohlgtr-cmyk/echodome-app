@@ -231,15 +231,27 @@ const Visualizer = (() => {
     cvBands.guitar = document.getElementById('eqGuitar');
     cvBands.keys   = document.getElementById('eqKeys');
     cvBands.drums  = document.getElementById('eqDrums');
-    /* Aguarda o painel estar visível para dimensionar corretamente */
-    requestAnimationFrame(function() {
+
+    /* Dimensiona após o painel estar visível e o layout ter sido calculado */
+    function sizeBandCanvases() {
       Object.values(cvBands).forEach(function(cv) {
         if (!cv) return;
-        const parent = cv.parentElement;
-        const W = parent ? parent.offsetWidth  : 60;
-        const H = parent ? parent.offsetHeight - 20 : 55; /* 20 = label height */
-        cv.width  = Math.max(W, 10);
-        cv.height = Math.max(H, 20);
+        const parent = cv.parentElement; /* .band-channel */
+        if (!parent) return;
+        const W = parent.clientWidth  || 60;
+        const H = Math.max(parent.clientHeight - 22, 40); /* 22 = label height */
+        cv.width  = Math.max(W, 20);
+        cv.height = Math.max(H, 40);
+        /* Limpa para evitar artefatos do canvas vazio */
+        cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
+      });
+    }
+
+    /* Tenta dimensionar em múltiplos frames para garantir que o layout foi calculado */
+    requestAnimationFrame(function() {
+      sizeBandCanvases();
+      requestAnimationFrame(function() {
+        sizeBandCanvases(); /* segunda passada para garantir */
       });
     });
   }

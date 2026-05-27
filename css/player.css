@@ -275,8 +275,25 @@
 }
 
 /* Overlay nunca aparece fora do focus mode */
-.fs-controls-overlay { display: none; }
-.fullscreen-player.focus-mode .fs-controls-overlay { display: flex; }
+.fs-controls-overlay {
+  display: none !important;
+  position: absolute;
+  bottom: 0;
+  left: 0; right: 0;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-lg);
+  padding: 24px 0 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+  border-radius: 0 0 14px 14px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  z-index: 5;
+}
+.fullscreen-player.focus-mode .fs-controls-overlay {
+  display: flex !important;
+}
 
 /* Aparece ao hover na capa (desktop) */
 .fullscreen-player.focus-mode .fs-cover-wrap:hover .fs-controls-overlay {
@@ -682,6 +699,7 @@
   border: 1px solid var(--neon-15);
   border-radius: 8px;
   height: 90px;        /* mesma altura do waveform */
+  min-height: 90px;
   box-sizing: border-box;
   animation: bandFadeIn 0.25s ease-out;
 }
@@ -710,10 +728,12 @@
   align-items: center;
   gap: 5px;
   min-width: 0;
+  height: 100%;
 }
 .band-eq-canvas {
   width: 100%;
   flex: 1;
+  min-height: 40px;
   border-radius: 4px;
   background: transparent;
   display: block;

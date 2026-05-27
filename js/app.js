@@ -75,10 +75,23 @@ const app = (() => {
       menu.appendChild(btn);
     });
 
-    /* Posiciona o menu junto ao botão ⋯ */
+    /* Posiciona o menu junto ao botão ⋯ usando fixed para nunca ficar oculto */
     const moreBtn = trackItem.querySelector('.track-more-btn');
-    trackItem.style.position = 'relative';
-    trackItem.appendChild(menu);
+    const btnRect = moreBtn.getBoundingClientRect();
+    const menuW   = 200; /* min-width do menu */
+    const vw      = window.innerWidth;
+
+    /* Coloca à direita do botão, ajusta se sair da tela */
+    let left = btnRect.right - menuW;
+    if (left < 8) left = 8;
+    if (left + menuW > vw - 8) left = vw - menuW - 8;
+
+    menu.style.position = 'fixed';
+    menu.style.top  = (btnRect.bottom + 4) + 'px';
+    menu.style.left = left + 'px';
+    menu.style.zIndex = '9999';
+
+    document.body.appendChild(menu);
 
     /* Fecha ao clicar fora */
     setTimeout(() => {

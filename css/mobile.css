@@ -170,7 +170,11 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
 
   .fs-char-silhouette { display: none; }
 
-  .fs-cover-wrap { width: 170px; height: 170px; }
+  /* Capa maior no mobile para preencher melhor */
+  .fs-cover-wrap {
+    width: min(80vw, 300px);
+    height: min(80vw, 300px);
+  }
 
   .fs-mode-btns { gap: 4px; right: var(--gap-md); }
   .fs-mode-btn  { width: 28px; height: 28px; font-size: 0.75rem; }
