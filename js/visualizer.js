@@ -232,47 +232,49 @@ const Visualizer = (() => {
     cvBands.keys   = document.getElementById('eqKeys');
     cvBands.drums  = document.getElementById('eqDrums');
 
-    /* Dimensiona um canvas individual usando getBoundingClientRect
-       (confiável logo após reflow, ao contrário de clientWidth/clientHeight
-        que podem retornar 0 quando o painel acabou de receber display:flex) */
+    /* Dimensiona canvas via atributo width/height (não CSS).
+       getBoundingClientRect() é usado porque clientWidth pode ser 0
+       imediatamente após display:flex ser aplicado. */
     function sizeBandCanvas(cv) {
       if (!cv) return;
-      var parent = cv.parentElement; /* .band-channel */
-      if (!parent) return;
-      var rect    = parent.getBoundingClientRect();
-      var labelEl = parent.querySelector('.band-channel-label');
-      var labelH  = labelEl ? (labelEl.offsetHeight || 14) + 5 : 22;
-      var W = Math.max(Math.floor(rect.width),  20);
-      var H = Math.max(Math.floor(rect.height) - labelH, 40);
-      if (cv.width !== W || cv.height !== H) {
-        cv.width  = W;
-        cv.height = H;
-      }
-      cv.getContext('2d').clearRect(0, 0, cv.width, cv.height);
+      var ch = cv.parentElement; /* .band-channel */
+      if (!ch) return;
+      var rect = ch.getBoundingClientRect();
+      if (rect.width === 0) return;  /* ainda não no DOM visível — tenta de novo */
+      var labelEl = ch.querySelector('.band-channel-label');
+      var labelH  = labelEl ? Math.round(labelEl.getBoundingClientRect().height) + 4 : 20;
+      var W = Math.max(Math.round(rect.width),  10);
+      var H = Math.max(Math.round(rect.height) - labelH, 20);
+      cv.width  = W;
+      cv.height = H;
+      cv.getContext('2d').clearRect(0, 0, W, H);
     }
 
     function sizeAll() {
       Object.values(cvBands).forEach(sizeBandCanvas);
     }
 
-    /* rAF duplo: aguarda o navegador calcular o layout após display:flex */
+    /* Estratégia de timing:
+       1) rAF duplo — garante que o browser calculou o layout após display:flex
+       2) ResizeObserver no painel — lida com resize/rotação depois */
     requestAnimationFrame(function() {
-      sizeAll();
-      requestAnimationFrame(sizeAll);
+      requestAnimationFrame(function() {
+        sizeAll();
+        /* Se ainda zeros (animação CSS atrasou o reflow), tenta mais uma vez */
+        var panel = document.getElementById('fsBandModePanel');
+        if (panel && panel.getBoundingClientRect().width === 0) {
+          setTimeout(sizeAll, 200);
+        }
+      });
     });
 
-    /* Fallbacks com setTimeout para casos em que a animação CSS atrasa o reflow */
-    setTimeout(sizeAll, 100);
-    setTimeout(sizeAll, 350);
-
-    /* ResizeObserver: redimensiona automaticamente se o painel mudar de tamanho
-       (ex.: rotação de tela, resize de janela, modo fullscreen) */
-    if (typeof ResizeObserver !== 'undefined') {
-      var panel = document.getElementById('fsBandModePanel');
-      if (panel && !panel._bandResizeObs) {
-        panel._bandResizeObs = new ResizeObserver(sizeAll);
-        panel._bandResizeObs.observe(panel);
-      }
+    /* ResizeObserver: redimensiona se o painel mudar de tamanho */
+    var panel = document.getElementById('fsBandModePanel');
+    if (panel && typeof ResizeObserver !== 'undefined') {
+      /* Desconecta observer anterior se existir */
+      if (panel._bandRO) { panel._bandRO.disconnect(); }
+      panel._bandRO = new ResizeObserver(function() { sizeAll(); });
+      panel._bandRO.observe(panel);
     }
   }
 
@@ -280,9 +282,15 @@ const Visualizer = (() => {
 
   function start() {
     if (!connected) return;
-    if (ctx.state === 'suspended') ctx.resume();
-    isRunning = true;
-    loop();
+    if (ctx.state === 'suspended') {
+      ctx.resume().then(function() {
+        isRunning = true;
+        loop();
+      });
+    } else {
+      isRunning = true;
+      loop();
+    }
   }
 
   function stop() {

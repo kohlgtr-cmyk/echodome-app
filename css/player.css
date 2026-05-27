@@ -238,26 +238,33 @@
 }
 
 /* Capa ocupa ~80% da viewport */
+/* No focus mode a capa cresce para preencher a tela.
+   Usa min() separados (CSS não suporta min() com 3 args em todos os browsers). */
 .fullscreen-player.focus-mode .fs-cover-wrap {
-  width: min(80vw, 80vh, 540px);
-  height: min(80vw, 80vh, 540px);
+  width:  min(min(80vw, 80vh), 540px);
+  height: min(min(80vw, 80vh), 540px);
   transition: width 0.5s cubic-bezier(.4,0,.2,1),
               height 0.5s cubic-bezier(.4,0,.2,1);
 }
 
-/* fs-content centraliza a capa na tela toda */
+/* fs-content vira viewport inteiro: sem max-width, sem padding, centralizado */
 .fullscreen-player.focus-mode .fs-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  max-width: none;
+  width: 100%;
+  height: 100vh;
   min-height: 100vh;
+  padding: 0;
   gap: 0;
-  padding-bottom: 0;
+  justify-content: center;
+}
+
+/* O fullscreen-player não deve ter scroll no focus mode */
+.fullscreen-player.focus-mode {
+  overflow: hidden;
 }
 
 /* ── Overlay de controles dentro da capa ── */
-/* Oculto por padrão; só existe no focus mode */
+/* Oculto por padrão; ativado apenas dentro do focus mode */
 .fs-controls-overlay {
   display: none;
   position: absolute;
@@ -439,8 +446,8 @@
 /* ---- Capa grande com glow pulsante (pontos 1, 2) ---- */
 .fs-cover-wrap {
   position: relative;
-  width: clamp(200px, 40vw, 420px);
-  height: clamp(200px, 40vw, 420px);
+  width: clamp(200px, 38vw, 420px);
+  height: clamp(200px, 38vw, 420px);
   flex-shrink: 0;
   transition: transform 0.5s cubic-bezier(.4,0,.2,1);
   margin: 0 auto;

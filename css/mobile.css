@@ -172,8 +172,14 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
 
   /* Capa maior no mobile para preencher melhor */
   .fs-cover-wrap {
-    width: min(80vw, 300px);
-    height: min(80vw, 300px);
+    width: min(80vw, 320px);
+    height: min(80vw, 320px);
+  }
+
+  /* No focus mode mobile, capa preenche a tela */
+  .fullscreen-player.focus-mode .fs-cover-wrap {
+    width: min(85vw, 85vh);
+    height: min(85vw, 85vh);
   }
 
   .fs-mode-btns { gap: 4px; right: var(--gap-md); }
@@ -187,7 +193,7 @@ body.section-about    .char-bg__img.active { --char-opacity: 0.15; }
   .fs-title { font-size: 1.1rem; }
 
   .fs-band-mode { gap: 4px; }
-  .band-eq-canvas { height: 48px; }
+  /* Não fixar height do canvas via CSS — o JS seta o atributo height diretamente */
 
   /* ── gallery.css ─────────────────────────────────────── */
 

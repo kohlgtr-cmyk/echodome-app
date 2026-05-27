@@ -369,10 +369,13 @@ const Player = (() => {
     if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
     if (isBandMode && typeof Visualizer !== 'undefined') {
       Visualizer.initBandMode();
-    } else if (!isBandMode && elFSBandMode && elFSBandMode._bandResizeObs) {
+    } else if (!isBandMode) {
       /* Libera o ResizeObserver quando band mode é desativado */
-      elFSBandMode._bandResizeObs.disconnect();
-      elFSBandMode._bandResizeObs = null;
+      var panel = document.getElementById('fsBandModePanel');
+      if (panel && panel._bandRO) {
+        panel._bandRO.disconnect();
+        panel._bandRO = null;
+      }
     }
   }
   function toggleFocusMode() {
