@@ -5,6 +5,41 @@
 
    Campos por música:
      id, title, albumId, track, file, duration, lyrics, story
+
+   STEMS (Band Mode interativo com Demucs):
+   ─────────────────────────────────────────
+   Adicione o campo `stems` a qualquer música para ativar o
+   Band Mode com stems reais separados pelo Demucs.
+
+   Exemplo de saída do Demucs (modelo htdemucs, 4 stems):
+     demucs --mp3 --two-stems vocals assets/songs/love-story.mp3
+     → htdemucs/love-story/vocals.mp3
+     → htdemucs/love-story/no_vocals.mp3
+
+   Para 4 stems completos:
+     demucs --mp3 assets/songs/love-story.mp3
+     → htdemucs/love-story/vocals.mp3
+     → htdemucs/love-story/bass.mp3
+     → htdemucs/love-story/drums.mp3
+     → htdemucs/love-story/other.mp3   ← guitarra + teclados
+
+   Coloque os arquivos em:
+     assets/songs/<song-id>/stems/vocals.mp3
+     assets/songs/<song-id>/stems/bass.mp3
+     assets/songs/<song-id>/stems/drums.mp3
+     assets/songs/<song-id>/stems/other.mp3
+
+   Declare no campo stems da música (null = canal não existe):
+     stems: {
+       vocals: "assets/songs/love-story/stems/vocals.mp3",
+       bass:   "assets/songs/love-story/stems/bass.mp3",
+       drums:  "assets/songs/love-story/stems/drums.mp3",
+       guitar: "assets/songs/love-story/stems/other.mp3",
+       keys:   null,
+     }
+
+   Se `stems` for omitido, o Band Mode usa fallback visual
+   (divisão de frequências do mix master) sem controles reais.
    ========================================================= */
 
 // =====================================================

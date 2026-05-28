@@ -295,24 +295,9 @@
         <input type="range" class="fs-volume-slider" id="fsVolume" min="0" max="1" step="0.01" value="1" />
       </div>
 
-      <!-- Band Mode: equalizadores por instrumento -->
+      <!-- Band Mode: equalizadores por instrumento (gerado dinamicamente pelo StemEngine) -->
       <div class="fs-band-mode" id="fsBandModePanel">
-        <div class="band-channel">
-          <canvas class="band-eq-canvas" id="eqBass"></canvas>
-          <span class="band-channel-label">BASS</span>
-        </div>
-        <div class="band-channel">
-          <canvas class="band-eq-canvas" id="eqGuitar"></canvas>
-          <span class="band-channel-label">GTR</span>
-        </div>
-        <div class="band-channel">
-          <canvas class="band-eq-canvas" id="eqKeys"></canvas>
-          <span class="band-channel-label">KEYS</span>
-        </div>
-        <div class="band-channel">
-          <canvas class="band-eq-canvas" id="eqDrums"></canvas>
-          <span class="band-channel-label">DRUMS</span>
-        </div>
+        <!-- Preenchido pelo StemEngine ao ativar Band Mode -->
       </div>
 
       <!-- Tabs: Lyrics / Story -->
@@ -345,6 +330,8 @@
   <script src="js/character-design.js"></script>
   <!-- VISUALIZER -->
   <script src="js/visualizer.js"></script>
+  <!-- STEM ENGINE -->
+  <script src="js/stem-engine.js"></script>
   <script src="js/player.js"></script>
   <script src="js/char-bg.js"></script>
   <script src="js/gallery.js"></script>

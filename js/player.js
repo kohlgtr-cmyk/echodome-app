@@ -367,9 +367,18 @@ const Player = (() => {
     if (waveWrap)    waveWrap.classList.toggle('band-active', isBandMode);
     if (elFSBandMode) elFSBandMode.classList.toggle('visible', isBandMode);
     if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
-    if (isBandMode && typeof Visualizer !== 'undefined') {
-      Visualizer.initBandMode();
-    } else if (!isBandMode) {
+    if (isBandMode) {
+      /* Inicia o visualizador de banda */
+      if (typeof Visualizer !== 'undefined') Visualizer.initBandMode();
+      /* Carrega stems SOMENTE agora — lazy loading */
+      const song = playlist[currentIdx];
+      if (song && typeof StemEngine !== 'undefined' && audio) {
+        StemEngine.load(song, audio);
+      }
+    } else {
+      /* Desativa band mode */
+      if (typeof StemEngine !== 'undefined') StemEngine.unload();
+      if (typeof Visualizer !== 'undefined') Visualizer.setStemAnalysers({});
       /* Libera o ResizeObserver quando band mode é desativado */
       var panel = document.getElementById('fsBandModePanel');
       if (panel && panel._bandRO) {
@@ -594,6 +603,8 @@ const Player = (() => {
     if (typeof Visualizer !== 'undefined') {
       Visualizer.init(audio, { onBeat: onBeat });
     }
+    /* Expõe o audio element para o StemEngine */
+    window._masterAudio = audio;
   }
 
   return {

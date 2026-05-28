@@ -21,6 +21,7 @@ const Visualizer = (() => {
   let cvFS        = null;
   let cvMini      = null;
   let cvBands     = {};
+  let stemAnalysers = {};   /* { id: AnalyserNode } — fornecido pelo StemEngine */
 
   /* ---- Config ---- */
   const CFG = {
@@ -181,12 +182,25 @@ const Visualizer = (() => {
     /* Mini waveform */
     if (cvMini) drawWave(cvMini, timeData, bufLen, CFG.miniLine);
 
-    /* Band mode EQ bars */
-    const total = bufLen;
-    if (cvBands.bass)   drawBand(cvBands.bass,   freqData, 0,                       Math.floor(total*0.06));
-    if (cvBands.guitar) drawBand(cvBands.guitar, freqData, Math.floor(total*0.06),  Math.floor(total*0.18));
-    if (cvBands.keys)   drawBand(cvBands.keys,   freqData, Math.floor(total*0.18),  Math.floor(total*0.40));
-    if (cvBands.drums)  drawBand(cvBands.drums,  freqData, Math.floor(total*0.40),  Math.floor(total*0.70));
+    /* Band mode EQ bars — usa analysers dos stems se disponíveis,
+       senão faz fallback para faixas de frequência do mix master */
+    if (Object.keys(stemAnalysers).length > 0) {
+      /* Modo stems: cada canal tem seu próprio AnalyserNode */
+      for (const id in stemAnalysers) {
+        const cv = document.getElementById('eqStem_' + id);
+        if (!cv) continue;
+        const stemBuf = new Uint8Array(stemAnalysers[id].frequencyBinCount);
+        stemAnalysers[id].getByteFrequencyData(stemBuf);
+        drawBand(cv, stemBuf, 0, stemBuf.length);
+      }
+    } else {
+      /* Fallback: divisão de frequências do mix completo (comportamento original) */
+      const total = bufLen;
+      if (cvBands.bass)   drawBand(cvBands.bass,   freqData, 0,                       Math.floor(total*0.06));
+      if (cvBands.guitar) drawBand(cvBands.guitar, freqData, Math.floor(total*0.06),  Math.floor(total*0.18));
+      if (cvBands.keys)   drawBand(cvBands.keys,   freqData, Math.floor(total*0.18),  Math.floor(total*0.40));
+      if (cvBands.drums)  drawBand(cvBands.drums,  freqData, Math.floor(total*0.40),  Math.floor(total*0.70));
+    }
 
     pulseBars(bassEnergy);
   }
@@ -272,6 +286,10 @@ const Visualizer = (() => {
     }
   }
 
+  function setStemAnalysers(map) {
+    stemAnalysers = map || {};
+  }
+
   function setBoost(active) { boostMode = active; }
 
   function start() {
@@ -302,5 +320,5 @@ const Visualizer = (() => {
     sizeCanvas(cvMini);
   }
 
-  return { init, start, stop, resize, initBandMode, setBoost };
+  return { init, start, stop, resize, initBandMode, setBoost, setStemAnalysers };
 })();
