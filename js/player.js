@@ -319,18 +319,29 @@ const Player = (() => {
   }
   function playIndex(idx) {
     if (idx === currentIdx) { togglePlay(); return; }
-    loadSong(idx, true);
+    loadSong(idx, true); /* sempre inicia a reprodução ao clicar */
   }
 
   /* Toca uma música da fila (por objeto, não por índice da playlist) */
   function playQueueItemInternal(song) {
     const idx = playlist.findIndex(s => s.id === song.id);
-    if (idx !== -1) { loadSong(idx, true); }
-    else {
-      /* Música não está na playlist — injeta temporariamente */
-      playlist.push(song);
-      loadSong(playlist.length - 1, true);
+    if (idx !== -1) { loadSong(idx, true); return; }
+    /* Música não está na playlist principal — usa playlist global (SONGS) */
+    if (typeof SONGS !== 'undefined') {
+      const globalIdx = SONGS.findIndex(s => s.id === song.id);
+      if (globalIdx !== -1) { playlist = SONGS; loadSong(globalIdx, true); return; }
     }
+    /* Fallback: injeta temporariamente */
+    playlist.push(song);
+    loadSong(playlist.length - 1, true);
+  }
+
+  /* Substitui a playlist ativa (usado por playlists customizadas) */
+  function setPlaylist(songs, startIdx) {
+    playlist   = songs;
+    currentIdx = -1;
+    loadSong(startIdx !== undefined ? startIdx : 0, true);
+    if (isShuffling) buildShuffleOrder(startIdx || 0);
   }
 
   function updateTracklistBtns() {
@@ -610,6 +621,7 @@ const Player = (() => {
   return {
     init,
     playIndex,
+    setPlaylist,
     playQueueItem: playQueueItemInternal,
     togglePlay,
     next,
@@ -617,6 +629,7 @@ const Player = (() => {
     toggleShuffle,
     isPlaying:   function() { return isPlaying; },
     isShuffling: function() { return isShuffling; },
+    currentSong: function() { return playlist[currentIdx] || null; },
     onThemeChange: updateCharacter,
   };
 })();

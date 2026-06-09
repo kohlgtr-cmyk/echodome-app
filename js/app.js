@@ -60,7 +60,7 @@ const app = (() => {
       { label: 'Ver letra',          icon: '♪', action: () => { Player.playIndex(globalIdx); setTimeout(() => { const fsEl = document.getElementById('fullscreenPlayer'); if (fsEl) { fsEl.classList.add('open'); fsEl.removeAttribute('aria-hidden'); } const tab = document.querySelector('.fs-tab[data-tab="lyrics"]'); if (tab) tab.click(); }, 150); } },
       { label: 'Como foi feita',     icon: '◎', action: () => { Player.playIndex(globalIdx); setTimeout(() => { const fsEl = document.getElementById('fullscreenPlayer'); if (fsEl) { fsEl.classList.add('open'); fsEl.removeAttribute('aria-hidden'); } const tab = document.querySelector('.fs-tab[data-tab="story"]'); if (tab) tab.click(); }, 150); } },
       { label: 'Download',           icon: '↓', action: () => { const songId = song.id; if (Downloader.isDownloaded(songId)) { Downloader.removeSong(song); } else { Downloader.downloadSong(song); } } },
-      { label: 'Adicionar à playlist', icon: '+', action: () => { if (typeof Queue !== 'undefined') Queue.add(song); } },
+      { label: 'Adicionar à playlist', icon: '+', action: () => { if (typeof Playlists !== 'undefined') Playlists.openAddToPlaylistPicker(song); else if (typeof Queue !== 'undefined') Queue.add(song); } },
     ];
 
     actions.forEach(({ label, icon, action }) => {
@@ -453,6 +453,8 @@ const app = (() => {
     if (typeof PushNotifs !== 'undefined') PushNotifs.init();
     /* #19 — Fila */
     if (typeof Queue !== 'undefined') Queue.init();
+    /* Playlists customizadas */
+    if (typeof Playlists !== 'undefined') Playlists.init();
     /* #20 — Lyrics browser */
     if (typeof LyricsBrowser !== 'undefined') LyricsBrowser.init();
   }
