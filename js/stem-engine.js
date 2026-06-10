@@ -222,8 +222,15 @@ const StemEngine = (() => {
   function createChannel(ctx, id, url) {
     return new Promise((resolve, reject) => {
       const el = new Audio();
-      el.crossOrigin = 'anonymous';
-      el.preload     = 'auto';
+      /* Só usa crossOrigin se o stem for de outro domínio.
+         Mesmo domínio: sem crossOrigin evita erros CORS desnecessários. */
+      try {
+        const stemOrigin = new URL(url, location.href).origin;
+        if (stemOrigin !== location.origin) el.crossOrigin = 'anonymous';
+      } catch (_) {
+        el.crossOrigin = 'anonymous';
+      }
+      el.preload = 'auto';
 
       el.addEventListener('canplaythrough', () => {
         const source   = ctx.createMediaElementSource(el);
@@ -244,7 +251,10 @@ const StemEngine = (() => {
         resolve();
       }, { once: true });
 
-      el.addEventListener('error', reject, { once: true });
+      el.addEventListener('error', (e) => {
+        console.warn('[StemEngine] Falha ao carregar stem "' + id + '":', url, e);
+        reject(e);
+      }, { once: true });
       el.src = url;
     });
   }
@@ -354,9 +364,22 @@ const StemEngine = (() => {
     if (ctx.state === 'suspended') await ctx.resume();
 
     try {
-      await Promise.all(
+      const results = await Promise.allSettled(
         availableIds.map(id => createChannel(ctx, id, stemMap[id]))
       );
+
+      const loaded = availableIds.filter((_, i) => results[i].status === 'fulfilled');
+      const failed = availableIds.filter((_, i) => results[i].status === 'rejected');
+
+      if (failed.length) {
+        console.warn('[StemEngine] Stems que falharam:', failed);
+      }
+
+      if (loaded.length === 0) {
+        setLoadingState(false);
+        showStemError();
+        return;
+      }
 
       setLoadingState(false);
       syncAll(masterAudio);
@@ -373,7 +396,7 @@ const StemEngine = (() => {
 
     } catch (err) {
       if (err.name !== 'AbortError') {
-        console.warn('[StemEngine] Erro ao carregar stems:', err);
+        console.warn('[StemEngine] Erro inesperado:', err);
         setLoadingState(false);
         showStemError();
       }
