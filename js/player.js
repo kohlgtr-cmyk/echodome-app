@@ -379,6 +379,8 @@ const Player = (() => {
     if (elFSBandMode) elFSBandMode.classList.toggle('visible', isBandMode);
     if (elFSBandBtn)  elFSBandBtn.classList.toggle('active', isBandMode);
     if (isBandMode) {
+      /* Silencia o áudio master — os stems assumem o playback */
+      audio.volume = 0;
       /* Inicia o visualizador de banda */
       if (typeof Visualizer !== 'undefined') Visualizer.initBandMode();
       /* Carrega stems SOMENTE agora — lazy loading */
@@ -387,6 +389,9 @@ const Player = (() => {
         StemEngine.load(song, audio);
       }
     } else {
+      /* Restaura volume do áudio master */
+      const savedVol = elFSVolume ? parseFloat(elFSVolume.value) : 1;
+      audio.volume = savedVol;
       /* Desativa band mode */
       if (typeof StemEngine !== 'undefined') StemEngine.unload();
       if (typeof Visualizer !== 'undefined') Visualizer.setStemAnalysers({});

@@ -683,23 +683,23 @@
 .fs-band-mode {
   display: none;
   width: 100%;
-  gap: var(--gap-sm);
-  padding: 10px var(--gap-sm);
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
   background: var(--neon-05);
   border: 1px solid var(--neon-15);
   border-radius: 8px;
-  height: 90px;        /* mesma altura do waveform */
-  min-height: 90px;
   box-sizing: border-box;
   animation: bandFadeIn 0.25s ease-out;
+  overflow: hidden;
 }
 @keyframes bandFadeIn {
-  from { opacity: 0; transform: scaleY(0.88); }
+  from { opacity: 0; transform: scaleY(0.92); }
   to   { opacity: 1; transform: scaleY(1); }
 }
 .fs-band-mode.visible { display: flex; }
 
-/* Quando band mode ativa, esconde o waveform com fade */
+/* Quando band mode ativa, esconde o waveform */
 .fs-waveform-wrap.band-active {
   opacity: 0;
   pointer-events: none;
@@ -711,30 +711,148 @@
   transition: opacity 0.2s, height 0.25s;
 }
 
+/* ---- Band mode: grade de canais ---- */
+#fsBandModePanel {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  padding: 10px 6px 6px;
+  gap: 4px;
+  box-sizing: border-box;
+}
+
 .band-channel {
   flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 5px;
+  gap: 4px;
   min-width: 0;
-  height: 100%;
+  padding: 6px 2px 4px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  transition: border-color 0.2s, background 0.2s;
+  cursor: default;
 }
+.band-channel:hover {
+  background: var(--neon-05);
+  border-color: var(--neon-15);
+}
+.band-channel.stem-muted {
+  opacity: 0.4;
+}
+
+/* Visualizador de frequência do stem */
 .band-eq-canvas {
   width: 100%;
-  flex: 1;
-  min-height: 40px;
-  border-radius: 4px;
+  height: 38px;
+  border-radius: 3px;
   background: transparent;
   display: block;
 }
+
+/* Label do canal */
 .band-channel-label {
   font-family: var(--font-mono);
-  font-size: 0.52rem;
-  letter-spacing: 0.18em;
+  font-size: 0.5rem;
+  letter-spacing: 0.16em;
   color: var(--neon);
-  opacity: 0.65;
+  opacity: 0.7;
   line-height: 1;
+  white-space: nowrap;
+}
+
+/* Controles: slider vertical + botão mute */
+.stem-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  width: 100%;
+}
+
+/* Slider de volume — vertical, compacto */
+.stem-vol-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  writing-mode: vertical-lr;
+  direction: rtl;
+  width: 20px;
+  height: 44px;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+.stem-vol-slider::-webkit-slider-runnable-track {
+  width: 3px;
+  background: var(--neon-20);
+  border-radius: 2px;
+}
+.stem-vol-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon);
+  margin-left: -3.5px;
+  box-shadow: 0 0 4px var(--neon);
+}
+.stem-vol-slider::-moz-range-track {
+  width: 3px;
+  background: var(--neon-20);
+  border-radius: 2px;
+}
+.stem-vol-slider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--neon);
+  border: none;
+  box-shadow: 0 0 4px var(--neon);
+}
+
+/* Botão de mute */
+.stem-mute-btn {
+  background: transparent;
+  border: 1px solid var(--neon-20);
+  border-radius: 3px;
+  color: var(--fg-dim);
+  font-size: 0.6rem;
+  width: 20px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+  line-height: 1;
+}
+.stem-mute-btn:hover   { border-color: var(--neon-50); color: var(--neon); }
+.stem-mute-btn.muted   { background: var(--neon-10); border-color: var(--neon-30); color: var(--fg-dim); }
+
+/* Loading e erro */
+.stem-loading-indicator {
+  display: none;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  padding: 8px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.1em;
+  border-top: 1px solid var(--neon-10);
+}
+.stem-error-msg {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: var(--fg-dim);
+  opacity: 0.6;
+  text-align: center;
+  padding: 10px;
+  width: 100%;
 }
 
 /* ---- Tabs ---- */
