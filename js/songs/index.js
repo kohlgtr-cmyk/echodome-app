@@ -873,6 +873,15 @@ Busca coexistência.`
     singleCover: "assets/single/between-the-lines.svg", // ← coloque o SVG da capa aqui
     tags: ["english"],
     duration: "4:30",
+    stems: {
+      vocals:       "assets/songs/between-the-lines/vocals.mp3",
+      bass:         "assets/songs/between-the-lines/bass.mp3",
+      drums:        "assets/songs/between-the-lines/drums.mp3",
+      guitar:       "assets/songs/between-the-lines/guitar.mp3",
+      keys:         "assets/songs/between-the-lines/keys.mp3",
+      other:        "assets/songs/between-the-lines/other.mp3",
+      instrumental: "assets/songs/between-the-lines/instrumental.mp3",
+    },
     lyrics: `VERSE 1
 
 It’s 2 a.m. again.
